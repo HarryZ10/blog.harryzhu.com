@@ -6,7 +6,7 @@ class PostReadService {
 
     // Retrieve all posts
     // Unauthenticated OKAY
-    public static function all_posts() {
+    public static function fetchAllPosts() {
         $stmt = DatabaseService::database()->query("SELECT * FROM post;");
         $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $result = [];
@@ -19,9 +19,9 @@ class PostReadService {
 
     // Retrieve a post based on id
     // Authentication Check Needed
-    public static function get_post($post_id) {
+    public static function fetchPost($id) {
         $stmt = DatabaseService::database()->prepare("SELECT * FROM post WHERE id = :post_id;");
-        $stmt->execute(['post_id' => $post_id]);
+        $stmt->execute(['post_id' => $id]);
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $post = $stmt->fetch();
         return $post;

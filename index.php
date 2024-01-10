@@ -1,5 +1,4 @@
 <?php
-require_once __DIR__.'/services/DatabaseService.php';
 require_once __DIR__.'/routes/Router.php';
 
 header('Content-Type: application/json');
