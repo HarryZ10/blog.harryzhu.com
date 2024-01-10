@@ -3,7 +3,7 @@
 require_once __DIR__.'/../services/api/PostReadService.php';
 require_once __DIR__.'/../services/api/PostWriteService.php';
 
-class Feed {
+class FeedService {
     public function retrieveBlogFeed() {
         return json_encode(PostReadService::fetchAllPosts());
     }

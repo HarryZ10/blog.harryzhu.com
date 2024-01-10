@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__.'/../services/DatabaseService.php';
 
-class Auth {
+class AuthService {
 
     private $secretKey = "S3cr3tK3y!_2024$#YsP67&^gHJb2%4#k^s@6v9yB8&F";
 
@@ -47,13 +47,13 @@ class Auth {
     // Here, adds logic to validate and store the user's credentials
     // and verifying the provided password against the stored hash
     private function validateUserCredentials($username, $password) {
+        $result = null;
         $stmt = DatabaseService::database()->prepare("SELECT id, username, password FROM blog_user WHERE username = ?");
         $stmt->execute([$username]);
 
         // gets the user data in a dictionary format in this mode FETCH_ASSOC
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $result = null;
         // verifies the hash of the password stored in our database and provided password
         // && password_verify($password, $user['password'])
         if (isset($user)) {
@@ -65,9 +65,10 @@ class Auth {
         return $result;
     }
 
+    // Generate a token based on the user information provided
+    // and then return a token string
     private function generateJWTToken($user) {
-
-        // Assign current time
+        // Save current time
         $issued = time();
 
         // Token is valid for 1 hour for security purposes

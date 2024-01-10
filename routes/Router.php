@@ -1,6 +1,6 @@
 <?php
-require_once 'Feed.php';
-require_once 'Auth.php';
+require_once __DIR__.'/../services/FeedService.php';
+require_once __DIR__.'/../services/AuthService.php';
 
 class Router {
 
@@ -13,8 +13,8 @@ class Router {
     // constructor for the Router that initializes the blog controller service
     // that performs CRUD operations for posts and comments
     public function __construct() {
-        $this->feed = new Feed();
-        $this->authenticator = new Auth();
+        $this->feed = new FeedService();
+        $this->authenticator = new AuthService();
     }
 
     public function handle_request() {
@@ -23,8 +23,12 @@ class Router {
         $token = $this->getTokenFromReqBody();
 
         // Secured endpoints
-        $endpoints_to_gatekeep = ['/posts'];
-        $is_secured = in_array($uri, $endpoints_to_gatekeep);
+        $endpoints_to_gatekeep = ['/posts', '/comments'];
+        
+        // Extract the base endpoint from the URI
+        // Skip past primary domain and prepend '/'
+        $base_uri = '/' . explode('/', $uri)[1];
+        $is_secured = in_array($base_uri, $endpoints_to_gatekeep);
 
         // Check for token on secured endpoints
         if ($is_secured && !$this->authenticator->isAliveToken($token)) {
@@ -63,10 +67,34 @@ class Router {
             echo $this->feed->removeBlogPost($matches[1]);
         }
 
-         // Edits/updates a post
+        // Edits/updates a post
         // PUT /posts/:id
         elseif ($method == 'PUT' && preg_match('/\/posts\/(\d+)/', $uri, $matches)) {
             echo $this->feed->editBlogPost($matches[1]);
+        }
+
+        // Add comment to a post by identifier
+        // POST /posts/:id/comments
+        elseif ($method == 'POST' && preg_match('\/posts\/(\d+)\/comments', $uri, $matches)) {
+            // todo
+        }
+
+        // Retrieve all comments for a post.
+        // GET /posts/:id/comments
+        elseif ($method == 'GET' && preg_match('\/posts\/(\d+)\/comments', $uri, $matches)) {
+            // todo
+        }
+
+        // Update a comment
+        // PUT /comments/:id
+        elseif ($method == 'GET' && preg_match('/\/comments\/(\d+)/', $uri, $matches)) {
+            // todo
+        }
+
+        // Delete a comment
+        // DELETE /comments/:id
+        elseif ($method == 'GET' && preg_match('/\/comments\/(\d+)/', $uri, $matches)) {
+            // todo
         }
 
         else {
@@ -86,12 +114,14 @@ class Router {
         $headers = getallheaders();
 
         $authHeader = null;
-        foreach ($headers as $k => $v) {
-            if (strtolower($k) == 'authorization') {
-                $authHeader = $v;
+        foreach ($headers as $key => $val) {
+            // finds the authorization header
+            if (strtolower($key) == 'authorization') {
+                $authHeader = $val;
             }
         }
 
+        // given a auth header we can look for the bearer token
         if ($authHeader) {
             $header = $headers['Authorization'];
 
@@ -100,8 +130,7 @@ class Router {
 
             // Must have 2 segments "Bearer <token>"
             if (count($parts) === 2) {
-                list($type, $raw) = $parts;
-                $token = $raw;
+                $token = $parts[1];
             }
         }
 
