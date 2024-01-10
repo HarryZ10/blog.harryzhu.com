@@ -19,10 +19,19 @@ class PostWriteService {
     // Authentication Check Needed
     public static function updatePost($postBodyData) {
         $stmt = DatabaseService::database()->prepare(
-            "UPDATE post (id, user_id, post_date, post_text, extra)
-             VALUES (:id, :user_id, :post_date, :post_text, :extra);"
+             "UPDATE post
+             SET user_id = :user_id,
+                 post_date = :post_date,
+                 post_text = :post_text,
+                 extra = :extra
+             WHERE id = :id;"
         );
-        $stmt->execute($postBodyData);
+        $stmt->bindParam(':user_id', $postBodyData['user_id']);
+        $stmt->bindParam(':post_date', $postBodyData['post_date']);
+        $stmt->bindParam(':post_text', $postBodyData['post_text']);
+        $stmt->bindParam(':id', $postBodyData['id']);
+        $stmt->bindParam(':extra', $postBodyData['extra']);
+        $stmt->execute();
         return "Success";
     }
 
@@ -30,10 +39,11 @@ class PostWriteService {
     // Authentication Check Needed & user ids must match
     public static function deletePost($postBodyData) {
         $stmt = DatabaseService::database()->prepare(
-            "DELETE post (id, user_id, post_date, post_text, extra)
-             VALUES (:id, :user_id, :post_date, :post_text, :extra)"
+            "DELETE FROM post WHERE id = :id AND user_id = :user_id;"
         );
-        $stmt->execute($postBodyData);
+        $stmt->bindParam(':user_id', $postBodyData['user_id']);
+        $stmt->bindParam(':id', $postBodyData['id']);
+        $stmt->execute();
         return "Success";
     }
 }

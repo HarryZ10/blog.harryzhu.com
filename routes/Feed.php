@@ -36,7 +36,7 @@ class Feed {
     }
 
     public function editBlogPost($id) {
-        $content = PostReadService::fetchPost($id);
+        $content = json_decode(file_get_contents('php://input'), true);
         // If found, encode the post data in json
         if ($content) {
             PostWriteService::updatePost($content);
