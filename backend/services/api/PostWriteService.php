@@ -15,6 +15,17 @@ class PostWriteService {
         return "Success";
     }
 
+    // Add a comment to a post
+    // Authentication Check Needed
+    public static function addCommentOnPost($commentData) {
+        $stmt = DatabaseService::database()->prepare(
+            "INSERT INTO blog_comment (id, user_id, post_id, comment_date, comment_text)
+             VALUES (:id, :user_id, :post_id, :comment_date, :comment_text);"
+        );
+        $stmt->execute($commentData);
+        return "Success";
+    }
+
     // Update a post
     // Authentication Check Needed
     public static function updatePost($postBodyData) {

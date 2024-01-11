@@ -2,8 +2,7 @@
 require_once __DIR__.'/../config.php';
 
 class DatabaseService {
-    // Connection instance
-    private static $db = null;
+    private static $db = null;                      // DB Connection instance
 
     // Ensuring single database instance
     private function __construct() {}
@@ -12,7 +11,7 @@ class DatabaseService {
     public static function database() {
 
         if (self::$db == null) {
-            // This is a standard URI to connect to a postgres server
+            // Standard URI to connect to a postgres server
             $conn_uri = "pgsql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_NAME;
 
             // Creates a new database connection with the parameters
