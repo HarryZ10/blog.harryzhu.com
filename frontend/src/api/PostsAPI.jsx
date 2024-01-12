@@ -1,11 +1,13 @@
 // src/api/PostsAPI.js
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
 const API_BASE_URL = 'http://10.10.10.25:80';
 
 // Get all posts
 export const getAllPosts = async () => {
+
     try {
         const response = await fetch(`${API_BASE_URL}/posts`, {
             method: 'GET',
@@ -14,10 +16,6 @@ export const getAllPosts = async () => {
                 'Authorization': `Bearer ${Cookies.get('token')}`
             },
         });
-
-        if (!response.ok) {
-            throw new Error('Error fetching posts');
-        }
         return await response.json();
     } catch (err) {
         console.error('Error:', err);

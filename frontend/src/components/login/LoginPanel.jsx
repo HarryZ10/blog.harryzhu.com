@@ -57,7 +57,7 @@ const LoginPanel = () => {
 
     useEffect(() => {
         // Capture the current URL and store it as returnUri
-        const currentUrl = window.location.href;
+        const currentUrl = window.location.href.replace("/login", "")
         localStorage.setItem('returnUri', currentUrl);
     }, []);
 
@@ -86,8 +86,8 @@ const LoginPanel = () => {
             await register(username, password);
 
             // Post-login success logic
-            toggleForm();
-
+            history("/"); // Redirect user to the saved URI or a default path
+            alert("Registered!");
         } catch (error) {
             // Handle login error
             console.error("Register failed:", error);

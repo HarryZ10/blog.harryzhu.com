@@ -3,6 +3,7 @@ import NavBar from '../components/layout/NavBar';
 import { getAllPosts, deletePost } from '../api/PostsAPI';
 import PostCard from '../components/feed/PostCard';
 import styled from "styled-components";
+import { useNavigate } from 'react-router-dom';
 
 const PageTitle = styled.h1`
     font-weight: 800;
@@ -21,16 +22,23 @@ const BlogPage = () => {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
       const fetchPosts = async () => {
         try {
             const fetchedPostData = await getAllPosts();
-            setPosts(fetchedPostData);
-            setLoading(false);
+
+            if (fetchedPostData.error) {
+                if (fetchedPostData.error == "Unauthorized") {
+                    navigate("/login")
+                }
+            } else {
+                setPosts(fetchedPostData);
+                setLoading(false);
+            }
         }
         catch (err) {
-
             setError(err);
             setLoading(true);
         }
