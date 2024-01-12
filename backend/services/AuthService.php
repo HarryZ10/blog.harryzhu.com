@@ -1,9 +1,35 @@
 <?php
 require_once __DIR__.'/../services/DatabaseService.php';
+require_once __DIR__.'/api/UserRegisterService.php';
 
 class AuthService {
 
     private $secretKey = "S3cr3tK3y!_2024$#YsP67&^gHJb2%4#k^s@6v9yB8&F";
+
+    public function register() {
+        $result = null;
+        $json_str = file_get_contents('php://input');
+        $data = json_decode($json_str, true);
+        $username = $data['username'] ?? '';
+        $password = $data['password'] ?? '';
+        if (!empty($username) and !empty($password)) {
+
+            if (!UserRegisterService::checkUsername($username)) {
+                // write to database
+                http_response_code(200);
+                UserRegisterService::addUser($username, $password);
+                $result = json_encode(["status" => "Success"]);
+            } else {
+               http_response_code(500);
+                $result = json_encode(["error" => "Username already exists"]); 
+            }
+
+        } else {
+            http_response_code(500);
+            $result = json_encode(["error" => "Username invalid"]);
+        }
+        return $result;
+    }
 
     public function login() {
         $result = null;
@@ -122,6 +148,30 @@ class AuthService {
     private function base64UrlDecode($data) {
         // Replace '-_' with '+/' and then decode data encoded with base64
         return base64_decode(strtr($data, '-_', '+/'));
+    }
+
+    function decodeJWT($jwt) {
+        // Split the JWT string into its three parts
+        $parts = explode('.', $jwt);
+
+        // Decode the segments for Header and Payload
+        if(count($parts) === 3) {
+
+            $header = json_decode(
+                $this->base64UrlDecode($parts[0]), true
+            );
+            $payload = json_decode(
+                $this->base64UrlDecode($parts[1]), true
+            );
+
+            return [
+                'header' => $header,
+                'payload' => $payload
+            ];
+
+        } else {
+            throw new Exception('Invalid JWT');
+        }
     }
 
     public function isAliveToken($full_token) {

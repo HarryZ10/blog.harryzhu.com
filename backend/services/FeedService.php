@@ -25,11 +25,11 @@ class FeedService {
         }
     }
 
-    public function removeBlogPost($id) {
+    public function removeBlogPost($id, $requestorUserId) {
         $content = PostReadService::fetchPost($id);
         // If found, encode the post data in json
         if ($content) {
-            PostWriteService::deletePost($content);
+            PostWriteService::deletePost($content, $requestorUserId);
             return json_encode($content);
         } else {
             http_response_code(404);

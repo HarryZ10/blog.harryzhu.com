@@ -11,7 +11,12 @@ class PostWriteService {
             "INSERT INTO post (id, user_id, post_date, post_text, extra)
              VALUES (:id, :user_id, :post_date, :post_text, :extra);"
         );
-        $stmt->execute($postBodyData);
+        $stmt->bindParam(":id", $postBodyData["id"]);
+        $stmt->bindParam(":user_id", $postBodyData["user_id"]);
+        $stmt->bindParam(":post_date", $postBodyData["post_date"]);
+        $stmt->bindParam(":post_text", $postBodyData["post_text"]);
+        $stmt->bindParam(":extra", json_encode($postBodyData["extra"]));
+        $stmt->execute();
         return "Success";
     }
 
@@ -48,7 +53,13 @@ class PostWriteService {
 
     // Delete a post
     // Authentication Check Needed & user ids must match
-    public static function deletePost($postBodyData) {
+    // This function should also take the user_id of the requestor as a parameter
+    public static function deletePost($postBodyData, $requestorUserId) {
+        // First, verify if the post belongs to the user making the request
+        if ($postBodyData['user_id'] != $requestorUserId) {
+            throw new Exception("Unauthorized action.");
+        }
+
         $stmt = DatabaseService::database()->prepare(
             "DELETE FROM post WHERE id = :id AND user_id = :user_id;"
         );

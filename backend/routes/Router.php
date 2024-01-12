@@ -49,6 +49,10 @@ class Router {
             echo $this->authenticator->login();
         }
 
+        elseif ($method == "POST" && $base_uri == "/register") {
+            echo $this->authenticator->register();
+        }
+
         // Add comment to a post by identifier
         // POST /posts/:id/comments
         elseif ($method == 'POST'
@@ -83,7 +87,9 @@ class Router {
         elseif ($method == 'DELETE'
             && $uriArray[1] == "posts" && is_numeric($uriArray[2])
         ) {
-            echo $this->feed->removeBlogPost($uriArray[2]);
+            $decoded = $this->authenticator->decodeJWT($token);
+            $payload = $decoded['payload'];
+            echo $this->feed->removeBlogPost($uriArray[2], $payload['user_id']);
         }
 
         // Edits/updates a post
@@ -151,6 +157,7 @@ class Router {
         }
         return $token;
     }
+
 }
 
 ?>

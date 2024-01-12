@@ -5,7 +5,7 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import PostPage from './pages/PostPage';
 import BlogPage from './pages/BlogPage';
-
+import { Logout } from './api/UsersAPI';
 /**
  * Manages routing on the client side to different pages
  */
@@ -15,8 +15,9 @@ const RoutesHandler = () => {
       <Routes>
         <Route path="/" element={<HomePage/>} />
         <Route path="/posts/:id" element={<PostPage/>} />
-        <Route path="/blog" element={<BlogPage/>} />
+        <Route path="/feed" element={<BlogPage/>} />
         <Route path="/login" element={<LoginPage/>} />
+        <Route path="/logout" element={<Logout /> } />
       </Routes>
     </Router>
   );
