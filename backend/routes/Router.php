@@ -28,7 +28,7 @@ class Router {
         $token = $this->getTokenFromReqBody();
 
         // Secured endpoints
-        $endpoints_to_gatekeep = ['/posts', '/comments'];
+        $endpoints_to_gatekeep = ['/posts', '/comments', "/users"];
 
         // Transform to an array
         $uriArray = explode('/', $uri);
@@ -59,6 +59,12 @@ class Router {
             && $uriArray[1] == "posts" && is_numeric($uriArray[2]) && $uriArray[3] == "comments"
         ) {
             echo $this->feed->addComment();
+        }
+
+        // Retrieve username from id
+        // GET /users/:id
+        elseif ($method == 'GET' && $uriArray[1] == "users" && is_numeric($uriArray[2])) {
+            echo $this->authenticator->retrieveUsername($uriArray[2]);
         }
 
         // Retrieve all comments for a post.

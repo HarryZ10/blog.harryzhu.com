@@ -22,7 +22,7 @@ const PageTitle = styled.h1`
     padding: ${(props) => props.main ? '28px 0 16px' : '0'};
 `;
 
-const PageSubTitle = styled.h1`
+export const PageSubTitle = styled.h1`
     font-weight: 100;
     font-family: 'Outfit';
     color: #36382e;
@@ -50,7 +50,7 @@ const HomePage = () => {
                 <NavBar />
                 <Content>
                     <PageTitle>Flez.</PageTitle>
-                    <PageSubTitle>flex, and take it easy</PageSubTitle>
+                    <PageSubTitle>flex easy</PageSubTitle>
                 </Content>
             </PageContainer>
         </>

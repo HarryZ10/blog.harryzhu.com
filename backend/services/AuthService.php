@@ -1,10 +1,26 @@
 <?php
 require_once __DIR__.'/../services/DatabaseService.php';
 require_once __DIR__.'/api/UserRegisterService.php';
+require_once __DIR__.'/api/UserReadService.php';
 
 class AuthService {
 
     private $secretKey = "S3cr3tK3y!_2024$#YsP67&^gHJb2%4#k^s@6v9yB8&F";
+
+    public function retrieveUsername($id) {
+        $result = null;
+        // Check if 'id' is set
+        if ($id) {
+            $username = UserReadService::getUsername($id);
+            http_response_code(200);
+            $result = json_encode(["username" => $username]);
+        } else {
+            http_response_code(404);
+            $result = json_encode(["error" => "ID not found"]);
+        }
+
+        return $result;
+    }
 
     public function register() {
         $result = null;
@@ -20,7 +36,7 @@ class AuthService {
                 UserRegisterService::addUser($username, $password);
                 $result = json_encode(["status" => "Success"]);
             } else {
-               http_response_code(500);
+                http_response_code(500);
                 $result = json_encode(["error" => "Username already exists"]); 
             }
 

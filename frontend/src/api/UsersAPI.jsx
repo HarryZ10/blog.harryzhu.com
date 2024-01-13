@@ -3,6 +3,26 @@ import { useNavigate } from 'react-router-dom';
 
 const API_BASE_URL = 'http://10.10.10.25:80';
 
+export const getUsername = async (id) => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/users/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${Cookies.get('token')}`
+            },
+        });
+        if (!response.ok) {
+            throw new Error('No username found');
+        }
+        const resp = await response.json();
+        return resp.username
+    } catch (err) {
+        console.error('Error:', err);
+        throw err;
+    }
+};
+
 // Login
 export const login = async (username, password) => {
     try {
@@ -34,7 +54,11 @@ export const login = async (username, password) => {
 export const Logout = () => {
     const navigate = useNavigate();
     Cookies.remove('token');
-    navigate("/");
+    
+    // Wait for a short time before navigating
+    setTimeout(() => {
+        navigate("/");
+    }, 500); // delay in milliseconds
 }
 
 // Register
@@ -53,6 +77,7 @@ export const register = async (username, password) => {
         if (!response.ok) {
             throw new Error('Error registering');
         }
+
         return await response.json();
 
     } catch (err) {

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import CreatePostModal from '../components/feed/CreatePostModal';
 import NavBar from '../components/layout/NavBar';
 import { getAllPosts, deletePost } from '../api/PostsAPI';
 import PostCard from '../components/feed/PostCard';
+import { PageSubTitle } from '../pages/HomePage';
 import styled from "styled-components";
 import { useNavigate } from 'react-router-dom';
 
@@ -72,6 +74,7 @@ const BlogPage = () => {
             <PageTitle>
                 Flez Feed.
             </PageTitle>
+            <PageSubTitle>flex easy</PageSubTitle>
             {posts.map(post => (
                 <PostCard
                     key={post.id}
@@ -83,6 +86,7 @@ const BlogPage = () => {
                     onDelete={() => onDeleteHandler(post.id, post.user_id)}
                 />
             ))}
+            <CreatePostModal />
         </div>
     );
 };

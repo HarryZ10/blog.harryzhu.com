@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
+import Dropdown from 'react-bootstrap/Dropdown';
 import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
 
@@ -34,9 +35,28 @@ const NavBar = () => {
                     <Navbar.Collapse className="justify-content-end">
                         <Nav>
                             {username ? (
-                                <Nav.Link style={LinkStyle} href="/profile">
-                                    {username}
-                                </Nav.Link>
+                                <Dropdown>
+                                    <Dropdown.Toggle style={LoggedInLink} id="dropdown-basic">
+                                        {username}
+                                    </Dropdown.Toggle>
+                                    <Dropdown.Menu
+                                        style={{
+                                            width: "200px"
+                                        }}>
+                                        <Dropdown.Item
+                                            style={{
+                                                display: "flex",
+                                                justifyContent: "center"
+                                            }}
+                                            href="/profile">Profile</Dropdown.Item>
+                                        <Dropdown.Item 
+                                            style={{
+                                                display: "flex",
+                                                justifyContent: "center"
+                                            }}
+                                            href="/logout">Logout</Dropdown.Item>
+                                    </Dropdown.Menu>
+                                </Dropdown>
                             ) : (
                                 <Nav.Link style={LinkStyle} href="/login">
                                     Login
@@ -54,6 +74,13 @@ const NavBar = () => {
 const LinkStyle = {
     textDecoration: 'none',
     color: '#fff'
+}
+
+const LoggedInLink = {
+    textDecoration: 'none',
+    backgroundColor: '#5bc3eb',
+    border: '#5bc3eb',
+    width: '200px'
 }
 
 const NavStyle = {

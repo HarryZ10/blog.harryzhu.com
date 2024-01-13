@@ -55,12 +55,19 @@ class FeedService {
 
     public function makeBlogPost() {
         $content = json_decode(file_get_contents('php://input'), true);
-        $id = PostWriteService::createPost($content);
 
-        return json_encode([
-            'status' => 'Post created',
-            'post_id' => $id
-        ]);
+        if ($content["post_text"]) {
+            $id = PostWriteService::createPost($content);
+
+            return json_encode([
+                'status' => 'Post created',
+                'post_id' => $id
+            ]);
+        } else {
+            return json_encode([
+                'error' => 'No post content',
+            ]); 
+        }
     }
 
     // Comments Feed Service

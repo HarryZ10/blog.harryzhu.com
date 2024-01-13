@@ -8,10 +8,9 @@ class PostWriteService {
     // Authentication Check Needed
     public static function createPost($postBodyData) {
         $stmt = DatabaseService::database()->prepare(
-            "INSERT INTO post (id, user_id, post_date, post_text, extra)
-             VALUES (:id, :user_id, :post_date, :post_text, :extra);"
+            "INSERT INTO post (user_id, post_date, post_text, extra)
+             VALUES (:user_id, :post_date, :post_text, :extra);"
         );
-        $stmt->bindParam(":id", $postBodyData["id"]);
         $stmt->bindParam(":user_id", $postBodyData["user_id"]);
         $stmt->bindParam(":post_date", $postBodyData["post_date"]);
         $stmt->bindParam(":post_text", $postBodyData["post_text"]);
