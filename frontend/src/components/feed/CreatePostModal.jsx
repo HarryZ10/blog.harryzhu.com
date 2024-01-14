@@ -20,7 +20,10 @@ const StyledModal = styled(Modal)`
     }
   }
   .modal-header {
-    border-bottom: 1px solid #0A0A0B !important;
+    border-bottom: 0.6px solid #8c8785 !important;
+    button {
+        margin-left: 0;
+    }
   }
   
   .modal-footer {
@@ -154,57 +157,73 @@ const CreatePostModal = () => {
             <StyledModal show={show} onHide={handleClose}>
                 <div style={modalBackground}>
                     <Modal.Header closeButton>
-                        <Modal.Title style={modalTitleStyle}>What's your Flez?</Modal.Title>
+                        <Modal.Title style={modalTitleStyle}>Create Post</Modal.Title>
                     </Modal.Header>
                     <Modal.Body style={modalTextStyle}>
                         <Form>
                             {/* Text fields */}
                             <Form.Group as={Row}>
-                                <Form.Label column sm={2}>Post Content</Form.Label>
-                                <Col sm={10}>
+                                <Col sm={12}>
                                     <Form.Control
                                         as="textarea"
                                         name="postContent"
+                                        className="post-textarea"
                                         value={formData.postContent}
                                         onChange={handleInputChange}
-                                        style={FormInputStyle}
-                                        rows={4}
+                                        placeholder="What's your flez?"
+                                        style={{...FormInputStyle, ...{
+                                            border: 'none',
+                                            fontSize: '20px',
+                                        }}}
+                                        rows={3}
                                     />
                                 </Col>
                             </Form.Group>
                             <Form.Group as={Row}>
-                                <Form.Label column sm={2}>Base Salary</Form.Label>
-                                <Col sm={10}>
+                                <Form.Label column sm={3}>Base Salary</Form.Label>
+                                <Col sm={12}>
                                     <Form.Control
                                         type="number"
                                         name="baseSalary"
                                         value={formData.baseSalary}
                                         onChange={handleInputChange}
-                                        style={FormInputStyle}
+                                        style={{
+                                            ...FormInputStyle, ...{
+                                                fontSize: '16px',
+                                            }
+                                        }}
                                     />
                                 </Col>
                             </Form.Group>
                             <Form.Group as={Row}>
-                                <Form.Label column sm={2}>Sign-On Bonus</Form.Label>
-                                <Col sm={10}>
+                                <Form.Label column sm={4}>Sign-On Bonus</Form.Label>
+                                <Col sm={12}>
                                     <Form.Control
                                         type="number"
                                         name="signOnBonus"
                                         value={formData.signOnBonus}
                                         onChange={handleInputChange}
-                                        style={FormInputStyle}
+                                        style={{
+                                            ...FormInputStyle, ...{
+                                                fontSize: '16px',
+                                            }
+                                        }}
                                     />
                                 </Col>
                             </Form.Group>
                             <Form.Group as={Row}>
-                                <Form.Label column sm={2}>Equity</Form.Label>
-                                <Col sm={10}>
+                                <Form.Label column sm={3}>Equity</Form.Label>
+                                <Col sm={12}>
                                     <Form.Control
                                         type="number"
                                         name="equity"
                                         value={formData.equity}
                                         onChange={handleInputChange}
-                                        style={FormInputStyle}
+                                        style={{
+                                            ...FormInputStyle, ...{
+                                                fontSize: '16px',
+                                            }
+                                        }}
                                     />
                                 </Col>
                             </Form.Group>
@@ -346,7 +365,7 @@ const FormInputStyle = {
     backgroundColor: themes.dark.colors.modalTextInput,
     border: '1px solid #3D3D42',
     color: themes.dark.colors.postText,
-    marginBottom: '15px',
+    marginBottom: '10px',
 }
 
 const FormCheckboxStyle = {
@@ -354,13 +373,11 @@ const FormCheckboxStyle = {
     color: '#fff'
 }
 
-
 const modalTitleStyle = {
     fontFamily: "Outfit",
     fontWeight: '300',
     letterSpacing: "0.05rem",
-    display: "flex",
-    justifyContent: "center",
+    marginLeft: '10px'
 }
 
 const modalTextStyle = {
