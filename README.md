@@ -31,9 +31,7 @@ Configuration file for the backend, includes database settings and other configu
 
 ### Frontend Structure
 
-#### `/frontend`
 The main directory for the frontend part of the project.
-- `node_modules`: Contains npm packages used in the project.
 - `public`: Public assets for the frontend.
 - `src`: Source files for the frontend application.
   - `api`: Contains files related to API calls.
@@ -46,8 +44,6 @@ The main directory for the frontend part of the project.
   - `App.js`: Main React application file.
   - `index.js`: Entry point for the React application.
   - `routes.js`: Defines the routing for the frontend application.
-- `.gitignore`: Specifies files to be ignored by Git.
-- `package-lock.json` & `package.json`: NPM configuration and dependency files.
 
 ## Installation
 
