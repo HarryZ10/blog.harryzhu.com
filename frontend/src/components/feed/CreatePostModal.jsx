@@ -99,57 +99,72 @@ const CreatePostModal = () => {
     };
 
     const confirmPost = async () => {
-        try {
-            const user_id = getUserIdFromToken();
-            if (!user_id) {
-                console.error('User ID not found in token');
-                return;
-            }
+        if (isButtonEnabled) {
+            try {
+                const user_id = getUserIdFromToken();
+                if (!user_id) {
+                    console.error('User ID not found in token');
+                    return;
+                }
 
-            const postData = {
-                user_id,
-                post_date: new Date().toISOString().split('T')[0], // YYYY-MM-DD format
-                post_text: formData.postContent,
-                extra: {
-                    jobOfferInfo: {
-                        baseSalary: formData.baseSalary,
-                        equity: formData.equity,
-                        signOnBonus: formData.signOnBonus,
-                        otherOptions: {
-                            unlimitedPTO: formData.unlimitedPTO,
-                            has401k: formData.has401k,
-                            healthInsurance: {
-                                medical: formData.medicalInsurance,
-                                dental: formData.dentalInsurance,
-                                vision: formData.visionInsurance
-                            },
-                            flexibleWorkHours: formData.flexibleWorkHours,
-                            remoteWorkOptions: formData.remoteWorkOptions,
-                            relocationAssistance: formData.relocationAssistance,
-                            maternityPaternityLeave: formData.maternityPaternityLeave,
-                            gymMembership: formData.gymMembership,
-                            tuitionAssistance: formData.tuitionAssistance,
+                const postData = {
+                    user_id,
+                    post_date: new Date().toISOString().split('T')[0], // YYYY-MM-DD format
+                    post_text: formData.postContent,
+                    extra: {
+                        jobOfferInfo: {
+                            baseSalary: formData.baseSalary,
+                            equity: formData.equity,
+                            signOnBonus: formData.signOnBonus,
+                            otherOptions: {
+                                unlimitedPTO: formData.unlimitedPTO,
+                                has401k: formData.has401k,
+                                healthInsurance: {
+                                    medical: formData.medicalInsurance,
+                                    dental: formData.dentalInsurance,
+                                    vision: formData.visionInsurance
+                                },
+                                flexibleWorkHours: formData.flexibleWorkHours,
+                                remoteWorkOptions: formData.remoteWorkOptions,
+                                relocationAssistance: formData.relocationAssistance,
+                                maternityPaternityLeave: formData.maternityPaternityLeave,
+                                gymMembership: formData.gymMembership,
+                                tuitionAssistance: formData.tuitionAssistance,
+                            }
+                        }
+                    }
+                };
+
+                const response = await createPost(postData);
+                if (response.status == "Post created") {
+                    setPostCreated(true);
+                    handleClose();
+                } else {
+                    if (response.error) {
+                        if (response.error == "No post content") {
+                            alert("Post must have content!");
                         }
                     }
                 }
-            };
 
-            const response = await createPost(postData);
-            if (response.status == "Post created") {
-                setPostCreated(true);
-                handleClose();
-            } else {
-                if (response.error) {
-                    if (response.error == "No post content") {
-                        alert("Post must have content!");
-                    }
-                }
+            } catch (error) {
+                console.error("Post error: " + error);
             }
-
-        } catch (error) {
-            console.error("Post error: " + error);
         }
     };
+
+    const modalButtonStyle = {
+        fontFamily: "Cabin",
+        fontWeight: '400',
+        fontSize: '16px',
+        width: '70%',
+        margin: '10px auto',
+        backgroundColor: isButtonEnabled ? themes.dark.colors.submission : '#b193ca',
+        color: themes.dark.colors.postText,
+        borderColor: isButtonEnabled ? themes.dark.colors.submission : '#b193ca',
+        borderRadius: '15px',
+        transition: 'transform 0.3s, background-color 0.3s, border-color 0.3s'
+    }
 
     return (
         <>
@@ -346,10 +361,12 @@ const CreatePostModal = () => {
         
                     <Modal.Footer>
                         <Button
-                            style={modalButtonStyle}
-                            className="hover-effect-button"
+                            style={{
+                                ...modalButtonStyle,
+                                cursor: !isButtonEnabled ? 'not-allowed' : 'pointer'
+                            }}
+                            className= {isButtonEnabled ? "hover-effect-button" : ''}
                             variant="primary"
-                            disabled={!isButtonEnabled}
                             onClick={confirmPost}>
                             Flez it
                         </Button>
@@ -390,19 +407,5 @@ const modalBackground = {
     borderRadius: '20px',
     width: '100%',
 }
-
-const modalButtonStyle = {
-    fontFamily: "Cabin",
-    fontWeight: '400',
-    fontSize: '16px',
-    width: '70%',
-    margin: '10px auto',
-    backgroundColor: themes.dark.colors.submission,
-    color: themes.dark.colors.postText,
-    borderColor: themes.dark.colors.submission,
-    borderRadius: '15px',
-    transition: 'transform 0.3s, background-color 0.3s, border-color 0.3s'
-}
-
 
 export default CreatePostModal;
