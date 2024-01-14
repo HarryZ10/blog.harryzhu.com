@@ -49,11 +49,6 @@ The main directory for the frontend part of the project.
 - `.gitignore`: Specifies files to be ignored by Git.
 - `package-lock.json` & `package.json`: NPM configuration and dependency files.
 
-#### `/index.php`
-The entry point for the backend application.
-
----
-
 ## Installation
 
 ### Backend Setup
