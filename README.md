@@ -38,7 +38,6 @@ The main directory for the frontend part of the project.
 - `src`: Source files for the frontend application.
   - `api`: Contains files related to API calls.
   - `components`: React components used in the application.
-  - `fonts`: Fonts used in the frontend.
   - `pages`: Contains the React components for different pages.
     - `BlogPage.jsx`: The blog page component.
     - `HomePage.jsx`: The home page component.
