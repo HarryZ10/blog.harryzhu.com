@@ -57,12 +57,19 @@ class FeedService {
         $content = json_decode(file_get_contents('php://input'), true);
 
         if ($content["post_text"]) {
-            $id = PostWriteService::createPost($content);
 
-            return json_encode([
-                'status' => 'Post created',
-                'post_id' => $id
-            ]);
+            if (strlen($content["post_text"]) <= 150) {
+                $id = PostWriteService::createPost($content);
+
+                return json_encode([
+                    'status' => 'Post created',
+                    'post_id' => $id
+                ]);
+            } else {
+                return json_encode([
+                    'error' => 'Character limit exceeded',
+                ]);  
+            }
         } else {
             return json_encode([
                 'error' => 'No post content',

@@ -75,17 +75,20 @@ const BlogPage = () => {
             <PageTitle>
                 Flez Feed.
             </PageTitle>
-            {posts.map(post => (
-                <PostCard
-                    key={post.id}
-                    post_id={post.id}
-                    post_text={post.post_text}
-                    post_date={post.post_date}
-                    user_id={post.user_id}
-                    additional_info={post.extra}
-                    onDelete={() => onDeleteHandler(post.id, post.user_id)}
-                />
-            ))}
+            {posts
+                .sort((a, b) => new Date(b.post_date) - new Date(a.post_date))
+                .map(post => (
+                    <PostCard
+                        key={post.id}
+                        post_id={post.id}
+                        post_text={post.post_text}
+                        post_date={post.post_date}
+                        user_id={post.user_id}
+                        additional_info={post.extra}
+                        onDelete={() => onDeleteHandler(post.id, post.user_id)}
+                    />
+                ))
+            }
             <CreatePostModal />
         </div>
     );

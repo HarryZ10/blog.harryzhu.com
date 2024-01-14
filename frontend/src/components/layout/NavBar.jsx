@@ -26,6 +26,8 @@ export const Styles = {
 
 const NavBar = () => {
     const [username, setUsername] = useState('');
+    const [expDate, setExpDate] = useState('');
+    const [isTokenExpired, setIsTokenExpired] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
 
     // Dropdown
@@ -39,7 +41,12 @@ const NavBar = () => {
         if (token) {
             // Decode the token to get the username
             const decodedToken = jwtDecode(token);
-            setUsername(decodedToken.username); // Adjust according to the token's structure
+            setUsername(decodedToken.username);
+            setExpDate(new Date(decodedToken.exp * 1000));
+
+            // Check if the token is expired
+            const now = new Date();
+            setIsTokenExpired(decodedToken.exp * 1000 < now.getTime());
         }
     }, []);
 
@@ -57,7 +64,7 @@ const NavBar = () => {
                     </Navbar.Collapse>
                     <Navbar.Collapse className="justify-content-end">
                         <Nav>
-                            {username ? (
+                            {username && !isTokenExpired ? (
                                 <Dropdown show={isOpen} onToggle={toggleDropdown}>
                                     <Dropdown.Toggle style={{...LoggedInLink, ... Styles.button}}>
                                         {username}

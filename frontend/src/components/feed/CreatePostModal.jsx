@@ -59,8 +59,12 @@ const CreatePostModal = () => {
     const handleShow = () => setShow(true);
 
     useEffect(() => {
-        setIsButtonEnabled(formData.postContent.trim() !== '');
-    }, [formData.postContent]);
+        if (formData.postContent.length <= 150) {
+            setIsButtonEnabled(formData.postContent.trim() !== '');
+        } else {
+            setIsButtonEnabled(false);
+        }
+    }, [formData.postContent, formData.postContent.length]);
 
     useEffect(() => {
         if (postCreated) {
@@ -143,6 +147,8 @@ const CreatePostModal = () => {
                     if (response.error) {
                         if (response.error == "No post content") {
                             alert("Post must have content!");
+                        } else if (response.error == "Character limit exceeded") {
+                            alert("Post must be less than 150 characters.");
                         }
                     }
                 }
@@ -152,6 +158,13 @@ const CreatePostModal = () => {
             }
         }
     };
+
+    const CharacterCount = styled.div`
+        color: ${formData.postContent.length > 150 ? "#c9163a" : "#777"};
+        font-size: 14px;
+        margin-top: 5px;
+        text-align: right;
+    `
 
     const modalButtonStyle = {
         fontFamily: "Cabin",
@@ -190,8 +203,11 @@ const CreatePostModal = () => {
                                             border: 'none',
                                             fontSize: '20px',
                                         }}}
-                                        rows={3}
+                                        rows={2}
                                     />
+                                    <CharacterCount>
+                                        {formData.postContent.length} characters
+                                    </CharacterCount>
                                 </Col>
                             </Form.Group>
                             <Form.Group as={Row}>
@@ -365,7 +381,9 @@ const CreatePostModal = () => {
                                 ...modalButtonStyle,
                                 cursor: !isButtonEnabled ? 'not-allowed' : 'pointer'
                             }}
-                            className= {isButtonEnabled ? "hover-effect-button" : ''}
+
+                            className={isButtonEnabled ? "hover-effect-button" : ''}
+
                             variant="primary"
                             onClick={confirmPost}>
                             Flez it
