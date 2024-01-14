@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import CreatePostModal from '../components/feed/CreatePostModal';
 import NavBar from '../components/layout/NavBar';
 import { getAllPosts, deletePost } from '../api/PostsAPI';
-import PostCard from '../components/feed/PostCard';
+import PostCard from '../components/feed/post/PostCard';
 import { PageSubTitle } from '../pages/HomePage';
 import styled from "styled-components";
 import { useNavigate } from 'react-router-dom';

@@ -14,7 +14,6 @@ const RoutesHandler = () => {
     <Router>
       <Routes>
         <Route path="/" element={<HomePage/>} />
-        {/* <Route path="/posts/:id" element={<PostPage/>} /> */}
         <Route path="/feed" element={<BlogPage/>} />
         <Route path="/login" element={<LoginPage/>} />
         <Route path="/logout" element={<Logout /> } />

@@ -1,16 +1,4 @@
 const themes = {
-  light: {
-    colors: {
-      primary: '#007bff',
-      secondary: '#6c757d',
-      background: '#ffffff',
-      text: '#36382e',
-      // other colors specific to light mode...
-    },
-    fonts: {
-      primary: 'Helvetica, Arial, sans-serif',
-    },
-  },
   dark: {
     colors: {
       primary: '#007bff',
@@ -26,7 +14,6 @@ const themes = {
       modalBackground: '#333338',
       modalTextInput: '#333338',
       submission: '#642895',
-      // other colors specific to dark mode...
     },
     fonts: {
       primary: 'Helvetica, Arial, sans-serif',

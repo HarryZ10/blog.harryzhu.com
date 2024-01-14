@@ -1,10 +1,10 @@
 .hover-effect-button:hover {
     transform: scale(1.1); /* Scale up the button */
-    background-color: #531E76 !important; /* Change to the new color */
-    border-color: #531E76 !important; /* Optional: Change border color if needed */
+    background-color: #531E76 !important;
+    border-color: #531E76 !important;
 }
 
 .post-textarea::placeholder {
-  color: #bdb7b5 !important; /* Replace with your desired color */
+  color: #bdb7b5 !important;
   font-size: 20px;
 }

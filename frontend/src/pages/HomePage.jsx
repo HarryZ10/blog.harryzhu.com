@@ -1,13 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Header from '../components/layout/Header';
-import Footer from '../components/layout/Footer';
 import NavBar from '../components/layout/NavBar';
-
-// Styled components
-const PageContainer = styled.div`
-  // Your styles here
-`;
 
 const PageTitle = styled.h1`
     font-weight: 800;
@@ -36,10 +29,6 @@ export const PageSubTitle = styled.h1`
     letter-spacing: 0;
     margin-bottom: ${(props) => props.projectHeading ? '52px' : '16px'};
     padding: ${(props) => props.main ? '28px 0 16px' : '0'};
-`;
-
-const Content = styled.main`
-  // Styling for main content area
 `;
 
 // Home Page component

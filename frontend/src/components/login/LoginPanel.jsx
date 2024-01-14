@@ -42,10 +42,10 @@ export const PageStyles = {
     },
     registerLink: {
         color: '#007bff', // Blue color for the link
-        textDecoration: 'none', // Optional: removes underline from the link
-        marginTop: '10px', // Spacing above the link
+        textDecoration: 'none',
+        marginTop: '10px',
         display: 'block', // Ensures the link is on a new line
-        textAlign: 'center', // Centers the link
+        textAlign: 'center',
         textDecoration: 'none',
         cursor: 'pointer'
     }

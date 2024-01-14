@@ -6,8 +6,8 @@ import Card from "react-bootstrap/Card";
 import { Row, Col } from 'react-bootstrap';
 import Button from "react-bootstrap/Button";
 import Collapse from "react-bootstrap/Collapse";
-import { getUsername } from "../../api/UsersAPI";
-import themes from "../../styles/themes";
+import { getUsername } from "../../../api/UsersAPI";
+import themes from "../../../styles/themes";
 
 const PostCardStyle = {
     width: "80%",
