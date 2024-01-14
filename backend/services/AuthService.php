@@ -97,8 +97,7 @@ class AuthService {
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         // verifies the hash of the password stored in our database and provided password
-        // && password_verify($password, $user['password'])
-        if (isset($user)) {
+        if (isset($user) && password_verify($password, $user['password'])) {
             $result = $user;
         } else {
             $result = false;

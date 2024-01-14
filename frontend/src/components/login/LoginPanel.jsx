@@ -3,37 +3,41 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useNavigate } from "react-router-dom";
 import { login, register } from "../../api/UsersAPI";
+import themes from "../../styles/themes";
 
-const Styles = {
+export const PageStyles = {
     container: {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         height: '500px',
-        backgroundColor: 'white'
+        backgroundColor: themes.dark.colors.background,
     },
     form: {
         width: '300px',
         padding: '20px',
         boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)', // Adds a subtle shadow for the box effect
         borderRadius: '5px',
-        backgroundColor: '#fff'
+        backgroundColor: themes.dark.colors.postBackground,
     },
     button: {
-        backgroundColor: '#007bff',
+        backgroundColor: '#2286f2',
+        borderColor: '#2286f2',
         color: 'white',
         border: 'none',
-        padding: '10px 15px',
-        borderRadius: '5px',
+        borderRadius: '20px',
         transition: 'background-color 0.3s, transform 0.3s',
-        marginTop: '10px',
+        marginTop: '50px',
         display: 'block',
+        width: '100%',
+        height: '40px',
         marginLeft: 'auto', // Centers the button
         marginRight: 'auto', // Centers the button
         width: '100%' // Full width
     },
     buttonHover: {
-        backgroundColor: '#0056b3', // Darker shade for hover
+        backgroundColor: '#114278',
+        borderColor: '#114278',
         transform: 'scale(1.05)'
     },
     registerLink: {
@@ -42,7 +46,8 @@ const Styles = {
         marginTop: '10px', // Spacing above the link
         display: 'block', // Ensures the link is on a new line
         textAlign: 'center', // Centers the link
-        textDecoration: 'none'
+        textDecoration: 'none',
+        cursor: 'pointer'
     }
 };
 
@@ -73,9 +78,8 @@ const LoginPanel = () => {
             // Post-login success logic
             history("/"); // Redirect user to the saved URI or a default path
 
-        } catch (error) {
-            // Handle login error
-            console.error("Login failed:", error);
+        } catch (err) {
+            alert("Login failed");
         }
     };
 
@@ -90,18 +94,18 @@ const LoginPanel = () => {
             alert("Registered!");
         } catch (error) {
             // Handle login error
-            console.error("Register failed:", error);
+            alert("Registration failed");
         }
     };
 
     return (
-        <div style={Styles.container}>
-            <Form style={Styles.form}>
+        <div style={PageStyles.container}>
+            <Form style={PageStyles.form}>
                 <Form.Group className="mb-3" controlId="formBasicUsername">
                     <Form.Label>Username</Form.Label>
                     <Form.Control
                         type="text"
-                        placeholder="Enter email"
+                        placeholder="Enter username"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)} // Update username
                     />
@@ -118,7 +122,7 @@ const LoginPanel = () => {
                 </Form.Group>
 
                 <Button
-                    style={{ ...Styles.button, ...(isHovered ? Styles.buttonHover : null) }}
+                    style={{ ...PageStyles.button, ...(isHovered ? PageStyles.buttonHover : null) }}
                     onMouseEnter={() => setIsHovered(true)}
                     onMouseLeave={() => setIsHovered(false)}
                     variant="primary"
@@ -128,7 +132,7 @@ const LoginPanel = () => {
                     {isRegistering ? "Register" : "Login"}
                 </Button>
 
-                <a style={Styles.registerLink} onClick={toggleForm}>
+                <a style={PageStyles.registerLink} onClick={toggleForm}>
                     {isRegistering ? "or login" : "or register"}
                 </a>
             </Form>

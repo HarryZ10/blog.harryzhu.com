@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 const PageTitle = styled.h1`
     font-weight: 800;
     font-family: 'Outfit';
-    color: #36382e;
+    color: ${(props) => props.theme.dark.colors.skyblueHighlight };
     font-size: 82px;
     line-height: ${(props) => props.main ? '72px' : '56px'};
     width: max-content;
@@ -74,7 +74,6 @@ const BlogPage = () => {
             <PageTitle>
                 Flez Feed.
             </PageTitle>
-            <PageSubTitle>flex easy</PageSubTitle>
             {posts.map(post => (
                 <PostCard
                     key={post.id}

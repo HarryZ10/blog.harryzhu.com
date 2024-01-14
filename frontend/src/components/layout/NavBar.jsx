@@ -1,14 +1,38 @@
 import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
+import '../../styles/navbar.css';
+
+export const Styles = {
+    button: {
+        // backgroundColor: '#5bc3eb',
+        background: 'transparent',
+        color: 'white',
+        border: 'none',
+        padding: '10px 15px',
+        // borderRadius: '45px',
+        transition: 'background-color 0.3s, transform 0.3s',
+        marginTop: '10px',
+        display: 'block',
+        marginLeft: 'auto', // Centers the button
+        marginRight: 'auto', // Centers the button
+    }
+};
 
 const NavBar = () => {
     const [username, setUsername] = useState('');
+    const [isOpen, setIsOpen] = useState(false);
 
+    // Dropdown
+    const toggleDropdown = () => setIsOpen(!isOpen);
+    const menuClass = isOpen ? "dropdown-menu-enter" : "";
+
+    // Get username to display
     useEffect(() => {
         // Get the token from cookies
         const token = Cookies.get('token');
@@ -35,14 +59,11 @@ const NavBar = () => {
                     <Navbar.Collapse className="justify-content-end">
                         <Nav>
                             {username ? (
-                                <Dropdown>
-                                    <Dropdown.Toggle style={LoggedInLink} id="dropdown-basic">
+                                <Dropdown show={isOpen} onToggle={toggleDropdown}>
+                                    <Dropdown.Toggle style={{...LoggedInLink, ... Styles.button}}>
                                         {username}
                                     </Dropdown.Toggle>
-                                    <Dropdown.Menu
-                                        style={{
-                                            width: "200px"
-                                        }}>
+                                    <Dropdown.Menu style={{ width: "200px" }} className={menuClass}>
                                         <Dropdown.Item
                                             style={{
                                                 display: "flex",
@@ -78,13 +99,13 @@ const LinkStyle = {
 
 const LoggedInLink = {
     textDecoration: 'none',
-    backgroundColor: '#5bc3eb',
     border: '#5bc3eb',
     width: '200px'
 }
 
 const NavStyle = {
-    backgroundColor: '#36382e',
+    fontFamily: 'Outfit',
+    fontSize: '19px',
 }
 
 export default NavBar;
