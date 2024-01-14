@@ -36,13 +36,11 @@ const HomePage = () => {
 
     return (
         <>
-            <PageContainer>
-                <NavBar />
-                <Content>
-                    <PageTitle>Flez it.</PageTitle>
-                    <PageSubTitle>flex and easy</PageSubTitle>
-                </Content>
-            </PageContainer>
+            <NavBar />
+            <section>
+                <PageTitle>Flez it.</PageTitle>
+                <PageSubTitle>flex and easy</PageSubTitle>
+            </section>
         </>
     );
 };
