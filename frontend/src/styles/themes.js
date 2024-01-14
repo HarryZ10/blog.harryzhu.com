@@ -23,9 +23,9 @@ const themes = {
       postText: '#ede6e3',
       danger: '#733226',
       cardBorder: '#424242',
-      modalBackground: '#3f5745',
-      modalTextInput: '#cad9cd',
-      submission: '#233827',
+      modalBackground: '#333338',
+      modalTextInput: '#333338',
+      submission: '#642895',
       // other colors specific to dark mode...
     },
     fonts: {

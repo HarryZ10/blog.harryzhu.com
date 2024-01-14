@@ -8,7 +8,7 @@ class PostReadService {
     // Retrieve all posts
     // Unauthenticated OKAY
     public static function fetchAllPosts() {
-        $stmt = DatabaseService::database()->query("SELECT * FROM post;");
+        $stmt = DatabaseService::database()->query("SELECT * FROM post ORDER BY post_date DESC;");
         $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $result = [];
         foreach ($posts as $post) {

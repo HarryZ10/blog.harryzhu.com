@@ -27,3 +27,7 @@
 .dropdown-menu-exit {
   animation: slideUp 0.5s ease forwards;
 }
+
+.custom-toggler .navbar-toggler-icon {
+    filter: invert(100%);
+}

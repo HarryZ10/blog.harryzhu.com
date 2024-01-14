@@ -48,14 +48,13 @@ const NavBar = () => {
             <Navbar style={NavStyle} expand="lg">
                 <Container>
                     <Navbar.Brand style={LinkStyle} href="/">Flez</Navbar.Brand>
-                    <Navbar.Toggle />
+                    <Navbar.Toggle aria-controls="responsive-navbar-nav" className="custom-toggler" />
                     <Navbar.Collapse>
                         <Nav>
                             <Nav.Link style={LinkStyle} href="/">Home</Nav.Link>
                             <Nav.Link style={LinkStyle} href="/feed">Blog</Nav.Link>
                         </Nav>
                     </Navbar.Collapse>
-
                     <Navbar.Collapse className="justify-content-end">
                         <Nav>
                             {username ? (
@@ -104,6 +103,8 @@ const LoggedInLink = {
 }
 
 const NavStyle = {
+    marginLeft: '50px',
+    marginRight: '50px',
     fontFamily: 'Outfit',
     fontSize: '19px',
 }

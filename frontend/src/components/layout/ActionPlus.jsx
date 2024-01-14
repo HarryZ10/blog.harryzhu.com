@@ -8,7 +8,7 @@ const Button = styled.div`
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background-color: #007bff;
+  background-color: #8b45de;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -18,12 +18,12 @@ const Button = styled.div`
 
   // Hover effects
   transition: all 0.3s ease;
-  box-shadow: 0 0 10px #007bff;
+  box-shadow: 0 0 10px #a25afa;
 
   &:hover {
     transform: scale(1.1);
-    background-color: #5bc3eb;
-    box-shadow: 0 0 15px #5bc3eb;
+    background-color: #a25afa;
+    box-shadow: 0 0 15px #d7b8fc;
   }
 `;
 

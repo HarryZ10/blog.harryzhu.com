@@ -49,6 +49,7 @@ const BlogPage = () => {
       fetchPosts();
     }, [])
 
+    
     const onDeleteHandler = async (post_id, user_id) => {
         try {
             const status = await deletePost(post_id, user_id);

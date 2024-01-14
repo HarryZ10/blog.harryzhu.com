@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
-import { Form, FormGroup, FormControl, FormLabel } from 'react-bootstrap';
+import { Modal, Button, Form, Row, Col, FormCheck } from 'react-bootstrap';
 import Cookies from 'js-cookie';
 import styled from 'styled-components';
 import { jwtDecode } from 'jwt-decode';
-import { useNavigate } from 'react-router-dom';
-import ActionPlus from '../layout/ActionPlus';
 import { createPost } from '../../api/PostsAPI';
+import ActionPlus from '../layout/ActionPlus';
 import themes from '../../styles/themes';
 import "../../styles/createPost.css"
 
@@ -15,9 +12,19 @@ const StyledModal = styled(Modal)`
   .modal-content {
     background: transparent;
     width: 100%;
+
+     @media (max-width: 768px) { // For mobile phones
+        width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+    }
   }
-  .modal-dialog {
-    width: 100%
+  .modal-header {
+    border-bottom: 1px solid #0A0A0B !important;
+  }
+  
+  .modal-footer {
+    border-top: none !important;
   }
 `;
 
@@ -25,16 +32,32 @@ const CreatePostModal = () => {
 
     const [show, setShow] = useState(false);
     const [postCreated, setPostCreated] = useState(false);
+    const [isButtonEnabled, setIsButtonEnabled] = useState(false);
 
-    const [postContent, setPostContent] = useState('');
-    const [baseSalary, setBaseSalary] = useState('');
-    const [bonus, setBonus] = useState('');
-    const [unlimitedPTO, setUnlimitedPTO] = useState(false);
-    const [has401k, setHas401k] = useState(false);
+    const [formData, setFormData] = useState({
+        postContent: '',
+        baseSalary: '',
+        signOnBonus: '',
+        equity: '',
+        unlimitedPTO: false,
+        has401k: false,
+        medicalInsurance: false,
+        dentalInsurance: false,
+        visionInsurance: false,
+        flexibleWorkHours: false,
+        remoteWorkOptions: false,
+        relocationAssistance: false,
+        maternityPaternityLeave: false,
+        gymMembership: false,
+        tuitionAssistance: false,
+    });
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    const navigate = useNavigate();
+
+    useEffect(() => {
+        setIsButtonEnabled(formData.postContent.trim() !== '');
+    }, [formData.postContent]);
 
     useEffect(() => {
         if (postCreated) {
@@ -56,24 +79,19 @@ const CreatePostModal = () => {
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
 
-        switch (name) {
-            case 'postContent':
-                setPostContent(value);
-                break;
-            case 'baseSalary':
-                setBaseSalary(value);
-                break;
-            case 'bonus':
-                setBonus(value);
-                break;
-            case 'unlimitedPTO':
-                setUnlimitedPTO(checked);
-                break;
-            case 'has401k':
-                setHas401k(checked);
-                break;
-            default:
-                break;
+        // If it is a checkbox, just get the value out of 'checked'
+        if (type === 'checkbox') {
+            // prevState refers to the current state of formData before the update is applied
+            // and then we "spread" it to include it in the newly filled in input value
+            setFormData(prevState => ({
+                ...prevState,
+                [name]: checked
+            }));
+        } else {
+            setFormData(prevState => ({
+                ...prevState,
+                [name]: value
+            }));
         }
     };
 
@@ -88,13 +106,27 @@ const CreatePostModal = () => {
             const postData = {
                 user_id,
                 post_date: new Date().toISOString().split('T')[0], // YYYY-MM-DD format
-                post_text: postContent,
+                post_text: formData.postContent,
                 extra: {
                     jobOfferInfo: {
-                        baseSalary: baseSalary,
-                        bonus: bonus,
-                        unlimitedPTO: unlimitedPTO,
-                        has401k: has401k
+                        baseSalary: formData.baseSalary,
+                        equity: formData.equity,
+                        signOnBonus: formData.signOnBonus,
+                        otherOptions: {
+                            unlimitedPTO: formData.unlimitedPTO,
+                            has401k: formData.has401k,
+                            healthInsurance: {
+                                medical: formData.medicalInsurance,
+                                dental: formData.dentalInsurance,
+                                vision: formData.visionInsurance
+                            },
+                            flexibleWorkHours: formData.flexibleWorkHours,
+                            remoteWorkOptions: formData.remoteWorkOptions,
+                            relocationAssistance: formData.relocationAssistance,
+                            maternityPaternityLeave: formData.maternityPaternityLeave,
+                            gymMembership: formData.gymMembership,
+                            tuitionAssistance: formData.tuitionAssistance,
+                        }
                     }
                 }
             };
@@ -126,70 +158,179 @@ const CreatePostModal = () => {
                     </Modal.Header>
                     <Modal.Body style={modalTextStyle}>
                         <Form>
-                            <FormGroup>
-                                <FormLabel>Your flezzy insights</FormLabel>
-                                <FormControl
-                                    as="textarea"
-                                    label="Post"
-                                    value={postContent}
-                                    onChange={handleInputChange}
-                                    name="postContent"
-                                    style={FormInputStyle}
-                                />
-                            </FormGroup>
-                            <FormGroup>
-                                <FormLabel>Base Salary</FormLabel>
-                                <FormControl
-                                    type="number"
-                                    label="Base Salary"
-                                    value={baseSalary}
-                                    onChange={handleInputChange}
-                                    name="baseSalary"
-                                    style={FormInputStyle}
-                                />
-                            </FormGroup>
+                            {/* Text fields */}
+                            <Form.Group as={Row}>
+                                <Form.Label column sm={2}>Post Content</Form.Label>
+                                <Col sm={10}>
+                                    <Form.Control
+                                        as="textarea"
+                                        name="postContent"
+                                        value={formData.postContent}
+                                        onChange={handleInputChange}
+                                        style={FormInputStyle}
+                                        rows={4}
+                                    />
+                                </Col>
+                            </Form.Group>
+                            <Form.Group as={Row}>
+                                <Form.Label column sm={2}>Base Salary</Form.Label>
+                                <Col sm={10}>
+                                    <Form.Control
+                                        type="number"
+                                        name="baseSalary"
+                                        value={formData.baseSalary}
+                                        onChange={handleInputChange}
+                                        style={FormInputStyle}
+                                    />
+                                </Col>
+                            </Form.Group>
+                            <Form.Group as={Row}>
+                                <Form.Label column sm={2}>Sign-On Bonus</Form.Label>
+                                <Col sm={10}>
+                                    <Form.Control
+                                        type="number"
+                                        name="signOnBonus"
+                                        value={formData.signOnBonus}
+                                        onChange={handleInputChange}
+                                        style={FormInputStyle}
+                                    />
+                                </Col>
+                            </Form.Group>
+                            <Form.Group as={Row}>
+                                <Form.Label column sm={2}>Equity</Form.Label>
+                                <Col sm={10}>
+                                    <Form.Control
+                                        type="number"
+                                        name="equity"
+                                        value={formData.equity}
+                                        onChange={handleInputChange}
+                                        style={FormInputStyle}
+                                    />
+                                </Col>
+                            </Form.Group>
 
-                            <FormGroup>
-                                <FormLabel>Bonus</FormLabel>
-                                <FormControl
-                                    style={FormInputStyle}
-                                    type="number"
-                                    label="Bonus"
-                                    value={bonus}
-                                    onChange={handleInputChange}
-                                    name="bonus"
-                                // Add state management and onChange handler as needed
-                                />
-                            </FormGroup>
-
-                            <FormGroup>
-                                <Form.Check
-                                    type="checkbox"
-                                    label="Unlimited PTO"
-                                    value={unlimitedPTO}
-                                    onChange={handleInputChange}
-                                    name="Unlimited PTO"
-                                    style={FormCheckboxStyle}
-                                />
-                            </FormGroup>
-
-                            <FormGroup>
-                                <Form.Check
-                                    type="checkbox"
-                                    style={FormCheckboxStyle}
-                                    label="401k matching"
-                                    name="401K matching"
-                                    value={has401k}
-                                    onChange={handleInputChange}
-                                />
-                            </FormGroup>
-                        </Form>
+                            {/* True/False Questions */}
+                            <Row>
+                                <Col sm={6} md={6} xs={6}>
+                                    <Form.Check
+                                        type="checkbox"
+                                        label="Unlimited PTO"
+                                        name="unlimitedPTO"
+                                        checked={formData.unlimitedPTO}
+                                        onChange={handleInputChange}
+                                        style={FormCheckboxStyle}
+                                    />
+                                </Col>
+                                <Col sm={6} md={6} xs={6}>
+                                    <Form.Check
+                                        type="checkbox"
+                                        label="Has 401k"
+                                        name="has401k"
+                                        checked={formData.has401k}
+                                        onChange={handleInputChange}
+                                        style={FormCheckboxStyle}
+                                    />
+                                </Col>
+                                <Col sm={6} md={6} xs={6}>
+                                    <Form.Check
+                                        type="checkbox"
+                                        label="Medical Insurance"
+                                        name="medicalInsurance"
+                                        checked={formData.medicalInsurance}
+                                        onChange={handleInputChange}
+                                        style={FormCheckboxStyle}
+                                    />
+                                </Col>
+                                <Col sm={6} md={6} xs={6}>
+                                    <Form.Check
+                                        type="checkbox"
+                                        label="Dental Insurance"
+                                        name="dentalInsurance"
+                                        checked={formData.dentalInsurance}
+                                        onChange={handleInputChange}
+                                        style={FormCheckboxStyle}
+                                    />
+                                </Col>
+                                <Col sm={6} md={6} xs={6}>
+                                    <Form.Check
+                                        type="checkbox"
+                                        label="Vision Insurance"
+                                        name="visionInsurance"
+                                        checked={formData.visionInsurance}
+                                        style={FormCheckboxStyle}
+                                        onChange={handleInputChange}
+                                    />
+                                </Col>
+                                <Col sm={6} md={6} xs={6}>
+                                    <Form.Check
+                                        type="checkbox"
+                                        label="Flexible Work Hours"
+                                        name="flexibleWorkHours"
+                                        checked={formData.flexibleWorkHours}
+                                        onChange={handleInputChange}
+                                        style={FormCheckboxStyle}
+                                    />
+                                </Col>
+                                <Col sm={6} md={6} xs={6}>
+                                    <Form.Check
+                                        type="checkbox"
+                                        label="Remote Work Options"
+                                        name="remoteWorkOptions"
+                                        checked={formData.remoteWorkOptions}
+                                        onChange={handleInputChange}
+                                        style={FormCheckboxStyle}
+                                    />
+                                </Col>
+                                <Col sm={6} md={6} xs={6}>
+                                    <Form.Check
+                                        type="checkbox"
+                                        label="Relocation Assistance"
+                                        name="relocationAssistance"
+                                        checked={formData.relocationAssistance}
+                                        onChange={handleInputChange}
+                                        style={FormCheckboxStyle}
+                                    />
+                                </Col>
+                                <Col sm={6} md={6} xs={6}>
+                                    <Form.Check
+                                        type="checkbox"
+                                        label="Maternity/Paternity Leave"
+                                        name="maternityPaternityLeave"
+                                        checked={formData.maternityPaternityLeave}
+                                        onChange={handleInputChange}
+                                        style={FormCheckboxStyle}
+                                    />
+                                </Col>
+                                <Col sm={6} md={6} xs={6}>
+                                    <Form.Check
+                                        type="checkbox"
+                                        label="Gym Membership"
+                                        name="gymMembership"
+                                        checked={formData.gymMembership}
+                                        onChange={handleInputChange}
+                                        style={FormCheckboxStyle}
+                                    />
+                                </Col>
+                                <Col sm={6} md={6} xs={6}>
+                                    <Form.Check
+                                        type="checkbox"
+                                        label="Tuition Assistance"
+                                        name="tuitionAssistance"
+                                        checked={formData.tuitionAssistance}
+                                        onChange={handleInputChange}
+                                        style={FormCheckboxStyle}
+                                    />
+                                </Col>
+                            </Row>
+                         </Form>
                     </Modal.Body>
+        
                     <Modal.Footer>
                         <Button
                             style={modalButtonStyle}
                             className="hover-effect-button"
                             variant="primary"
+                            disabled={!isButtonEnabled}
                             onClick={confirmPost}>
                             Flez it
                         </Button>
@@ -203,11 +344,14 @@ const CreatePostModal = () => {
 
 const FormInputStyle = {
     backgroundColor: themes.dark.colors.modalTextInput,
+    border: '1px solid #3D3D42',
+    color: themes.dark.colors.postText,
+    marginBottom: '15px',
 }
 
 const FormCheckboxStyle = {
-    paddingTop: '20px',
-    color: themes.dark.colors.modalTextInput,
+    marginTop: '10px',
+    color: '#fff'
 }
 
 
@@ -216,7 +360,7 @@ const modalTitleStyle = {
     fontWeight: '300',
     letterSpacing: "0.05rem",
     display: "flex",
-    justifyContent: "center"
+    justifyContent: "center",
 }
 
 const modalTextStyle = {

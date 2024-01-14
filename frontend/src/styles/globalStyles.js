@@ -9,6 +9,13 @@ const GlobalStyle = createGlobalStyle`
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+  input:focus, select:focus, textarea:focus, button:focus {
+      outline: none !important;
+      outline-width: 0 !important;
+      box-shadow: none !important;
+      -moz-box-shadow: none !important;
+      -webkit-box-shadow: none !important;
+  }
 `;
 
 export default GlobalStyle;
