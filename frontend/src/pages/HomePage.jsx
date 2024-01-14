@@ -38,8 +38,8 @@ const HomePage = () => {
         <>
             <NavBar />
             <section>
-                <PageTitle>Flez it.</PageTitle>
-                <PageSubTitle>flex and easy</PageSubTitle>
+                <PageTitle>Journex</PageTitle>
+                <PageSubTitle>Career journaling made easy</PageSubTitle>
             </section>
         </>
     );

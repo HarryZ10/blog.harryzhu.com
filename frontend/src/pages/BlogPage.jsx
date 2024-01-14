@@ -73,7 +73,7 @@ const BlogPage = () => {
         <div>
             <NavBar />
             <PageTitle>
-                Flez Feed.
+                Flexes for you.
             </PageTitle>
             {posts
                 .sort((a, b) => new Date(b.post_date) - new Date(a.post_date))

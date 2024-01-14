@@ -1,4 +1,4 @@
-# CSIS 314 Flez Web Application
+# CSIS 314 Journex Web Application
 
 ## Description
 

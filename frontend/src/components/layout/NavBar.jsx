@@ -54,7 +54,7 @@ const NavBar = () => {
         <>
             <Navbar style={NavStyle} expand="lg">
                 <Container>
-                    <Navbar.Brand style={LinkStyle} href="/">Flez</Navbar.Brand>
+                    <Navbar.Brand style={LinkStyle} href="/">Journex</Navbar.Brand>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" className="custom-toggler" />
                     <Navbar.Collapse>
                         <Nav>

@@ -175,7 +175,7 @@ const CreatePostModal = () => {
         backgroundColor: isButtonEnabled ? themes.dark.colors.submission : '#b193ca',
         color: themes.dark.colors.postText,
         borderColor: isButtonEnabled ? themes.dark.colors.submission : '#b193ca',
-        borderRadius: '15px',
+        borderRadius: '5px',
         transition: 'transform 0.3s, background-color 0.3s, border-color 0.3s'
     }
 
@@ -198,7 +198,7 @@ const CreatePostModal = () => {
                                         className="post-textarea"
                                         value={formData.postContent}
                                         onChange={handleInputChange}
-                                        placeholder="What's your flez?"
+                                        placeholder="What's your flex?"
                                         style={{...FormInputStyle, ...{
                                             border: 'none',
                                             fontSize: '20px',
@@ -386,7 +386,7 @@ const CreatePostModal = () => {
 
                             variant="primary"
                             onClick={confirmPost}>
-                            Flez it
+                            Flex
                         </Button>
                     </Modal.Footer>
                 </div>
