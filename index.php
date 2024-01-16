@@ -2,7 +2,6 @@
 require_once __DIR__.'/backend/routes/Router.php';
 
 header('Content-Type: application/json');
-header("Access-Control-Allow-Origin: http://localhost:3000");
 header("Access-Control-Allow-Origin: http://10.10.10.25:3000");
 
 header("Content-Type: application/json; charset=UTF-8");
