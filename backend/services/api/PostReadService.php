@@ -39,12 +39,24 @@ class PostReadService {
 
     // Retrieves comments on a post
     // Authentication Check Needed
-    public static function retrieveCommentsOnPost() {
-        $stmt = DatabaseService::database()->query("SELECT * FROM blog_comment;");
+    public static function retrieveCommentsOnPost($post_id) {
+        $stmt = DatabaseService::database()->prepare("SELECT *
+            FROM blog_comment
+            WHERE post_id = :post_id;"
+        );
+
+        $stmt->bindParam(':post_id', $post_id);
+        $stmt->execute();
         $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $result = [];
         foreach ($comments as $comment) {
-            $result[] = new Comment($comment['id'], $comment['user_id'], $comment['comment_date'], $comment['comment_text'], $comment['post_id']);
+            $result[] = new Comment(
+                $comment['id'],
+                $comment['post_id'],
+                $comment['user_id'],
+                $comment['comment_date'],
+                $comment['comment_text']
+            );
         }
         return $result;
     }

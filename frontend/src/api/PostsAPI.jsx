@@ -19,8 +19,7 @@ export const getAllPosts = async () => {
         return await response.json();
     } catch (err) {
         console.error('Error:', err);
-        throw err;
-    }
+     }
 };
 
 // Get a single post by ID
@@ -41,7 +40,6 @@ export const getPostById = async (id) => {
         return await response.json();
     } catch (err) {
         console.error('Error:', err);
-        throw err;
     }
 };
 
@@ -61,8 +59,7 @@ export const createPost = async (data) => {
         }
         return await response.json();
     } catch (err) {
-        console.error('Error:', err);
-        throw err;
+        console.error('Error: ', err);
     }
 };
 
@@ -83,7 +80,6 @@ export const updatePost = async (id, updatedData) => {
         return await response.json();
     } catch (err) {
         console.error('Error:', err);
-        throw err;
     }
 };    
 
@@ -108,6 +104,5 @@ export const deletePost = async (id, userId) => {
         return await response.json();
     } catch (err) {
         console.error('Error:', err);
-        throw err;
     }
 };    

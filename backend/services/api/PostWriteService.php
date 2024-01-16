@@ -12,7 +12,7 @@ class PostWriteService {
              VALUES (:user_id, :post_date, :post_text, :extra);"
         );
         $stmt->bindParam(":user_id", $postBodyData["user_id"]);
-        $stmt->bindParam(":post_date", $postBodyData["post_date"]);
+        $stmt->bindParam(":post_date", date('Y-m-d'));
         $stmt->bindParam(":post_text", $postBodyData["post_text"]);
         $stmt->bindParam(":extra", json_encode($postBodyData["extra"]));
         $stmt->execute();
@@ -23,10 +23,14 @@ class PostWriteService {
     // Authentication Check Needed
     public static function addCommentOnPost($commentData) {
         $stmt = DatabaseService::database()->prepare(
-            "INSERT INTO blog_comment (id, user_id, post_id, comment_date, comment_text)
-             VALUES (:id, :user_id, :post_id, :comment_date, :comment_text);"
+            "INSERT INTO blog_comment (user_id, post_id, comment_date, comment_text)
+             VALUES (:user_id, :post_id, :comment_date, :comment_text);"
         );
-        $stmt->execute($commentData);
+        $stmt->bindParam(':user_id', $commentData['user_id']);
+        $stmt->bindParam(':post_id', $commentData['post_id']);
+        $stmt->bindParam(':comment_date', date('Y-m-d'));
+        $stmt->bindParam(':comment_text', $commentData['comment_text']);
+        $stmt->execute();
         return "Success";
     }
 

@@ -31,7 +31,7 @@ const StyledModal = styled(Modal)`
   }
 `;
 
-const CreatePostModal = () => {
+const CreatePostForm = () => {
 
     const [show, setShow] = useState(false);
     const [postCreated, setPostCreated] = useState(false);
@@ -112,8 +112,7 @@ const CreatePostModal = () => {
                 }
 
                 const postData = {
-                    user_id,
-                    post_date: new Date().toISOString().split('T')[0], // YYYY-MM-DD format
+                    user_id: user_id,
                     post_text: formData.postContent,
                     extra: {
                         jobOfferInfo: {
@@ -374,7 +373,6 @@ const CreatePostModal = () => {
                             </Row>
                          </Form>
                     </Modal.Body>
-        
                     <Modal.Footer>
                         <Button
                             style={{
@@ -393,7 +391,6 @@ const CreatePostModal = () => {
             </StyledModal>
         </>
     );
-
 };
 
 const FormInputStyle = {
@@ -426,4 +423,4 @@ const modalBackground = {
     width: '100%',
 }
 
-export default CreatePostModal;
+export default CreatePostForm;

@@ -81,17 +81,28 @@ class FeedService {
 
     public function addComment() {
         $content = json_decode(file_get_contents('php://input'), true);
-        $id = PostWriteService::addCommentOnPost($content);
 
-        return json_encode([
-            'status' => 'Comment created',
-            'comment_id' => $id
-        ]);
+        if ($content["comment_text"]) {
+            if (strlen($content["comment_text"]) <= 150) {
+                PostWriteService::addCommentOnPost($content);
+                return json_encode([
+                    'status' => 'Comment created',
+                ]);
+            } else {
+                return json_encode([
+                    'error' => 'Character limit exceeded',
+                ]);  
+            }
+        } else {
+            return json_encode([
+                'error' => 'No comment content',
+            ]);
+        }
     }
 
-    public function listComments() {
+    public function listComments($post_id) {
         return json_encode(
-            PostReadService::retrieveCommentsOnPost()
+            PostReadService::retrieveCommentsOnPost($post_id)
         );
     }
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import CreatePostModal from '../components/feed/CreatePostModal';
+import CreatePostForm from '../components/feed/CreatePostForm';
 import NavBar from '../components/layout/NavBar';
 import { getAllPosts, deletePost } from '../api/PostsAPI';
 import PostCard from '../components/feed/post/PostCard';
@@ -89,7 +89,7 @@ const BlogPage = () => {
                     />
                 ))
             }
-            <CreatePostModal />
+            <CreatePostForm />
         </div>
     );
 };

@@ -72,7 +72,7 @@ class Router {
         elseif ($method == 'GET'
             && $uriArray[1] == "posts" && is_numeric($uriArray[2]) && $uriArray[3] == "comments"
         ) {
-             echo $this->feed->listComments();
+             echo $this->feed->listComments($uriArray[2]);
         }
 
         // Retrieve post by identifier

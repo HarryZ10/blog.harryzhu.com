@@ -8,3 +8,8 @@
   color: #bdb7b5 !important;
   font-size: 20px;
 }
+
+.comment-textarea::placeholder {
+  color: #bdb7b5 !important;
+  font-size: 17px;
+}

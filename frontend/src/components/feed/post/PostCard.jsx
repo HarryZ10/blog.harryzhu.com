@@ -7,33 +7,26 @@ import { Row, Col } from 'react-bootstrap';
 import Button from "react-bootstrap/Button";
 import Collapse from "react-bootstrap/Collapse";
 import { getUsername } from "../../../api/UsersAPI";
+import { getCommentsByPostId } from "../../../api/CommentsAPI";
+
 import themes from "../../../styles/themes";
+import CreateCommentForm from "../CreateCommentForm";
 
-const PostCardStyle = {
-    width: "80%",
-    margin: "0 auto",
-    marginBottom: "50px",
-    marginTop: "50px",
-    backgroundColor: themes.dark.colors.postBackground,
-    color: themes.dark.colors.postText,
-}
-
-const CardBorderStyle = {
-    borderColor: themes.dark.colors.cardBorder,
-}
+const StyledCard = styled(Card)`
+    @media (max-width: 768px) {
+        width: 80% !important;
+    }
+`;
 
 const ActionButton = styled(Button)`
-    background-color: ${props => props.theme.dark.colors.danger};
-    border: ${props => props.theme.dark.colors.danger};
     color: ${props => props.theme.dark.colors.postText};
-    width: 10%;
 
     @media (max-width: 1024px) { // For larger screens
-        width: 20%;
+        width: 150px !important;
     }
 
     @media (max-width: 480px) { // For mobile phones
-        width: 50%;
+        width: 100px !important;
     }
 `;
 
@@ -41,10 +34,35 @@ const PostCard = ({ post_id, post_text, post_date, user_id, additional_info, onD
 
     // Post Card Other Info collapse/show toggle
     const [openAdditionalInfo, setOpenAdditionalInfo] = useState(false);
+    const [openCommentForm, setOpenCommentForm] = useState(false); 
 
     // Get username info
     const [username, setUsername] = useState('');
     const [currentUserId, setCurrentUserId] = useState('');
+
+    // Comment data
+    const [comments, setComments] = useState([]);
+    
+    useEffect(() => {
+        const fetchCommentsAndUsernames = async () => {
+            let resp = await getCommentsByPostId(post_id);
+
+            // Create a new array to store comments with usernames
+            let commentsWithUsernames = [];
+
+            for (let comment of resp) {
+                // Fetch the username for each comment
+                let username = await fetchUsername(comment.user_id);
+
+                // Create a new comment object including the username
+                commentsWithUsernames.push({ ...comment, username });
+            }
+
+            setComments(commentsWithUsernames);
+        }
+
+        fetchCommentsAndUsernames();
+    }, [post_id]);
 
     useEffect(() => {
         const token = Cookies.get("token");
@@ -62,12 +80,10 @@ const PostCard = ({ post_id, post_text, post_date, user_id, additional_info, onD
     }, [user_id]);
 
     // Job offer info
-
     const jobOfferInfo = additional_info ? 
         (JSON.parse(additional_info)).jobOfferInfo : null;
 
     // Handles delete and updates
-
     const handleDelete = () => {
         onDelete({ id: post_id, post_text, post_date, user_id, additional_info });
     };
@@ -80,14 +96,11 @@ const PostCard = ({ post_id, post_text, post_date, user_id, additional_info, onD
     };
 
      return (
-        <Card style={PostCardStyle}>
-            <Card.Header style={CardBorderStyle}>Post from {username} on {post_date} </Card.Header>
+        <StyledCard style={PostCardStyle}>
+            <Card.Header style={CardBorderStyle}>Post from {username} on {post_date}</Card.Header>
             <Card.Body style={CardBorderStyle}>
                 <Card.Title>Job Offer Details</Card.Title>
-                <Card.Text>
-                     {post_text}
-                </Card.Text>
-
+                <Card.Text>{post_text}</Card.Text>
                 <hr style={{ 
                     borderColor: themes.dark.colors.cardBorder,
                     borderTop: '0.5px solid' }} />
@@ -115,19 +128,17 @@ const PostCard = ({ post_id, post_text, post_date, user_id, additional_info, onD
                             <Col xs={6} sm={6} md={6}>{jobOfferInfo.otherOptions.has401k ? 'Yes' : 'No'}</Col>
                         </Row>
 
-                         <a
-                             href="#!"
-                             onClick={(e) => {
+                         <a href="#!" onClick={(e) => {
                                  e.preventDefault();
                                  setOpenAdditionalInfo(!openAdditionalInfo);
                              }}
                              style={{
                                  textDecoration: 'none',
                                  color: 'inherit',
-                                 paddingTop: '20px',         // Some padding for clickable area
+                                 paddingTop: '20px',
                                  paddingBottom: '5px',
-                                 cursor: 'pointer',      // Changes cursor to indicate clickability
-                                 display: 'inline-block' // Ensures padding is applied correctly
+                                 cursor: 'pointer',
+                                 display: 'inline-block'
                              }}
                          >
                              {openAdditionalInfo ? 'Hide Details' : 'Show Details'}
@@ -176,14 +187,76 @@ const PostCard = ({ post_id, post_text, post_date, user_id, additional_info, onD
                      </div>
                 )}
 
-                <Card.Footer style={{ display: "flex", justifyContent: "right", ...CardBorderStyle}}>
-                     {currentUserId === user_id && (
-                        <ActionButton variant="danger" onClick={handleDelete}>Delete</ActionButton>
-                     )}
+                <Card.Footer style={CardBorderStyle}>
+                    <Row>
+                        <Col xs={6} md={9} style={{ padding: 0 }} className="d-flex justify-content-start">
+
+                            {currentUserId === user_id && (
+                                <ActionButton onClick={(e) => {
+                                    // e.preventDefault();
+                                    // setOpenCommentForm(!openCommentForm);
+                                }} style={EditButtonStyle}>Edit</ActionButton>
+                            )}
+                        </Col>
+
+                        <Col xs={6} md={3} style={{ padding: 0 }}
+                            className="d-flex justify-content-end">
+
+                            {/* {currentUserId === user_id && (
+                                <ActionButton style={DeleteButtonStyle} onClick={handleDelete}>Delete</ActionButton>
+                            )} */}
+                        </Col>
+                    </Row>
+                    <Row>
+                        <CreateCommentForm post_id={post_id} />
+                    </Row>
+                    
+                     {comments && comments.map(comment => (
+                         <Row className="align-items-center my-2">
+                             <Col xs={4} sm={4} md={3} className="text-truncate">
+                                 <strong>{comment.username}:</strong>
+                             </Col>
+                             <Col xs={8} sm={8} md={9} className="text-break">
+                                 {comment.comment_text}
+                             </Col>
+                         </Row>
+                     ))}
+
                 </Card.Footer>
             </Card.Body>
-        </Card>
+        </StyledCard>
     )
 }
 
 export default PostCard;
+
+const fetchUsername = async (user_id) => {
+    const username = await getUsername(user_id);
+    return username;
+}
+
+const PostCardStyle = {
+    width: "50%",
+    margin: "0 auto",
+    marginBottom: "50px",
+    marginTop: "50px",
+    backgroundColor: themes.dark.colors.postBackground,
+    color: themes.dark.colors.postText,
+    borderRadius: '5px',
+}
+
+const CardBorderStyle = {
+    borderColor: themes.dark.colors.cardBorder,
+}
+
+const DeleteButtonStyle = {
+    backgroundColor: themes.dark.colors.danger,
+    border: themes.dark.colors.danger,
+    width: '100%'
+}
+
+const EditButtonStyle = {
+    backgroundColor: themes.dark.colors.submission,
+    border: themes.dark.colors.danger,
+    width: '150px',
+}
