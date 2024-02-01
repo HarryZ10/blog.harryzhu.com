@@ -165,7 +165,7 @@ class AuthService {
         return base64_decode(strtr($data, '-_', '+/'));
     }
 
-    function decodeJWT($jwt) {
+    public function decodeJWT($jwt) {
         // Split the JWT string into its three parts
         $parts = explode('.', $jwt);
 
