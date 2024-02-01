@@ -50,7 +50,8 @@ const CreateCommentForm = ({ post_id }) => {
                 const commentData = {
                     user_id: user_id,
                     post_id: post_id,
-                    comment_text: formStringData
+                    comment_text: formStringData,
+                    token: Cookies.get('token')
                 }
 
                 if (user_id) {

@@ -94,7 +94,8 @@ export const deletePost = async (id, userId) => {
             },
             body: {
                 "user_id": userId,
-                "id":  id
+                "id": id,
+                "token": Cookies.get('token')
             }
         });
         if (!response.ok) {
@@ -105,4 +106,4 @@ export const deletePost = async (id, userId) => {
     } catch (err) {
         console.error('Error:', err);
     }
-};    
+};

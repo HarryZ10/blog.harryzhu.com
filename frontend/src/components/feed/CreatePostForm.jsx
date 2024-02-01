@@ -114,6 +114,7 @@ const CreatePostForm = () => {
                 const postData = {
                     user_id: user_id,
                     post_text: formData.postContent,
+                    token: Cookies.get('token'),
                     extra: {
                         jobOfferInfo: {
                             baseSalary: formData.baseSalary,
