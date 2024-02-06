@@ -6,7 +6,7 @@ RewriteBase /~hzhu20/
 # Handle API requests
 RewriteRule ^api/ index.php [L,QSA]
 
-# Handle SPA routes
+# Handle SPA routes - serve index.html
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ index.html [QSA,L]

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -58,8 +58,12 @@ const NavBar = () => {
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" className="custom-toggler" />
                     <Navbar.Collapse>
                         <Nav>
-                            <Nav.Link style={LinkStyle} href="/">Home</Nav.Link>
-                            <Nav.Link style={LinkStyle} href="/feed">Blog</Nav.Link>
+                            <Nav.Link as={Link} to="/" style={LinkStyle}>
+                                Home
+                            </Nav.Link>
+                            <Nav.Link as={Link} to="/feed" style={LinkStyle}>
+                                Login
+                            </Nav.Link>
                         </Nav>
                     </Navbar.Collapse>
                     <Navbar.Collapse className="justify-content-end">
@@ -85,7 +89,7 @@ const NavBar = () => {
                                     </Dropdown.Menu>
                                 </Dropdown>
                             ) : (
-                                <Nav.Link style={LinkStyle} href="/login">
+                                <Nav.Link as={Link} to="/login" style={LinkStyle}>
                                     Login
                                 </Nav.Link>
                             )}

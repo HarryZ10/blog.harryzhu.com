@@ -5,6 +5,7 @@ import LoginPage from './pages/LoginPage';
 import BlogPage from './pages/BlogPage';
 import { Logout } from './api/UsersAPI';
 
+
 /**
  * Manages routing on the client side to different pages
  */

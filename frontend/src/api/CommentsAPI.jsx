@@ -1,7 +1,7 @@
 // src/api/CommentsAPI.js
 import Cookies from "js-cookie";
 
-const API_BASE_URL = process.env.REACT_APP_API_ROOT;
+const API_BASE_URL = process.env.REACT_APP_API_ROOT | 'http://web.cs.georgefox.edu/~hzhu20/api/v1';
 
 // Add comment to post
 export const addComment = async (post_id, data) => {
