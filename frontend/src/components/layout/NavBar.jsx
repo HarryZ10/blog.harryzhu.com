@@ -42,7 +42,7 @@ const NavBar = () => {
             // Decode the token to get the username
             const decodedToken = jwtDecode(token);
             setUsername(decodedToken.username);
-            setExpDate(new Date(decodedToken.exp * 1000));
+            // setExpDate(new Date(decodedToken.exp * 1000));
 
             // Check if the token is expired
             const now = new Date();
