@@ -1,21 +1,6 @@
 <?php
 require_once __DIR__.'/backend/routes/Router.php';
 
-/*$allowedUris = [
-    "http://10.10.10.25:3000",
-    "https://web.cs.georgefox.edu/~hzhu20",
-    "http://web.cs.georgefox.edu/~hzhu20",
-];
-
-$httpOrigin = null;
-    
-if (in_array($_SERVER['HTTP_ORIGIN'], $allowedUris)) {
-    $httpOrigin = $_SERVER['HTTP_ORIGIN'];
-} else {
-    $httpOrigin = "http://127.0.0.1:3000";
-}
- */
-
 $httpOrigin = "http://web.cs.georgefox.edu/~hzhu20";
 
 header('Content-Type: application/json');
