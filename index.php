@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__.'/routes/Router.php';
+require_once __DIR__.'/backend/routes/Router.php';
 
 $allowedUris = [
     "http://10.10.10.25:3000",
@@ -10,7 +10,7 @@ $allowedUris = [
 ];
 
 $httpOrigin = null;
-
+    
 if (in_array($_SERVER['HTTP_ORIGIN'], $allowedUris)) {
     $httpOrigin = $_SERVER['HTTP_ORIGIN'];
 } else {
