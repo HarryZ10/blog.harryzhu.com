@@ -32,24 +32,15 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_API_TOKEN }}
         run: |
-          # Configure git
           git config --global user.email "action@github.com"
           git config --global user.name "GitHub Action"
     
           # Define the branch name dynamically based on the current ref
           BRANCH_NAME=$(echo $GITHUB_REF | sed 's/refs\/heads\///')
       
-          # Create a new branch from the current branch
           git checkout -b build/$BRANCH_NAME
-     
-          # Copy build artifacts from the frontend build directory to the root directory
-          # Ensure the destination directory is correct according to your project structure
           cp -a frontend/build/. .
-     
-          # Add all changes to git
           git add .
-      
-          # Commit the changes
           git commit -m "Add build artifacts"
     
           # Push the branch to the remote repository
@@ -57,9 +48,10 @@ jobs:
 
       # Create Pull Request to release/v1
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_API_TOKEN }}
         with:
-          token: ${GH_TOKEN}
           commit-message: "Add build artifacts"
           title: "New Build Artifacts for Release"
           body: "Auto-generated pull request to merge build artifacts into release/v1"
