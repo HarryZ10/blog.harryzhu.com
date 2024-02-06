@@ -1,7 +1,8 @@
 // src/api/CommentsAPI.js
 import Cookies from "js-cookie";
+require('dotenv').config()
 
-const API_BASE_URL = 'http://10.10.10.25:80';
+const API_BASE_URL = process.env.REACT_APP_API_ROOT;
 
 // Add comment to post
 export const addComment = async (post_id, data) => {
