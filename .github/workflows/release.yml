@@ -28,25 +28,30 @@ jobs:
         run: npm run build
         working-directory: ./frontend
 
-      - name: Commit and Push
-        env:
-          GH_TOKEN: ${{ secrets.GH_API_TOKEN }}
+      - name: Prepare Artifacts
         run: |
           git config --global user.email "action@github.com"
           git config --global user.name "GitHub Action"
     
-          # Define the branch name dynamically based on the current ref
-          BRANCH_NAME=$(echo $GITHUB_REF | sed 's/refs\/heads\///')
-      
-          git checkout -b build/$BRANCH_NAME
+          # Copy build artifacts from the frontend build directory to the root directory
           cp -a frontend/build/. .
-          git add .
-          git commit -m "Add build artifacts"
     
-          # Push the branch to the remote repository
-          git push -f -u https://x-access-token:${GH_TOKEN}@github.com/HarryZ10/Journex-Platform.git build/$BRANCH_NAME
+          # Stage the changes
+          git add .
 
-      # Create Pull Request to release/v1
+      - name: Commit and Push
+        env:
+          GH_TOKEN: ${{ secrets.GH_API_TOKEN }}
+        run: |
+          # Check if there are any changes (if not, the script will exit)
+          if git diff --quiet --staged; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          # Commit the changes
+          git commit -m "Add build artifacts"
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
         env:
@@ -55,6 +60,6 @@ jobs:
           commit-message: "Add build artifacts"
           title: "New Build Artifacts for Release"
           body: "Auto-generated pull request to merge build artifacts into release/v1"
-          branch: "build/$BRANCH_NAME"
+          branch: "build/${{ github.head_ref }}"
           base: "release/v1"
 
