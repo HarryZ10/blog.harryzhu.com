@@ -53,10 +53,9 @@ jobs:
           git commit -m "Add build artifacts"
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_API_TOKEN }}
+        uses: peter-evans/create-pull-request@v6
         with:
+          token: ${{ secrets.GH_API_TOKEN }}
           commit-message: "Add build artifacts"
           title: "New Build Artifacts for Release"
           body: "Auto-generated pull request to merge build artifacts into release/v1"
