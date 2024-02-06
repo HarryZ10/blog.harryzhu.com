@@ -58,8 +58,8 @@ jobs:
       # Create Pull Request to release/v1
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
-        token: ${GH_TOKEN}
         with:
+          token: ${GH_TOKEN}
           commit-message: "Add build artifacts"
           title: "New Build Artifacts for Release"
           body: "Auto-generated pull request to merge build artifacts into release/v1"
