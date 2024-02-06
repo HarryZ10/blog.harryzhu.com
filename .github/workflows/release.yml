@@ -31,6 +31,8 @@ jobs:
           git config --global user.email "action@github.com"
           git config --global user.name "GitHub Action"
 
+          git remote add origin https://github.com/HarryZ10/Journex-Platform.git
+
           # Navigate into the build directory
           cd frontend/build
 
