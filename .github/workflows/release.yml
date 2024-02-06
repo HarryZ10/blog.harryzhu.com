@@ -26,6 +26,8 @@ jobs:
         working-directory: ./frontend
 
       - name: Commit and Push
+        env:
+          GH_TOKEN: ${{ secrets.GH_API_TOKEN }}
         run: |
           # Configure git
           git config --global user.email "action@github.com"
@@ -48,7 +50,7 @@ jobs:
           git commit -m "Add build artifacts"
     
           # Push the branch to the remote repository
-          git push -u origin build/$BRANCH_NAME
+          git push -u https://${GH_TOKEN}@github.com/HarryZ10/Journex-Platform.git build/$BRANCH_NAME
 
       # Create Pull Request to release/v1
       - name: Create Pull Request
