@@ -1,7 +1,7 @@
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 
-const API_BASE_URL = process.env.REACT_APP_API_ROOT | 'http://web.cs.georgefox.edu/~hzhu20/api/v1';
+const API_BASE_URL = 'http://web.cs.georgefox.edu/~hzhu20/api/v1';
 
 export const getUsername = async (id) => {
     try {

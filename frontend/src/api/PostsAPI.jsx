@@ -1,7 +1,7 @@
 // src/api/PostsAPI.js
 import Cookies from "js-cookie";
 
-const API_BASE_URL = process.env.REACT_APP_API_ROOT | 'http://web.cs.georgefox.edu/~hzhu20/api/v1';
+const API_BASE_URL = 'http://web.cs.georgefox.edu/~hzhu20/api/v1';
 
 // Get all posts
 export const getAllPosts = async () => {
