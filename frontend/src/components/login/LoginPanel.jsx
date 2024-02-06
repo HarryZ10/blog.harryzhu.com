@@ -46,7 +46,6 @@ export const PageStyles = {
         marginTop: '10px',
         display: 'block', // Ensures the link is on a new line
         textAlign: 'center',
-        textDecoration: 'none',
         cursor: 'pointer'
     }
 };
@@ -132,7 +131,7 @@ const LoginPanel = () => {
                     {isRegistering ? "Register" : "Login"}
                 </Button>
 
-                <a style={PageStyles.registerLink} onClick={toggleForm}>
+                <a href="#" style={PageStyles.registerLink} onClick={toggleForm}>
                     {isRegistering ? "or login" : "or register"}
                 </a>
             </Form>

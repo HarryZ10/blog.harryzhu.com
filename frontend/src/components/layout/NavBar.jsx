@@ -26,7 +26,7 @@ export const Styles = {
 
 const NavBar = () => {
     const [username, setUsername] = useState('');
-    const [expDate, setExpDate] = useState('');
+    // const [expDate, setExpDate] = useState('');
     const [isTokenExpired, setIsTokenExpired] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
 
@@ -70,7 +70,7 @@ const NavBar = () => {
                         <Nav>
                             {username && !isTokenExpired ? (
                                 <Dropdown show={isOpen} onToggle={toggleDropdown}>
-                                    <Dropdown.Toggle style={{...LoggedInLink, ... Styles.button}}>
+                                    <Dropdown.Toggle style={{...LoggedInLink, ...Styles.button}}>
                                         {username}
                                     </Dropdown.Toggle>
                                     <Dropdown.Menu style={{ width: "200px" }} className={menuClass}>
