@@ -22,7 +22,7 @@ class Router {
     /**
      * Handles all GET, PUT, DELETE, and POST authenticated/all requests
      */
-    public function handle_request() {
+    public function handleRequest() {
         $uri = $_SERVER['REQUEST_URI'];
         $method = $_SERVER['REQUEST_METHOD'];
         $token = $this->getTokenFromReqBody();
