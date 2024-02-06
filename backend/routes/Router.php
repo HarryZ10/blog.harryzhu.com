@@ -26,9 +26,9 @@ class Router {
         $uri = $_SERVER['REQUEST_URI'];
         $method = $_SERVER['REQUEST_METHOD'];
         $token = $this->getTokenFromReqBody();
-
-         // Ensure URI starts with /api/v1
-        if (substr($uri, 0, 7) !== '/api/v1') {
+	
+        // Ensure URI starts with /api/v1
+        if (substr($uri, 0, 15) !== '/~hzhu20/api/v1') {
             header('HTTP/1.1 400 Bad Request');
             echo json_encode([
                 'status' => 'Invalid endpoint'
@@ -43,8 +43,8 @@ class Router {
         $uriArray = explode('/', $uri);
 
         // Extract the base endpoint from the URI
-        // Skip past primary domain and "api/v1" and prepend '/'
-        $base_uri = '/' . $uriArray[3];
+        // Skip past primary domain and "/~hzhu20/api/v1" and prepend '/'
+        $base_uri = '/' . $uriArray[4];
         $is_secured = in_array($base_uri, $endpoints_to_gatekeep);
 
         // Check for token on secured endpoints
@@ -141,7 +141,6 @@ class Router {
             http_response_code(404);
             echo json_encode([
                 'error' => "Resource not found",
-                'uri' => $uri
             ]);
             exit(1);
         }
