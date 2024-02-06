@@ -57,7 +57,7 @@ export const Logout = () => {
     
     // Wait for a short time before navigating
     setTimeout(() => {
-        navigate("/");
+        navigate("/~hzhu20/");
     }, 500); // delay in milliseconds
 }
 

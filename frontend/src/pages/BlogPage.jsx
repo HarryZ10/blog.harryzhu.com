@@ -35,7 +35,7 @@ const BlogPage = () => {
 
             if (fetchedPostData.error) {
                 if (fetchedPostData.error === "Unauthorized") {
-                    navigate("/login")
+                    navigate("/~hzhu20/login")
                 }
             } else {
                 setPosts(fetchedPostData);

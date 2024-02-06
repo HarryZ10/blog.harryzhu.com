@@ -62,7 +62,7 @@ const NavBar = () => {
                                 Home
                             </Nav.Link>
                             <Nav.Link as={Link} to="/feed" style={LinkStyle}>
-                                Login
+                                Feed
                             </Nav.Link>
                         </Nav>
                     </Navbar.Collapse>
