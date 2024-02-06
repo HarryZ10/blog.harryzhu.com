@@ -60,6 +60,6 @@ jobs:
           commit-message: "Add build artifacts"
           title: "New Build Artifacts for Release"
           body: "Auto-generated pull request to merge build artifacts into release/v1"
-          branch: "build/${{ github.head_ref }}"
+          branch: "build/${{ github.ref }}"
           base: "release/v1"
 
