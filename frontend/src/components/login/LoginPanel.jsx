@@ -29,7 +29,6 @@ export const PageStyles = {
         transition: 'background-color 0.3s, transform 0.3s',
         marginTop: '50px',
         display: 'block',
-        width: '100%',
         height: '40px',
         marginLeft: 'auto', // Centers the button
         marginRight: 'auto', // Centers the button
