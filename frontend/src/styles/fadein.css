@@ -1,0 +1,4 @@
+.slide-in {
+  transform: translateX(0) !important;
+  opacity: 1 !important;
+}

@@ -2,15 +2,12 @@ import React, { useState, useEffect} from "react";
 import styled from "styled-components";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
-import Card from "react-bootstrap/Card";
-import { Row, Col } from 'react-bootstrap';
-import Button from "react-bootstrap/Button";
-import Collapse from "react-bootstrap/Collapse";
+import { Card, Row, Col, Button, Collapse } from 'react-bootstrap';
+
+import CreateCommentForm from "../CreateCommentForm";
 import { getUsername } from "../../../api/UsersAPI";
 import { getCommentsByPostId } from "../../../api/CommentsAPI";
-
 import themes from "../../../styles/themes";
-import CreateCommentForm from "../CreateCommentForm";
 
 const StyledCard = styled(Card)`
     @media (max-width: 768px) {
@@ -34,6 +31,8 @@ const PostCard = ({ post_id, post_text, post_date, user_id, additional_info, onD
 
     // Post Card Other Info collapse/show toggle
     const [openAdditionalInfo, setOpenAdditionalInfo] = useState(false);
+
+    // eslint-disable-next-line
     const [openCommentForm, setOpenCommentForm] = useState(false); 
 
     // Get username info
@@ -84,6 +83,7 @@ const PostCard = ({ post_id, post_text, post_date, user_id, additional_info, onD
         (JSON.parse(additional_info)).jobOfferInfo : null;
 
     // Handles delete and updates
+    // eslint-disable-next-line
     const handleDelete = () => {
         onDelete({ id: post_id, post_text, post_date, user_id, additional_info });
     };
@@ -96,7 +96,7 @@ const PostCard = ({ post_id, post_text, post_date, user_id, additional_info, onD
     };
 
      return (
-        <StyledCard style={PostCardStyle}>
+        <StyledCard style={PostCardStyle} id="post-card-index">
             <Card.Header style={CardBorderStyle}>Post from {username} on {post_date}</Card.Header>
             <Card.Body style={CardBorderStyle}>
                 <Card.Title>Job Offer Details</Card.Title>
@@ -243,12 +243,17 @@ const PostCardStyle = {
     backgroundColor: themes.dark.colors.postBackground,
     color: themes.dark.colors.postText,
     borderRadius: '5px',
+
+    // Fade in
+    transform: 'translateX(-150%)',
+    opacity: '0',
 }
 
 const CardBorderStyle = {
     borderColor: themes.dark.colors.cardBorder,
 }
 
+// eslint-disable-next-line
 const DeleteButtonStyle = {
     backgroundColor: themes.dark.colors.danger,
     border: themes.dark.colors.danger,

@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styled from "styled-components";
+
 import CreatePostForm from '../components/feed/CreatePostForm';
 import NavBar from '../components/layout/NavBar';
-import { getAllPosts, deletePost } from '../api/PostsAPI';
 import PostCard from '../components/feed/post/PostCard';
-import { PageSubTitle } from '../pages/HomePage';
-import styled from "styled-components";
-import { useNavigate } from 'react-router-dom';
+
+import FadeIn from "../utils/FadeIn";
+import { getAllPosts, deletePost } from '../api/PostsAPI';
 
 const PageTitle = styled.h1`
     font-weight: 800;
@@ -32,7 +34,7 @@ const BlogPage = () => {
             const fetchedPostData = await getAllPosts();
 
             if (fetchedPostData.error) {
-                if (fetchedPostData.error == "Unauthorized") {
+                if (fetchedPostData.error === "Unauthorized") {
                     navigate("/login")
                 }
             } else {
@@ -47,13 +49,13 @@ const BlogPage = () => {
       }
     
       fetchPosts();
-    }, [])
+    }, [navigate])
 
     
     const onDeleteHandler = async (post_id, user_id) => {
         try {
             const status = await deletePost(post_id, user_id);
-            if (status != "Error") {
+            if (status !== "Error") {
                 setPosts(posts.filter(post => post.id !== post_id));
             }
         } catch (err) {
@@ -78,15 +80,17 @@ const BlogPage = () => {
             {posts
                 .sort((a, b) => new Date(b.post_date) - new Date(a.post_date))
                 .map(post => (
-                    <PostCard
-                        key={post.id}
-                        post_id={post.id}
-                        post_text={post.post_text}
-                        post_date={post.post_date}
-                        user_id={post.user_id}
-                        additional_info={post.extra}
-                        onDelete={() => onDeleteHandler(post.id, post.user_id)}
-                    />
+                    <FadeIn>
+                        <PostCard
+                            key={post.id}
+                            post_id={post.id}
+                            post_text={post.post_text}
+                            post_date={post.post_date}
+                            user_id={post.user_id}
+                            additional_info={post.extra}
+                            onDelete={() => onDeleteHandler(post.id, post.user_id)}
+                        />
+                    </FadeIn>
                 ))
             }
             <CreatePostForm />

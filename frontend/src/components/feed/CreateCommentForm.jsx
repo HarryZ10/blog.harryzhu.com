@@ -57,13 +57,13 @@ const CreateCommentForm = ({ post_id }) => {
                 if (user_id) {
                     const response = await addComment(post_id, commentData);
 
-                    if (response.status == "Comment created") {
+                    if (response.status === "Success") {
                         setCommentCreated(true);
                     } else {
                         if (response.error) {
-                            if (response.error == "No comment content") {
-                                alert("Must have content");
-                            } else if (response.error == "Character limit exceeded") {
+                            if (response.error === "Unauthorized") {
+                                alert("Must reauthenticate or post is emptyn");
+                            } else if (response.error === "Character limit exceeded") {
                                 alert("Comment must be less than 150 characters.");
                             }
                         }

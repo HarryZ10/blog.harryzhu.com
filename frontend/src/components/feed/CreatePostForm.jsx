@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Button, Form, Row, Col, FormCheck } from 'react-bootstrap';
+import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
 import Cookies from 'js-cookie';
 import styled from 'styled-components';
 import { jwtDecode } from 'jwt-decode';
@@ -140,14 +140,14 @@ const CreatePostForm = () => {
                 };
 
                 const response = await createPost(postData);
-                if (response.status == "Post created") {
+                if (response.status === "Post created") {
                     setPostCreated(true);
                     handleClose();
                 } else {
                     if (response.error) {
-                        if (response.error == "No post content") {
-                            alert("Post must have content!");
-                        } else if (response.error == "Character limit exceeded") {
+                        if (response.error === "Unauthorized") {
+                            alert("Must reauthenticate or post is empty");
+                        } else if (response.error === "Character limit exceeded") {
                             alert("Post must be less than 150 characters.");
                         }
                     }
