@@ -5,6 +5,9 @@ on:
     branches:
       - master
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -50,7 +53,7 @@ jobs:
           git commit -m "Add build artifacts"
     
           # Push the branch to the remote repository
-          git push -u https://${GH_TOKEN}@github.com/HarryZ10/Journex-Platform.git build/$BRANCH_NAME
+          git push -u https://x-access-token:${GH_TOKEN}@github.com/HarryZ10/Journex-Platform.git build/$BRANCH_NAME
 
       # Create Pull Request to release/v1
       - name: Create Pull Request
