@@ -25,30 +25,30 @@ jobs:
         run: npm run build
         working-directory: ./frontend
 
-     - name: Commit and Push
-       run: |
-         # Configure git
-         git config --global user.email "action@github.com"
-         git config --global user.name "GitHub Action"
+      - name: Commit and Push
+        run: |
+          # Configure git
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
     
-         # Define the branch name dynamically based on the current ref
-         BRANCH_NAME=$(echo $GITHUB_REF | sed 's/refs\/heads\///')
+          # Define the branch name dynamically based on the current ref
+          BRANCH_NAME=$(echo $GITHUB_REF | sed 's/refs\/heads\///')
+      
+          # Create a new branch from the current branch
+          git checkout -b build/$BRANCH_NAME
      
-         # Create a new branch from the current branch
-         git checkout -b build/$BRANCH_NAME
+          # Copy build artifacts from the frontend build directory to the root directory
+          # Ensure the destination directory is correct according to your project structure
+          cp -a frontend/build/. .
      
-         # Copy build artifacts from the frontend build directory to the root directory
-         # Ensure the destination directory is correct according to your project structure
-         cp -a frontend/build/. .
+          # Add all changes to git
+          git add .
+      
+          # Commit the changes
+          git commit -m "Add build artifacts"
     
-         # Add all changes to git
-         git add .
-     
-         # Commit the changes
-         git commit -m "Add build artifacts"
-    
-         # Push the branch to the remote repository
-         git push -u origin build/$BRANCH_NAME
+          # Push the branch to the remote repository
+          git push -u origin build/$BRANCH_NAME
 
       # Create Pull Request to release/v1
       - name: Create Pull Request
