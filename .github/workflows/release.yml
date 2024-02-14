@@ -60,6 +60,6 @@ jobs:
           title: "New Build Artifacts for Release"
           body: "Auto-generated pull request to merge build artifacts into release/v1"
           branch: "build/releasing"
-          delete-branch: true,
+          delete-branch: true
           base: "release/v1"
 
