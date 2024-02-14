@@ -59,6 +59,7 @@ jobs:
           commit-message: "Add build artifacts"
           title: "New Build Artifacts for Release"
           body: "Auto-generated pull request to merge build artifacts into release/v1"
-          branch: "${{ github.ref_name || github.base_ref }}"
+          branch: "build/releasing"
+          delete-branch: true,
           base: "release/v1"
 
