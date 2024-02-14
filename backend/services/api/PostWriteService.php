@@ -8,13 +8,14 @@ class PostWriteService {
     // Authentication Check Needed
     public static function createPost($postBodyData) {
         $stmt = DatabaseService::database()->prepare(
-            "INSERT INTO post (user_id, post_date, post_text, extra)
-             VALUES (:user_id, :post_date, :post_text, :extra);"
+            "INSERT INTO post (user_id, post_date, post_text, extra, project_id)
+             VALUES (:user_id, :post_date, :post_text, :extra, :project_id);"
         );
         $stmt->bindParam(":user_id", $postBodyData["user_id"]);
         $stmt->bindParam(":post_date", date('Y-m-d'));
         $stmt->bindParam(":post_text", $postBodyData["post_text"]);
-        $stmt->bindParam(":extra", json_encode($postBodyData["extra"]));
+	$stmt->bindParam(":extra", json_encode($postBodyData["extra"]));
+	$stmt->bindParam(":project_id", 3);
         $stmt->execute();
         return "Success";
     }
@@ -43,8 +44,8 @@ class PostWriteService {
                  post_date = :post_date,
                  post_text = :post_text,
                  extra = :extra
-             WHERE id = :id;"
-        );
+             WHERE project_id = 3 AND id = :id;"
+	)
         $stmt->bindParam(':user_id', $postBodyData['user_id']);
         $stmt->bindParam(':post_date', $postBodyData['post_date']);
         $stmt->bindParam(':post_text', $postBodyData['post_text']);
@@ -64,7 +65,7 @@ class PostWriteService {
         }
 
         $stmt = DatabaseService::database()->prepare(
-            "DELETE FROM post WHERE id = :id AND user_id = :user_id;"
+            "DELETE FROM post WHERE id = :id AND user_id = :user_id AND project_id = 3;"
         );
         $stmt->bindParam(':user_id', $postBodyData['user_id']);
         $stmt->bindParam(':id', $postBodyData['id']);
