@@ -45,7 +45,7 @@ class PostWriteService {
                  post_text = :post_text,
                  extra = :extra
              WHERE project_id = 3 AND id = :id;"
-	)
+	);
         $stmt->bindParam(':user_id', $postBodyData['user_id']);
         $stmt->bindParam(':post_date', $postBodyData['post_date']);
         $stmt->bindParam(':post_text', $postBodyData['post_text']);
