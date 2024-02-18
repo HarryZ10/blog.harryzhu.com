@@ -59,7 +59,7 @@ jobs:
           git config --global user.name "GitHub Actions"
     
           # Fetch all branches
-          git fetch origin master
+          git fetch --all
     
           # Checkout the release/v2 branch
           git checkout release/v2
