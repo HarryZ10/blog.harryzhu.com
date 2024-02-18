@@ -28,33 +28,23 @@ jobs:
         run: npm run build
         working-directory: ./frontend
 
-      - name: Prepare Artifacts
-        run: |
-          git config --global user.email "action@github.com"
-          git config --global user.name "GitHub Action"
-    
-          # Copy build artifacts from the frontend build directory to the root directory
-          cp -a frontend/build/. .
-    
-          # Stage the changes
-          git add .
-
-      - name: Commit and Push Artifacts
+      - name: Commit & Push Artifacts
         env:
           GH_TOKEN: ${{ secrets.GH_API_TOKEN }}
         run: |
           BRANCH_NAME="build-artifacts-$(date +'%Y%m%d-%H%M%S')"
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+    
+          cp -a frontend/build/. .
+          git checkout -b "$BRANCH_NAME"
+          git add .
           
           if git diff --quiet --staged; then
-            echo "No changes to commit."
             exit 0
           fi
 
-          # Commit the changes
-          git commit -m "Add build artifacts"
-          
-          # Create a new branch and push the commit
-          git checkout -b "$BRANCH_NAME"
+          git commit -m "Add build artifacts" 
           git push origin "$BRANCH_NAME"
 
       - name: Create Pull Request
