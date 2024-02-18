@@ -65,5 +65,5 @@ jobs:
           PR_BODY="Latest build artifacts for client files"
           BRANCH_NAME="build-artifacts-$(date +'%Y%m%d-%H%M%S')"
           
-          gh auth login --with-token $GH_TOKEN
+          echo "$GH_TOKEN" | gh auth login --with-token
           gh pr create --title "$PR_TITLE" --body "$PR_BODY" --base master --head "$BRANCH_NAME"
