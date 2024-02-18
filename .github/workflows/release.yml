@@ -39,11 +39,12 @@ jobs:
           # Stage the changes
           git add .
 
-      - name: Commit and Push
+      - name: Commit and Push Artifacts
         env:
           GH_TOKEN: ${{ secrets.GH_API_TOKEN }}
         run: |
-          # Check if there are any changes (if not, the script will exit)
+          BRANCH_NAME="build-artifacts-$(date +'%Y%m%d-%H%M%S')"
+          
           if git diff --quiet --staged; then
             echo "No changes to commit."
             exit 0
@@ -51,5 +52,18 @@ jobs:
 
           # Commit the changes
           git commit -m "Add build artifacts"
-          git push origin master
+          
+          # Create a new branch and push the commit
+          git checkout -b "$BRANCH_NAME"
+          git push origin "$BRANCH_NAME"
 
+      - name: Create Pull Request
+        env:
+          GH_TOKEN: ${{ secrets.GH_API_TOKEN }}
+        run: |
+          PR_TITLE="Automated Build Artifacts Update"
+          PR_BODY="Latest build artifacts for client files"
+          BRANCH_NAME="build-artifacts-$(date +'%Y%m%d-%H%M%S')"
+          
+          gh auth login --with-token $GH_TOKEN
+          gh pr create --title "$PR_TITLE" --body "$PR_BODY" --base master --head "$BRANCH_NAME"
