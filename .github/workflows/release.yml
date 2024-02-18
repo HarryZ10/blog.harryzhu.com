@@ -59,7 +59,7 @@ jobs:
 
       - name: Create Pull Request
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_API_TOKEN }}
         run: |
           PR_TITLE="Automated Build Artifacts Update"
           PR_BODY="Latest build artifacts for client files"
