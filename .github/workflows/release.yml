@@ -51,23 +51,6 @@ jobs:
           git commit -m "Add build artifacts" 
           git push origin ${{ env.BRANCH_NAME }}
 
-      - name: Rebase release branch on master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_API_TOKEN }}
-        run: |
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "GitHub Actions"
-    
-          # Fetch all branches
-          git fetch --all
-    
-          # Checkout the release/v2 branch
-          git checkout release/v2
-    
-          # Rebase release/v2 on master
-          git rebase origin/master
-          git push origin release/v2 --force-with-lease
-
       - name: Create Pull Request
         env:
           GITHUB_TOKEN: ${{ secrets.GH_API_TOKEN }}
