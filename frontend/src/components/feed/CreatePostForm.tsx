@@ -3,10 +3,32 @@ import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
 import Cookies from 'js-cookie';
 import styled from 'styled-components';
 import { jwtDecode } from 'jwt-decode';
+
+import { JSONPayload } from './CreateCommentForm';
+import { CreatePostData } from '../../interfaces/post';
+
 import { createPost } from '../../api/PostsAPI';
 import ActionPlus from '../layout/ActionPlus';
 import themes from '../../styles/themes';
 import "../../styles/createPost.css"
+
+interface FormData {
+    postContent: string;
+    baseSalary: string;
+    signOnBonus: string;
+    equity: string;
+    unlimitedPTO: boolean;
+    has401k: boolean;
+    medicalInsurance: boolean;
+    dentalInsurance: boolean;
+    visionInsurance: boolean;
+    flexibleWorkHours: boolean;
+    remoteWorkOptions: boolean;
+    relocationAssistance: boolean;
+    maternityPaternityLeave: boolean;
+    gymMembership: boolean;
+    tuitionAssistance: boolean;
+}
 
 const StyledModal = styled(Modal)`
   .modal-content {
@@ -31,13 +53,13 @@ const StyledModal = styled(Modal)`
   }
 `;
 
-const CreatePostForm = () => {
+const CreatePostForm: React.FC = () => {
 
     const [show, setShow] = useState(false);
     const [postCreated, setPostCreated] = useState(false);
     const [isButtonEnabled, setIsButtonEnabled] = useState(false);
 
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<FormData>({
         postContent: '',
         baseSalary: '',
         signOnBonus: '',
@@ -74,33 +96,28 @@ const CreatePostForm = () => {
         }
     }, [postCreated]);
 
-    const getUserIdFromToken = () => {
+    const getUserIdFromToken = (): string => {
         const token = Cookies.get('token');
+        let userid = '';
         if (token) {
-            const decoded = jwtDecode(token);
-            return decoded.user_id;
+            const decoded = jwtDecode<JSONPayload>(token);
+            userid = decoded.user_id;
         }
-        return null;
+        return userid;
     };
 
-    const handleInputChange = (e) => {
-        const { name, value, type, checked } = e.target;
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
+
+    setFormData((prevState: FormData) => ({
+        // prevState refers to the current state of formData before the update is applied
+        // and then we "spread" it to include it in the newly filled in input value
+        ...prevState,
 
         // If it is a checkbox, just get the value out of 'checked'
-        if (type === 'checkbox') {
-            // prevState refers to the current state of formData before the update is applied
-            // and then we "spread" it to include it in the newly filled in input value
-            setFormData(prevState => ({
-                ...prevState,
-                [name]: checked
-            }));
-        } else {
-            setFormData(prevState => ({
-                ...prevState,
-                [name]: value
-            }));
-        }
-    };
+        [name]: type === 'checkbox' ? checked : value,
+    }));
+};
 
     const confirmPost = async () => {
         if (isButtonEnabled) {
@@ -111,7 +128,7 @@ const CreatePostForm = () => {
                     return;
                 }
 
-                const postData = {
+                const postData: CreatePostData = {
                     user_id: user_id,
                     post_text: formData.postContent,
                     token: Cookies.get('token'),
@@ -144,10 +161,10 @@ const CreatePostForm = () => {
                     setPostCreated(true);
                     handleClose();
                 } else {
-                    if (response.error) {
-                        if (response.error === "Unauthorized") {
+                    if (response.status !== "Success") {
+                        if (response.status === "Unauthorized") {
                             alert("Must reauthenticate or post is empty");
-                        } else if (response.error === "Character limit exceeded") {
+                        } else if (response.status === "Character limit exceeded") {
                             alert("Post must be less than 150 characters.");
                         }
                     }

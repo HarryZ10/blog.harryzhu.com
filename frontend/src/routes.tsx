@@ -11,7 +11,7 @@ import { Logout } from './api/UsersAPI';
  */
 const RoutesHandler = () => {
   return (
-    <Router basename='/~hzhu20'>
+    <Router basename='/'>
       <Routes>
         <Route path="/" element={<HomePage/>} />
         <Route path="/feed" element={<BlogPage/>} />

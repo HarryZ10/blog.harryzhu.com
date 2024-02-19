@@ -6,6 +6,9 @@ import Navbar from 'react-bootstrap/Navbar';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
+
+import { JSONPayload } from '../feed/CreateCommentForm';
+
 import '../../styles/navbar.css';
 
 export const Styles = {
@@ -24,7 +27,7 @@ export const Styles = {
     }
 };
 
-const NavBar = () => {
+const NavBar: React.FC = () => {
     const [username, setUsername] = useState('');
     // const [expDate, setExpDate] = useState('');
     const [isTokenExpired, setIsTokenExpired] = useState(false);
@@ -40,7 +43,7 @@ const NavBar = () => {
         const token = Cookies.get('token');
         if (token) {
             // Decode the token to get the username
-            const decodedToken = jwtDecode(token);
+            const decodedToken = jwtDecode<JSONPayload>(token);
             setUsername(decodedToken.username);
             // setExpDate(new Date(decodedToken.exp * 1000));
 

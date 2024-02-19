@@ -1,11 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, FormEvent } from "react";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useNavigate } from "react-router-dom";
 import { login, register } from "../../api/UsersAPI";
 import themes from "../../styles/themes";
 
-export const PageStyles = {
+const PageStyles: { 
+    registerLink: React.CSSProperties;
+    container: React.CSSProperties;
+    form: React.CSSProperties;
+    button: React.CSSProperties;
+    buttonHover: React.CSSProperties;
+} = {
     container: {
         display: 'flex',
         justifyContent: 'center',
@@ -49,14 +55,13 @@ export const PageStyles = {
     }
 };
 
-const LoginPanel = () => {
+const LoginPanel: React.FC = () => {
     const [isHovered, setIsHovered] = useState(false);
     const [isRegistering, setIsRegistering] = useState(false); // State to toggle between login and register
     const history = useNavigate();
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-
 
     useEffect(() => {
         // Capture the current URL and store it as returnUri
@@ -68,7 +73,7 @@ const LoginPanel = () => {
         setIsRegistering(!isRegistering);
     };
 
-    const onLoginHandler = async (e) => {
+    const onLoginHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         try {
             await login(username, password);
@@ -81,7 +86,7 @@ const LoginPanel = () => {
         }
     };
 
-    const onRegisterHandler = async (e) => {
+    const onRegisterHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         try {
             console.log(username, password);

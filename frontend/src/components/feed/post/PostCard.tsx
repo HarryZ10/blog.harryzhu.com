@@ -5,49 +5,50 @@ import { jwtDecode } from "jwt-decode";
 import { Card, Row, Col, Button, Collapse } from 'react-bootstrap';
 
 import CreateCommentForm from "../CreateCommentForm";
+import { PostCard as PCInfo} from "../../../interfaces/postCard";
+import { JSONPayload } from "../CreateCommentForm";
 import { getUsername } from "../../../api/UsersAPI";
 import { getCommentsByPostId } from "../../../api/CommentsAPI";
 import themes from "../../../styles/themes";
 
-const StyledCard = styled(Card)`
-    @media (max-width: 768px) {
-        width: 80% !important;
-    }
-`;
+import useIntersectionObserver from "../../../utils/useIntersectionObserver";
+import '../../../styles/fadein.css';
 
-const ActionButton = styled(Button)`
-    color: ${props => props.theme.dark.colors.postText};
+interface Comment {
+    comment_text: string;
+    id: string
+    comment_date: string;
+    post_id: string;
+    user_id: string;
+    username: string;
+}
 
-    @media (max-width: 1024px) { // For larger screens
-        width: 150px !important;
-    }
-
-    @media (max-width: 480px) { // For mobile phones
-        width: 100px !important;
-    }
-`;
-
-const PostCard = ({ post_id, post_text, post_date, user_id, additional_info, onDelete }) => {
+const PostCard: React.FC<PCInfo> = ({ post_id, post_text, post_date, user_id, additional_info, onDelete }) => {
 
     // Post Card Other Info collapse/show toggle
     const [openAdditionalInfo, setOpenAdditionalInfo] = useState(false);
 
-    // eslint-disable-next-line
-    const [openCommentForm, setOpenCommentForm] = useState(false); 
+    const [openCommentForm, setOpenCommentForm] = useState(false);
 
     // Get username info
     const [username, setUsername] = useState('');
     const [currentUserId, setCurrentUserId] = useState('');
 
     // Comment data
-    const [comments, setComments] = useState([]);
-    
+    const [comments, setComments] = useState<Array<Comment>>([]);
+
+    // Intersection Observer
+    const [IOref, IOentry] = useIntersectionObserver({ threshold: 0.35, executeOnce: true });
+
+    // Add initial transform/opacity classes if the entry is not intersecting.
+    const addInitial = !IOentry?.isIntersecting;
+
     useEffect(() => {
         const fetchCommentsAndUsernames = async () => {
             let resp = await getCommentsByPostId(post_id);
 
             // Create a new array to store comments with usernames
-            let commentsWithUsernames = [];
+            let commentsWithUsernames: Array<Comment> = [];
 
             for (let comment of resp) {
                 // Fetch the username for each comment
@@ -65,8 +66,11 @@ const PostCard = ({ post_id, post_text, post_date, user_id, additional_info, onD
 
     useEffect(() => {
         const token = Cookies.get("token");
-        const userid = jwtDecode(token).user_id
-        setCurrentUserId(userid);
+        if (token) {
+            const userObject = jwtDecode<JSONPayload>(token);
+            const userid = userObject.user_id;
+            setCurrentUserId(userid);
+        }
     }, [user_id])
 
     useEffect(() => {
@@ -79,8 +83,7 @@ const PostCard = ({ post_id, post_text, post_date, user_id, additional_info, onD
     }, [user_id]);
 
     // Job offer info
-    const jobOfferInfo = additional_info ? 
-        (JSON.parse(additional_info)).jobOfferInfo : null;
+    const jobOfferInfo = additional_info ? additional_info.jobOfferInfo : null;
 
     // Handles delete and updates
     // eslint-disable-next-line
@@ -88,15 +91,20 @@ const PostCard = ({ post_id, post_text, post_date, user_id, additional_info, onD
         onDelete({ id: post_id, post_text, post_date, user_id, additional_info });
     };
 
-    const formatCurrency = (value) => {
+    const formatCurrency = (value: string): string => {
         return new Intl.NumberFormat('en-US', {
             style: 'currency',
             currency: 'USD'
-        }).format(value);
+        }).format(parseInt(value));
     };
 
      return (
-        <StyledCard style={PostCardStyle} id="post-card-index">
+        <StyledCard
+            style={PostCardStyle}
+            id="post-card-index"
+            ref={IOref}
+            className={`fade-in ${addInitial ? "fade-in-initial" : ""}`.trim()}
+        >
             <Card.Header style={CardBorderStyle}>Post from {username} on {post_date}</Card.Header>
             <Card.Body style={CardBorderStyle}>
                 <Card.Title>Job Offer Details</Card.Title>
@@ -189,15 +197,15 @@ const PostCard = ({ post_id, post_text, post_date, user_id, additional_info, onD
 
                 <Card.Footer style={CardBorderStyle}>
                     <Row>
-                        <Col xs={6} md={9} style={{ padding: 0 }} className="d-flex justify-content-start">
+                        {/* <Col xs={6} md={9} style={{ padding: 0 }} className="d-flex justify-content-start">
 
                             {currentUserId === user_id && (
                                 <ActionButton onClick={(e) => {
-                                    // e.preventDefault();
-                                    // setOpenCommentForm(!openCommentForm);
+                                    e.preventDefault();
+                                    setOpenCommentForm(!openCommentForm);
                                 }} style={EditButtonStyle}>Edit</ActionButton>
                             )}
-                        </Col>
+                        </Col> */}
 
                         <Col xs={6} md={3} style={{ padding: 0 }}
                             className="d-flex justify-content-end">
@@ -210,17 +218,17 @@ const PostCard = ({ post_id, post_text, post_date, user_id, additional_info, onD
                     <Row>
                         <CreateCommentForm post_id={post_id} />
                     </Row>
-                    
-                     {comments && comments.map(comment => (
-                         <Row className="align-items-center my-2">
-                             <Col xs={4} sm={4} md={3} className="text-truncate">
-                                 <strong>{comment.username}:</strong>
-                             </Col>
-                             <Col xs={8} sm={8} md={9} className="text-break">
-                                 {comment.comment_text}
-                             </Col>
-                         </Row>
-                     ))}
+
+                    {comments && comments.map(co => (
+                        <Row className="align-items-center my-2">
+                            <Col xs={4} sm={4} md={3} className="text-truncate">
+                                <strong>{co.username}:</strong>
+                            </Col>
+                            <Col xs={8} sm={8} md={9} className="text-break">
+                                {co.comment_text}
+                            </Col>
+                        </Row>
+                    ))}
 
                 </Card.Footer>
             </Card.Body>
@@ -230,10 +238,28 @@ const PostCard = ({ post_id, post_text, post_date, user_id, additional_info, onD
 
 export default PostCard;
 
-const fetchUsername = async (user_id) => {
+const fetchUsername = async (user_id: string): Promise<string> => {
     const username = await getUsername(user_id);
     return username;
 }
+
+const StyledCard = styled(Card)`
+    @media (max-width: 768px) {
+        width: 80% !important;
+    }
+`;
+
+const ActionButton = styled(Button)`
+    color: ${props => props.theme.dark.colors.postText};
+
+    @media (max-width: 1024px) { // For larger screens
+        width: 150px !important;
+    }
+
+    @media (max-width: 480px) { // For mobile phones
+        width: 100px !important;
+    }
+`;
 
 const PostCardStyle = {
     width: "50%",
@@ -243,10 +269,6 @@ const PostCardStyle = {
     backgroundColor: themes.dark.colors.postBackground,
     color: themes.dark.colors.postText,
     borderRadius: '5px',
-
-    // Fade in
-    transform: 'translateX(-150%)',
-    opacity: '0',
 }
 
 const CardBorderStyle = {

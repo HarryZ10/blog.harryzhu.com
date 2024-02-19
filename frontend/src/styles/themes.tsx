@@ -1,4 +1,6 @@
-const themes = {
+import { Theme } from './globalStyles';
+
+const themes: Theme = {
   dark: {
     colors: {
       primary: '#007bff',

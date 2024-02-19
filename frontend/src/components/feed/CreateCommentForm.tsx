@@ -6,7 +6,29 @@ import Cookies from "js-cookie";
 import { addComment } from "../../api/CommentsAPI";
 import themes from "../../styles/themes";
 
-const CreateCommentForm = ({ post_id }) => {
+interface ComponentProps {
+  post_id: string;
+}
+
+export interface JSONPayload {
+  user_id: string;
+  username: string;
+  exp: number;
+}
+
+interface CommentData {
+  user_id: string;
+  post_id: string;
+  comment_text: string;
+  token: string | undefined;
+}
+
+interface Response {
+  status: string;
+  error?: string;
+}
+
+const CreateCommentForm: React.FC<ComponentProps> = ({ post_id }) => {
 
     const [commentCreated, setCommentCreated] = useState(false);
     const [isPostable, setIsPostable] = useState(false);
@@ -28,26 +50,27 @@ const CreateCommentForm = ({ post_id }) => {
         }
     }, [commentCreated])
 
-    const handleInputChange = (e) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target;
         setFormStringData(value);
     };
 
-    const getUserIdFromToken = () => {
+    const getUserIdFromToken = (): string => {
         const token = Cookies.get('token');
+        let userid = '';
         if (token) {
-            const decoded = jwtDecode(token);
-            return decoded.user_id;
+            const decoded = jwtDecode<JSONPayload>(token);
+            userid = decoded.user_id;
         }
-        return null;
+        return userid;
     };
 
-    const confirmPost = async (post_id) => {
+    const confirmPost = async (post_id: string) => {
         if (isPostable) {
             try {
                 const user_id = getUserIdFromToken();
 
-                const commentData = {
+                const commentData: CommentData = {
                     user_id: user_id,
                     post_id: post_id,
                     comment_text: formStringData,
@@ -55,7 +78,7 @@ const CreateCommentForm = ({ post_id }) => {
                 }
 
                 if (user_id) {
-                    const response = await addComment(post_id, commentData);
+                    const response = await addComment(post_id, commentData) as Response;
 
                     if (response.status === "Success") {
                         setCommentCreated(true);
@@ -82,7 +105,7 @@ const CreateCommentForm = ({ post_id }) => {
         text-align: right;
     `
 
-    const modalButtonStyle = {
+    const modalButtonStyle: React.CSSProperties = {
         fontFamily: "Cabin",
         fontWeight: '400',
         fontSize: '16px',
@@ -93,8 +116,11 @@ const CreateCommentForm = ({ post_id }) => {
         color: themes.dark.colors.postText,
         borderColor: isPostable ? themes.dark.colors.submission : '#b193ca',
         borderRadius: '5px',
-        transition: 'transform 0.3s, background-color 0.3s, border-color 0.3s'
+        transition: 'transform 0.3s, background-color 0.3s, border-color 0.3s',
+        cursor: !isPostable ? 'not-allowed' : 'pointer'
     }
+
+    const confirmPostButton: string = isPostable ? "hover-effect-button" : '';
 
     return (
         <>
@@ -122,17 +148,11 @@ const CreateCommentForm = ({ post_id }) => {
                     </Col>
                     <Col sm={3} style={{ padding: 0 }}>
                         <StyledButton
-                            style={{
-                                ...modalButtonStyle,
-                                cursor: !isPostable ? 'not-allowed' : 'pointer'
-                            }}
-
-                            className={isPostable ? "hover-effect-button" : ''}
-
+                            style={modalButtonStyle}
+                            className={confirmPostButton}
                             variant="primary"
-                            onClick={() => {
-                                confirmPost(post_id);
-                            }}>
+                            onClick={() => confirmPost(post_id)}
+                        >
                             Comment
                         </StyledButton>
                     </Col>
@@ -142,7 +162,7 @@ const CreateCommentForm = ({ post_id }) => {
     );
 }
 
-const StyledButton = styled(Button)`
+const StyledButton = styled(Button)<any>`
     @media (max-width: 768px) {
         margin-top: 20px !important;
         margin-bottom: 20px !important;
