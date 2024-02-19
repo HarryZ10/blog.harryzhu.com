@@ -27,7 +27,12 @@ const Button = styled.div`
   }
 `;
 
-const ActionPlus = ({ onClick, id }) => {
+interface ActionPlusProps {
+  onClick: () => void;
+  id: string;
+}
+
+const ActionPlus: React.FC<ActionPlusProps> = ({ onClick, id }) => {
   return <Button id={id} onClick={onClick}>+</Button>;
 };
 

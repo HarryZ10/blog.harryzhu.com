@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__.'/../services/FeedService.php';
 require_once __DIR__.'/../services/AuthService.php';
+require_once __DIR__.'/../config.php';
 
 /**
  * Router implementation that handles requests that uses an in-house feed and login service
@@ -26,25 +27,28 @@ class Router {
         $uri = $_SERVER['REQUEST_URI'];
         $method = $_SERVER['REQUEST_METHOD'];
         $token = $this->getTokenFromReqBody();
-	
-        // Ensure URI starts with /api/v1
-        if (substr($uri, 0, 15) !== '/~hzhu20/api/v1') {
-            header('HTTP/1.1 400 Bad Request');
-            echo json_encode([
-                'status' => 'Invalid endpoint'
-            ]);
-            exit;
+        $uriArray = explode('/', $uri);
+
+        if (PRODUCTION_MODE) {
+            // Ensure URI starts with /api/v1
+            if (substr($uri, 0, 15) !== '/~hzhu20/api/v1') {
+                header('HTTP/1.1 400 Bad Request');
+                echo json_encode([
+                    'status' => 'Invalid endpoint'
+                ]);
+                exit;
+            }
+
+            // Skip past primary domain and "/~hzhu20/api/v1" and prepend '/'
+            $base_uri = '/' . $uriArray[4];
+        } else {
+            // Extract the base endpoint from the URI
+            $base_uri = '/' . $uriArray[1];
         }
 
         // Secured endpoints
         $endpoints_to_gatekeep = ['/posts', '/comments', "/users"];
 
-        // Transform to an array
-        $uriArray = explode('/', $uri);
-
-        // Extract the base endpoint from the URI
-        // Skip past primary domain and "/~hzhu20/api/v1" and prepend '/'
-        $base_uri = '/' . $uriArray[4];
         $is_secured = in_array($base_uri, $endpoints_to_gatekeep);
 
         // Check for token on secured endpoints

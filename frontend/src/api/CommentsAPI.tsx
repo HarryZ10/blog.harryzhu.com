@@ -1,10 +1,17 @@
 // src/api/CommentsAPI.js
 import Cookies from "js-cookie";
 
-const API_BASE_URL = 'http://web.cs.georgefox.edu/~hzhu20/api/v1';
+interface CommentData {
+  user_id: string;
+  post_id: string;
+  comment_text: string;
+  token: string | undefined;
+}
+
+const API_BASE_URL = process.env['REACT_APP_API_ROOT'];
 
 // Add comment to post
-export const addComment = async (post_id, data) => {
+export const addComment = async (post_id: string, data: CommentData) => {
     try {
         const response = await fetch(`${API_BASE_URL}/posts/${post_id}/comments`, {
             method: 'POST',
@@ -16,7 +23,7 @@ export const addComment = async (post_id, data) => {
         });
 
         if (!response.ok) {
-            throw new Error("Error creating post");
+            alert("Error creating comment");
         } else {
             return await response.json();
         }
@@ -27,7 +34,7 @@ export const addComment = async (post_id, data) => {
 };
 
 // Get comments by post id
-export const getCommentsByPostId = async (post_id) => {
+export const getCommentsByPostId = async (post_id: string) => {
     try {
         const response = await fetch(`${API_BASE_URL}/posts/${post_id}/comments`, {
             method: 'GET',
@@ -38,7 +45,7 @@ export const getCommentsByPostId = async (post_id) => {
         });
 
         if (!response.ok) {
-            throw new Error("Error getting post");
+            alert("Error getting post");
         } else {
             return await response.json();
         }

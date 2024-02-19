@@ -13,10 +13,16 @@ class AuthService {
         if ($id) {
             $username = UserReadService::getUsername($id);
             http_response_code(200);
-            $result = json_encode(["username" => $username]);
+            $result = json_encode([
+                "username" => $username,
+                "status" => "Success"
+            ]);
         } else {
             http_response_code(404);
-            $result = json_encode(["error" => "ID not found"]);
+            $result = json_encode([
+                "status" => "Not found",
+                "username" => ""
+            ]);
         }
 
         return $result;
@@ -37,12 +43,12 @@ class AuthService {
                 $result = json_encode(["status" => "Success"]);
             } else {
                 http_response_code(500);
-                $result = json_encode(["error" => "Username already exists"]); 
+                $result = json_encode(["status" => "Username already exists"]); 
             }
 
         } else {
             http_response_code(500);
-            $result = json_encode(["error" => "Username invalid"]);
+            $result = json_encode(["status" => "Username invalid"]);
         }
         return $result;
     }
@@ -72,14 +78,17 @@ class AuthService {
             if ($user) {
                 $token = $this->generateJWTToken($user);
                 http_response_code(200);
-                $result = json_encode(["token" => $token]);
+                $result = json_encode([
+                    "token" => $token,
+                    "status" => "Success"
+                ]);
             } else {
                 // we need to send a 401 error
                 http_response_code(401);
                 $result = json_encode(["status" => "Unauthorized"]);
             }
         } else {
-            http_response_code(400);
+            http_response_code(500);
             $result = json_encode(["status" => "Cannot leave fields blank"]);
         }
 

@@ -26,7 +26,7 @@ class FeedService {
         } else {
             http_response_code(404);
             return json_encode([
-                'error' => 'Post not found'
+                'status' => 'Post not found'
             ]);
         }
     }
@@ -36,7 +36,9 @@ class FeedService {
 
         if ($this->isValidContentAndUser($content, $this->authenticator)) {
             PostWriteService::deletePost($content, $requestorUserId);
-            return json_encode($content);
+            return json_encode([
+                'status' => 'Success'
+            ]);
         } else {
             http_response_code(403);
             return json_encode([
@@ -54,7 +56,7 @@ class FeedService {
         } else {
             http_response_code(403);
             return json_encode([
-                'error' => 'Unauthorized'
+                'status' => 'Unauthorized'
             ]);
         }
     }
@@ -63,7 +65,10 @@ class FeedService {
         $content = json_decode(file_get_contents('php://input'), true);
 
         // Initialize response array
-        $response = ['error' => 'Unauthorized'];
+        $response = [
+            'status' => 'Unauthorized',
+            'post_id' => ''
+        ];
 
         if ($this->isValidContentAndUser($content, $this->authenticator)) {
             // Check if post text exists in the content
@@ -79,12 +84,12 @@ class FeedService {
                 } else {
                     http_response_code(403);
                     // Prepare error response for character limit exceeded
-                    $response['error'] = 'Character limit exceeded';
+                    $response['status'] = 'Character limit exceeded';
                 }
             }
         } else {
             http_response_code(403);
-            $response['error'] = 'Unauthorized';
+            $response['status'] = 'Unauthorized';
         }
 
         // Return the JSON-encoded response
@@ -95,7 +100,9 @@ class FeedService {
 
     public function addComment() {
         $content = json_decode(file_get_contents('php://input'), true);
-        $response = json_encode(['error' => 'Unauthorized']);
+        $response = json_encode([
+            'status' => 'Unauthorized'
+        ]);
 
         if ($this->isValidContentAndUser($content, $this->authenticator)) {
 
@@ -106,12 +113,12 @@ class FeedService {
                     $response = json_encode(['status' => 'Success']);
                 } else {
                     http_response_code(403);
-                    $response['error'] = 'Character limit exceeded';
+                    $response['status'] = 'Character limit exceeded';
                 }
             }
         } else {
             http_response_code(403);
-            $response['error'] = 'Unauthorized';
+            $response['status'] = 'Unauthorized';
         }
 
         return $response;
@@ -125,16 +132,22 @@ class FeedService {
 
     public function editComment() {
         $content = json_decode(file_get_contents('php://input'), true);
-        $response = json_encode(['error' => 'Unauthorized']);
+        $response = json_encode([
+            'status' => 'Unauthorized',
+            'comment_id' => ''
+        ]);
 
         if ($this->isValidContentAndUser($content, $this->authenticator)) {
 
             CommentWriteService::updateComment($content);
-            $response = json_encode(['status' => "Success"]);
+            $response = json_encode([
+                'status' => "Success",
+                'comment_id' => $content['id']
+            ]);
 
         } else {
             http_response_code(403);
-            $response['error'] = 'Unauthorized';
+            $response['status'] = 'Unauthorized';
         }
 
         return $response;

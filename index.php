@@ -1,7 +1,8 @@
 <?php
 require_once __DIR__.'/backend/routes/Router.php';
+require_once __DIR__.'/backend/config.php';
 
-$httpOrigin = "http://web.cs.georgefox.edu/~hzhu20";
+$httpOrigin = HTTP_ORIGIN;
 
 header('Content-Type: application/json');
 header("Access-Control-Allow-Origin: $httpOrigin");
