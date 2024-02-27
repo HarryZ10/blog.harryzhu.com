@@ -23,7 +23,7 @@ interface Comment {
     username: string;
 }
 
-const PostCard: React.FC<PCInfo> = ({ post_id, post_text, post_date, user_id, additional_info, onDelete }) => {
+const PostCard: React.FC<PCInfo> = ({ post_id, post_text, post_date, user_id, additional_info, onDelete, onUpdate }) => {
 
     // Post Card Other Info collapse/show toggle
     const [openAdditionalInfo, setOpenAdditionalInfo] = useState(false);
@@ -83,7 +83,8 @@ const PostCard: React.FC<PCInfo> = ({ post_id, post_text, post_date, user_id, ad
     }, [user_id]);
 
     // Job offer info
-    const jobOfferInfo = additional_info ? additional_info.jobOfferInfo : null;
+    const jobOfferInfo = additional_info?.jobOfferInfo;
+    // console.log(`Job offer info: ${additional_info}`)
 
     // Handles delete and updates
     // eslint-disable-next-line
@@ -91,12 +92,22 @@ const PostCard: React.FC<PCInfo> = ({ post_id, post_text, post_date, user_id, ad
         onDelete({ id: post_id, post_text, post_date, user_id, additional_info });
     };
 
+    const handleUpdate = () => {
+        onUpdate({ id: post_id, post_text, post_date, user_id, additional_info });
+    };
+
     const formatCurrency = (value: string): string => {
+        const numberValue = parseInt(value);
+        if (isNaN(numberValue)) {
+            // Handle NaN, could return '$0.00' or any default value you see fit
+            return '$0.00';
+        }
+
         return new Intl.NumberFormat('en-US', {
             style: 'currency',
             currency: 'USD'
-        }).format(parseInt(value));
-    };
+        }).format(numberValue);
+    }; 
 
      return (
         <StyledCard
@@ -197,15 +208,17 @@ const PostCard: React.FC<PCInfo> = ({ post_id, post_text, post_date, user_id, ad
 
                 <Card.Footer style={CardBorderStyle}>
                     <Row>
-                        {/* <Col xs={6} md={9} style={{ padding: 0 }} className="d-flex justify-content-start">
+                        <Col xs={6} md={9} style={{ padding: 0 }} className="d-flex justify-content-start">
 
                             {currentUserId === user_id && (
-                                <ActionButton onClick={(e) => {
-                                    e.preventDefault();
-                                    setOpenCommentForm(!openCommentForm);
-                                }} style={EditButtonStyle}>Edit</ActionButton>
+                                <Button
+                                    onClick={handleUpdate}
+                                    style={EditButtonStyle}
+                                >
+                                    Edit
+                                </Button>
                             )}
-                        </Col> */}
+                        </Col>
 
                         <Col xs={6} md={3} style={{ padding: 0 }}
                             className="d-flex justify-content-end">
@@ -276,13 +289,13 @@ const CardBorderStyle = {
 }
 
 // eslint-disable-next-line
-const DeleteButtonStyle = {
+const DeleteButtonStyle: React.CSSProperties = {
     backgroundColor: themes.dark.colors.danger,
     border: themes.dark.colors.danger,
     width: '100%'
 }
 
-const EditButtonStyle = {
+const EditButtonStyle: React.CSSProperties = {
     backgroundColor: themes.dark.colors.submission,
     border: themes.dark.colors.danger,
     width: '150px',

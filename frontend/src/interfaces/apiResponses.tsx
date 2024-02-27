@@ -1,4 +1,5 @@
 // src/interfaces/apiResponses.tsx
+import { ExtraInfo, PreprocessedPost } from "./post";
 
 export interface RegisterResponse {
     status: string;
@@ -24,3 +25,7 @@ export interface UpdateCommentResponse {
     status: string;
 }
 
+export interface PostsResponse {
+    results: PreprocessedPost[],
+    status: string;
+}

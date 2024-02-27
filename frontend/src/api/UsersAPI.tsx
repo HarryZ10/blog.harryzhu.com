@@ -6,7 +6,7 @@ import {
     LoginResponse
 } from '../interfaces/apiResponses';
 
-const API_BASE_URL = process.env['REACT_APP_API_ROOT'];
+const API_BASE_URL = process.env.REACT_APP_API_ROOT || 'http://10.10.10.25:80';
 
 export const getUsername = async (id: string): Promise<string> => {
 

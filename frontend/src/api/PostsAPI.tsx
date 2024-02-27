@@ -1,25 +1,27 @@
 // src/api/PostsAPI.js
 import Cookies from "js-cookie";
-import { CreatePostResponse, UpdateCommentResponse } from "../interfaces/apiResponses";
+import { CreatePostResponse, UpdateCommentResponse, PostsResponse } from "../interfaces/apiResponses";
 import { CreatePostData } from "../interfaces/post";
 
-const API_BASE_URL = process.env['REACT_APP_API_ROOT'];
+const API_BASE_URL = process.env.REACT_APP_API_ROOT|| 'http://10.10.10.25:80';
 
 // Get all posts
-export const getAllPosts = async () => {
-    const response = await fetch(`${API_BASE_URL}/posts`, {
+export const getAllPosts = async (): Promise<PostsResponse> => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/posts`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${Cookies.get('token')}`
         },
-    }).then(res => {
-        return res.json();
-    }).catch(err => {
-        console.error(err);
-    });
+        });
 
-    return response;
+        const data: PostsResponse = await response.json();
+        return data;
+    } catch (err) {
+        console.error(err);
+        throw new Error('Failed to fetch posts');
+    }
 };
 
 // Get a single post by ID
@@ -61,7 +63,7 @@ export const createPost = async (data: CreatePostData): Promise<CreatePostRespon
     })
     .catch(err => console.error(err));
 
-    if (response.status !== "Success") {
+    if (response.status !== "Post created") {
         alert('Error creating post');
     }
 
@@ -69,26 +71,29 @@ export const createPost = async (data: CreatePostData): Promise<CreatePostRespon
 };
 
 // Update an existing post
-export const updatePost = async (id: string, updatedData: string): Promise<UpdateCommentResponse> => {
+export const updatePost = async (data: CreatePostData): Promise<UpdateCommentResponse> => {
 
-    const response: UpdateCommentResponse = await fetch(`${API_BASE_URL}/posts/${id}`, {
+    const response: UpdateCommentResponse = await fetch(`${API_BASE_URL}/posts/${data.id}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${Cookies.get('token')}`
         },
-        body: JSON.stringify(updatedData),
+        body: JSON.stringify({
+            ...data,
+            token: Cookies.get('token'),
+        }), 
     }).then((res) => {
         return res.json();
     }).catch(err => {
         alert("Something went wrong");
     })
     
-    if (response.status !== "Success") {
-        alert("Something went wrong");
+    if (response.status !== "Post updated") {
+        alert("Something went wrong with updating post");
     }
     return response;
-};    
+};
 
 // Delete an existing post
 export const deletePost = async (id: string, userId: string) => {

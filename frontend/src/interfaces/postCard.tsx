@@ -13,5 +13,13 @@ export interface PostCard {
         post_date: string;
         user_id: string;
         additional_info: ExtraInfo;
+    }) => void;
+
+    onUpdate: (props: {
+        id: string;
+        post_text: string;
+        post_date: string;
+        user_id: string;
+        additional_info: ExtraInfo;
     }) => void; 
 }
