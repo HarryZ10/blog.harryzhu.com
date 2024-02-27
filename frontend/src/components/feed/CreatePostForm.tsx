@@ -5,9 +5,9 @@ import styled from 'styled-components';
 import { jwtDecode } from 'jwt-decode';
 
 import { JSONPayload } from './CreateCommentForm';
-import { CreatePostData } from '../../interfaces/post';
+import { CreatePostData, Post } from '../../interfaces/post';
 
-import { createPost } from '../../api/PostsAPI';
+import { createPost, updatePost } from '../../api/PostsAPI';
 import ActionPlus from '../layout/ActionPlus';
 import themes from '../../styles/themes';
 import "../../styles/createPost.css"
@@ -30,55 +30,40 @@ interface FormData {
     tuitionAssistance: boolean;
 }
 
-const StyledModal = styled(Modal)`
-  .modal-content {
-    background: transparent;
-    width: 100%;
+interface FormProps {
+    id?: string,
+    initialFormData?: Post;
 
-     @media (max-width: 768px) { // For mobile phones
-        width: 80%;
-        margin-left: auto;
-        margin-right: auto;
-    }
-  }
-  .modal-header {
-    border-bottom: 0.6px solid #8c8785 !important;
-    button {
-        margin-left: 0;
-    }
-  }
-  
-  .modal-footer {
-    border-top: none !important;
-  }
-`;
+    show: boolean;
+    handleClose: () => void;
+}
 
-const CreatePostForm: React.FC = () => {
+const CreatePostForm: React.FC<FormProps> = ({ id, initialFormData, show, handleClose }) => {
 
-    const [show, setShow] = useState(false);
     const [postCreated, setPostCreated] = useState(false);
     const [isButtonEnabled, setIsButtonEnabled] = useState(false);
 
     const [formData, setFormData] = useState<FormData>({
-        postContent: '',
-        baseSalary: '',
-        signOnBonus: '',
-        equity: '',
-        unlimitedPTO: false,
-        has401k: false,
-        medicalInsurance: false,
-        dentalInsurance: false,
-        visionInsurance: false,
-        flexibleWorkHours: false,
-        remoteWorkOptions: false,
-        relocationAssistance: false,
-        maternityPaternityLeave: false,
-        gymMembership: false,
-        tuitionAssistance: false,
+        postContent: initialFormData?.post_text || '',
+        baseSalary: initialFormData?.extra?.jobOfferInfo?.baseSalary || '',
+        signOnBonus: initialFormData?.extra?.jobOfferInfo?.signOnBonus || '',
+        equity: initialFormData?.extra?.jobOfferInfo?.equity || '',
+        unlimitedPTO: initialFormData?.extra?.jobOfferInfo?.otherOptions?.unlimitedPTO || false,
+        has401k: initialFormData?.extra?.jobOfferInfo?.otherOptions?.has401k || false,
+        medicalInsurance: initialFormData?.extra?.jobOfferInfo?.otherOptions?.healthInsurance?.medical || false,
+        dentalInsurance: initialFormData?.extra?.jobOfferInfo?.otherOptions?.healthInsurance?.dental || false,
+        visionInsurance: initialFormData?.extra?.jobOfferInfo?.otherOptions?.healthInsurance?.vision || false,
+        flexibleWorkHours: initialFormData?.extra?.jobOfferInfo?.otherOptions?.flexibleWorkHours || false,
+        remoteWorkOptions: initialFormData?.extra?.jobOfferInfo?.otherOptions?.remoteWorkOptions || false,
+        relocationAssistance: initialFormData?.extra?.jobOfferInfo?.otherOptions?.relocationAssistance || false,
+        maternityPaternityLeave: initialFormData?.extra?.jobOfferInfo?.otherOptions?.maternityPaternityLeave || false,
+        gymMembership: initialFormData?.extra?.jobOfferInfo?.otherOptions?.gymMembership || false,
+        tuitionAssistance: initialFormData?.extra?.jobOfferInfo?.otherOptions?.tuitionAssistance || false,
     });
 
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const post_id = id || '';
+
+    const isUpdateMode = post_id !== '';
 
     useEffect(() => {
         if (formData.postContent.length <= 150) {
@@ -89,10 +74,30 @@ const CreatePostForm: React.FC = () => {
     }, [formData.postContent, formData.postContent.length]);
 
     useEffect(() => {
+        setFormData({
+            postContent: initialFormData?.post_text || '',
+            baseSalary: initialFormData?.extra?.jobOfferInfo?.baseSalary || '',
+            signOnBonus: initialFormData?.extra?.jobOfferInfo?.signOnBonus || '',
+            equity: initialFormData?.extra?.jobOfferInfo?.equity || '',
+            unlimitedPTO: initialFormData?.extra?.jobOfferInfo?.otherOptions?.unlimitedPTO || false,
+            has401k: initialFormData?.extra?.jobOfferInfo?.otherOptions?.has401k || false,
+            medicalInsurance: initialFormData?.extra?.jobOfferInfo?.otherOptions?.healthInsurance?.medical || false,
+            dentalInsurance: initialFormData?.extra?.jobOfferInfo?.otherOptions?.healthInsurance?.dental || false,
+            visionInsurance: initialFormData?.extra?.jobOfferInfo?.otherOptions?.healthInsurance?.vision || false,
+            flexibleWorkHours: initialFormData?.extra?.jobOfferInfo?.otherOptions?.flexibleWorkHours || false,
+            remoteWorkOptions: initialFormData?.extra?.jobOfferInfo?.otherOptions?.remoteWorkOptions || false,
+            relocationAssistance: initialFormData?.extra?.jobOfferInfo?.otherOptions?.relocationAssistance || false,
+            maternityPaternityLeave: initialFormData?.extra?.jobOfferInfo?.otherOptions?.maternityPaternityLeave || false,
+            gymMembership: initialFormData?.extra?.jobOfferInfo?.otherOptions?.gymMembership || false,
+            tuitionAssistance: initialFormData?.extra?.jobOfferInfo?.otherOptions?.tuitionAssistance || false,
+        });
+    }, [initialFormData])
+
+    useEffect(() => {
         if (postCreated) {
-            setTimeout(() => {
-                alert("Post created. Refresh to see post.")
-            }, 100);
+            alert("Post has been updated or created. Refresh to see post.");
+            handleClose();
+            setPostCreated(false);
         }
     }, [postCreated]);
 
@@ -129,6 +134,7 @@ const CreatePostForm: React.FC = () => {
                 }
 
                 const postData: CreatePostData = {
+                    id: post_id,
                     user_id: user_id,
                     post_text: formData.postContent,
                     token: Cookies.get('token'),
@@ -156,16 +162,36 @@ const CreatePostForm: React.FC = () => {
                     }
                 };
 
-                const response = await createPost(postData);
-                if (response.status === "Post created") {
-                    setPostCreated(true);
-                    handleClose();
+                let response;
+
+                if (!isUpdateMode) {
+                    response = await createPost(postData);
+                    if (response.status === "Post created") {
+                        setPostCreated(true);
+                        handleClose();
+                    } else {
+                        if (response.status !== "Success") {
+                            if (response.status === "Unauthorized") {
+                                alert("Must reauthenticate or post is empty");
+                            } else if (response.status === "Character limit exceeded") {
+                                alert("Post must be less than 150 characters.");
+                            }
+                        }
+                    }
                 } else {
-                    if (response.status !== "Success") {
-                        if (response.status === "Unauthorized") {
-                            alert("Must reauthenticate or post is empty");
-                        } else if (response.status === "Character limit exceeded") {
-                            alert("Post must be less than 150 characters.");
+                    console.log(postData);
+                    response = await updatePost(postData);
+
+                    if (response.status === "Post updated") {
+                        setPostCreated(true);
+                        handleClose();
+                    } else {
+                        if (response.status !== "Success") {
+                            if (response.status === "Unauthorized") {
+                                alert("Must reauthenticate or post is empty");
+                            } else if (response.status === "Character limit exceeded") {
+                                alert("Post must be less than 150 characters.");
+                            }
                         }
                     }
                 }
@@ -197,12 +223,13 @@ const CreatePostForm: React.FC = () => {
     }
 
     return (
-        <>
-            <ActionPlus id="create-post" onClick={handleShow} />
+        <> 
             <StyledModal show={show} onHide={handleClose}>
                 <div style={modalBackground}>
                     <Modal.Header closeButton>
-                        <Modal.Title style={modalTitleStyle}>Create Post</Modal.Title>
+                        <Modal.Title style={modalTitleStyle}>
+                            { isUpdateMode ? 'Edit Post' : 'Create Post' }
+                        </Modal.Title>
                     </Modal.Header>
                     <Modal.Body style={modalTextStyle}>
                         <Form>
@@ -215,7 +242,7 @@ const CreatePostForm: React.FC = () => {
                                         className="post-textarea"
                                         value={formData.postContent}
                                         onChange={handleInputChange}
-                                        placeholder="What's your flex?"
+                                        placeholder={ isUpdateMode ? '' : 'What\'s your flex?' }
                                         style={{...FormInputStyle, ...{
                                             border: 'none',
                                             fontSize: '20px',
@@ -440,5 +467,28 @@ const modalBackground = {
     borderRadius: '20px',
     width: '100%',
 }
+
+const StyledModal = styled(Modal)`
+  .modal-content {
+    background: transparent;
+    width: 100%;
+
+     @media (max-width: 768px) { // For mobile phones
+        width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+  }
+  .modal-header {
+    border-bottom: 0.6px solid #8c8785 !important;
+    button {
+        margin-left: 0;
+    }
+  }
+  
+  .modal-footer {
+    border-top: none !important;
+  }
+`;
 
 export default CreatePostForm;

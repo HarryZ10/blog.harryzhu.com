@@ -15,7 +15,14 @@ class FeedService {
     }
 
     public function retrieveBlogFeed() {
-        return json_encode(PostReadService::fetchAllPosts());
+        $status = [
+            'status' => 'Success'
+        ];
+
+        return json_encode([
+            ...$status,
+            'results' => PostReadService::fetchAllPosts()
+        ]);
     }
 
     public function retrieveBlogPost($id) {
@@ -48,11 +55,23 @@ class FeedService {
     }
 
     public function editBlogPost($id) {
+        $status = [
+            'status' => 'Post updated'
+        ];
+
         $content = json_decode(file_get_contents('php://input'), true);
 
         if ($this->isValidContentAndUser($content, $this->authenticator)) {
+            if (strlen($content["post_text"]) <= 150) {
                 PostWriteService::updatePost($content);
-                return json_encode($content);
+                return json_encode([
+                    ...$status,
+                ]);
+            } else {
+                http_response_code(403);
+                // Prepare error response for character limit exceeded
+                $response['status'] = 'Character limit exceeded';
+            }
         } else {
             http_response_code(403);
             return json_encode([

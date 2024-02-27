@@ -29,7 +29,6 @@ export const Styles = {
 
 const NavBar: React.FC = () => {
     const [username, setUsername] = useState('');
-    // const [expDate, setExpDate] = useState('');
     const [isTokenExpired, setIsTokenExpired] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
 
@@ -42,14 +41,18 @@ const NavBar: React.FC = () => {
         // Get the token from cookies
         const token = Cookies.get('token');
         if (token) {
-            // Decode the token to get the username
-            const decodedToken = jwtDecode<JSONPayload>(token);
-            setUsername(decodedToken.username);
-            // setExpDate(new Date(decodedToken.exp * 1000));
+            try {
+                // Decode the token to get the username
+                const decodedToken = jwtDecode<JSONPayload>(token);
+                setUsername(decodedToken.username);
 
-            // Check if the token is expired
-            const now = new Date();
-            setIsTokenExpired(decodedToken.exp * 1000 < now.getTime());
+                // Check if the token is expired
+                const now = new Date();
+                setIsTokenExpired(decodedToken.exp * 1000 < now.getTime());
+            } catch (error) {
+                console.error("Removing unused or improper token");
+                Cookies.remove('token');
+            }
         }
     }, []);
 

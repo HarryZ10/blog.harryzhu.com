@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
@@ -10,8 +10,10 @@ import { Logout } from './api/UsersAPI';
  * Manages routing on the client side to different pages
  */
 const RoutesHandler = () => {
+  let value = process.env.REACT_APP_BASENAME || "/";
+
   return (
-    <Router basename='/~hzhu20'>
+    <Router basename="/">
       <Routes>
         <Route path="/" element={<HomePage/>} />
         <Route path="/feed" element={<BlogPage/>} />

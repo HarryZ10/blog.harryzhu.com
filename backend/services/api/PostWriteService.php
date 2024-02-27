@@ -39,17 +39,16 @@ class PostWriteService {
     public static function updatePost($postBodyData) {
         $stmt = DatabaseService::database()->prepare(
              "UPDATE post
-             SET user_id = :user_id,
-                 post_date = :post_date,
+             SET post_date = :post_date,
                  post_text = :post_text,
                  extra = :extra
              WHERE project_id = 3 AND id = :id;"
 	);
-        $stmt->bindParam(':user_id', $postBodyData['user_id']);
-        $stmt->bindParam(':post_date', $postBodyData['post_date']);
-        $stmt->bindParam(':post_text', $postBodyData['post_text']);
+        $stmt->bindParam(':post_date', date('m-d-Y', time()));
+
         $stmt->bindParam(':id', $postBodyData['id']);
-        $stmt->bindParam(':extra', $postBodyData['extra']);
+        $stmt->bindParam(':post_text', $postBodyData['post_text']);
+        $stmt->bindParam(':extra', json_encode($postBodyData['extra']));
         $stmt->execute();
         return "Success";
     }

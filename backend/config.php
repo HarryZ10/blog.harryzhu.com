@@ -4,14 +4,15 @@
     define('DB_PORT', '5432');
 
     // Local development
-    //define('DB_NAME', 'program');
-    //define('DB_USER', 'dev');
-    //define('DB_PASSWORD', '314dev');
-    //define('HTTP_ORIGIN', 'http://10.10.10.25:3000');
+    // define('DB_NAME', 'program');
+    // define('DB_USER', 'dev');
+    // define('DB_PASSWORD', '314dev');
+    // define('HTTP_ORIGIN', 'http://10.10.10.25:3000');
     define('HTTP_ORIGIN', 'http://web.cs.georgefox.edu/~hzhu20');
 
     // Production mode
     define('PRODUCTION_MODE', true);
+    // define('PRODUCTION_MODE', false);
 
     // Production environment
     define('DB_NAME', 'blog');

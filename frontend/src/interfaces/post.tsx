@@ -30,8 +30,9 @@ export interface ExtraInfo {
 export interface CreatePostData {
   user_id: string;
   post_text: string;
-  token: string | undefined;
+  token?: string;
   extra: ExtraInfo;
+  id?: string;
 }
 
 export interface Post {
@@ -40,4 +41,12 @@ export interface Post {
     post_date: string;
     post_text: string;
     extra: ExtraInfo;
+}
+
+export interface PreprocessedPost {
+    id: string;
+    user_id: string;
+    post_date: string;
+    post_text: string;
+    extra: string;
 }
