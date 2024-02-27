@@ -13,7 +13,7 @@ const RoutesHandler = () => {
   let value = process.env.REACT_APP_BASENAME || "/";
 
   return (
-    <Router basename="/">
+    <Router basename="/~hzhu20">
       <Routes>
         <Route path="/" element={<HomePage/>} />
         <Route path="/feed" element={<BlogPage/>} />
