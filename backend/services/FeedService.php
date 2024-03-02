@@ -124,7 +124,7 @@ class FeedService {
                         ];
                     } else {
                         $response = [
-                            'status' => $result,
+                            'status' => $result['status']['errorInfo'][2],
                         ];
                     }
                 } else {
