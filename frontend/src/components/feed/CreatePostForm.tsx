@@ -6,6 +6,7 @@ import { jwtDecode } from 'jwt-decode';
 
 import { JSONPayload } from './CreateCommentForm';
 import { CreatePostData, Post } from '../../interfaces/post';
+import { CreatePostResponse, UpdateCommentResponse } from '../../interfaces/apiResponses';
 
 import { createPost, updatePost } from '../../api/PostsAPI';
 import ActionPlus from '../layout/ActionPlus';
@@ -161,24 +162,13 @@ const CreatePostForm: React.FC<FormProps> = ({ id, initialFormData, show, handle
                     }
                 };
 
-                let response;
+                let response: CreatePostResponse | UpdateCommentResponse;
 
                 if (!isUpdateMode) {
                     response = await createPost(postData);
                     if (response.status === "Post created") {
                         setPostCreated(true);
                         handleClose();
-                    } else {
-                        if (response.status !== "Success") {
-                            if (response.status === "Unauthorized") {
-                                alert("Must reauthenticate or post is empty");
-                            } else if (response.status === "Character limit exceeded") {
-                                alert("Post must be less than 150 characters.");
-                            } else {
-                                alert(response.status);
-                                handleClose();
-                            }
-                        }
                     }
                 } else {
                     response = await updatePost(postData);
@@ -186,17 +176,6 @@ const CreatePostForm: React.FC<FormProps> = ({ id, initialFormData, show, handle
                     if (response.status === "Post updated") {
                         setPostCreated(true);
                         handleClose();
-                    } else {
-                        if (response.status !== "Success") {
-                            if (response.status === "Unauthorized") {
-                                alert("Must reauthenticate or post is empty");
-                            } else if (response.status === "Character limit exceeded") {
-                                alert("Post must be less than 150 characters.");
-                            } else {
-                                alert(response.status);
-                                handleClose();
-                            }
-                        }
                     }
                 }
 
