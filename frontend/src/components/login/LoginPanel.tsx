@@ -4,7 +4,7 @@ import Form from 'react-bootstrap/Form';
 import { useNavigate } from "react-router-dom";
 import { login, register } from "../../api/UsersAPI";
 import themes from "../../styles/themes";
-import { LoginResponse } from "../../interfaces/apiResponses";
+import { LoginResponse, RegisterResponse } from "../../interfaces/apiResponses";
 
 const PageStyles: { 
     registerLink: React.CSSProperties;
@@ -94,14 +94,20 @@ const LoginPanel: React.FC = () => {
     const onRegisterHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         try {
-            await register(username, password);
+            const response: RegisterResponse = await register(username, password);
 
-            // Post-login success logic
-            history("/"); // Redirect user to the saved URI or a default path
-            alert("Registered!");
+            if (response.status == "Success") {
+                alert("Registered!");
+
+                // Post-login success logic
+                history("/"); // Redirect user to the saved URI or a default path
+            } else {
+                alert(response.status);
+            }
+
         } catch (error) {
             // Handle login error
-            alert("Registration failed");
+            alert(error);
         }
     };
 
