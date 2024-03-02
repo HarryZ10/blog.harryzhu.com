@@ -108,7 +108,6 @@ class FeedService {
         // Initialize response array
         $response = [
             'status' => 'Unauthorized',
-            'post_id' => ''
         ];
 
         if ($this->isValidContentAndUser($content, $this->authenticator)) {
@@ -117,11 +116,17 @@ class FeedService {
                 // Check if post text length is within the limit
                 if (strlen($content["post_text"]) <= 150) {
                     // Create post and prepare success response
-                    $id = PostWriteService::createPost($content);
-                    $response = [
-                        'status' => 'Post created',
-                        'post_id' => $id
-                    ];
+                    $result = PostWriteService::createPost($content);
+
+                    if ($result == "Success") {
+                        $response = [
+                            'status' => 'Post created',
+                        ];
+                    } else {
+                        $response = [
+                            'status' => $result,
+                        ];
+                    }
                 } else {
                     http_response_code(403);
                     // Prepare error response for character limit exceeded

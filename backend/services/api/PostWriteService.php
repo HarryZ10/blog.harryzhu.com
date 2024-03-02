@@ -7,15 +7,20 @@ class PostWriteService {
     // Create a post
     // Authentication Check Needed
     public static function createPost($postBodyData) {
-        $stmt = DatabaseService::database()->prepare(
-            "INSERT INTO post (user_id, project_id, post_date, post_text, extra)
-             VALUES (:user_id, 3, :post_date, :post_text, :extra);"
-        );
-        $stmt->bindParam(":user_id", $postBodyData["user_id"]);
-        $stmt->bindParam(":post_date", date('Y-m-d'));
-        $stmt->bindParam(":post_text", $postBodyData["post_text"]);
-	$stmt->bindParam(":extra", json_encode($postBodyData["extra"]));
-        $stmt->execute();
+        try  {
+            $stmt = DatabaseService::database()->prepare(
+                "INSERT INTO post (user_id, project_id, post_date, post_text, extra)
+                VALUES (:user_id, 3, :post_date, :post_text, :extra);"
+            );
+            $stmt->bindParam(":user_id", $postBodyData["user_id"]);
+            $stmt->bindParam(":post_date", date('Y-m-d'));
+            $stmt->bindParam(":post_text", $postBodyData["post_text"]);
+        $stmt->bindParam(":extra", json_encode($postBodyData["extra"]));
+            $stmt->execute();
+        } catch (\PDOException $e) {
+            return $e;
+        }
+
         return "Success";
     }
 
