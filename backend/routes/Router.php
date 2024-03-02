@@ -29,6 +29,8 @@ class Router {
         $token = $this->getTokenFromReqBody();
         $uriArray = explode('/', $uri);
 
+        $startingIndex = 1;
+
         if (PRODUCTION_MODE) {
             // Ensure URI starts with /api/v1
             if (substr($uri, 0, 15) !== '/~hzhu20/api/v1') {
@@ -39,8 +41,10 @@ class Router {
                 exit;
             }
 
+            $startingIndex = 4;
+
             // Skip past primary domain and "/~hzhu20/api/v1" and prepend '/'
-            $base_uri = '/' . $uriArray[4];
+            $base_uri = '/' . $uriArray[$startingIndex];
         } else {
             // Extract the base endpoint from the URI
             $base_uri = '/' . $uriArray[1];
@@ -69,30 +73,38 @@ class Router {
         // Add comment to a post by identifier
         // POST /posts/:id/comments
         elseif ($method == 'POST'
-            && $uriArray[1] == "posts" && is_numeric($uriArray[2]) && $uriArray[3] == "comments"
+            && $uriArray[1] == "posts"
+            && is_numeric($uriArray[$startingIndex + 1])
+            && $uriArray[$startingIndex + 2] == "comments"
         ) {
             echo $this->feed->addComment();
         }
 
         // Retrieve username from id
         // GET /users/:id
-        elseif ($method == 'GET' && $uriArray[1] == "users" && is_numeric($uriArray[2])) {
+        elseif ($method == 'GET'
+            && $uriArray[1] == "users"
+            && is_numeric($uriArray[$startingIndex + 1])) {
             echo $this->authenticator->retrieveUsername($uriArray[2]);
         }
 
         // Retrieve all comments for a post.
         // GET /posts/:id/comments
         elseif ($method == 'GET'
-            && $uriArray[1] == "posts" && is_numeric($uriArray[2]) && $uriArray[3] == "comments"
+            && $uriArray[1] == "posts"
+            && is_numeric($uriArray[$startingIndex + 1])
+            && $uriArray[$startingIndex + 2] == "comments"
         ) {
              echo $this->feed->listComments($uriArray[2]);
         }
 
         // Retrieve post by identifier
         // GET /posts/:id
-        elseif ($method == 'GET' && $uriArray[1] == "posts" && is_numeric($uriArray[2])
+        elseif ($method == 'GET'
+            && $uriArray[1] == "posts"
+            && is_numeric($uriArray[$startingIndex + 1])
         ) {
-             echo $this->feed->retrieveBlogPost($uriArray[2]);
+             echo $this->feed->retrieveBlogPost($uriArray[$startingIndex + 1]);
         }
 
         // Creates a post
@@ -104,15 +116,20 @@ class Router {
         // Deletes a post
         // DELETE /posts/:id
         elseif ($method == 'DELETE'
-            && $uriArray[1] == "posts" && is_numeric($uriArray[2])
+            && $uriArray[1] == "posts"
+            && is_numeric($uriArray[$startingIndex + 1])
         ) {
-            echo $this->feed->removeBlogPost($uriArray[2], $token);
+            echo $this->feed->removeBlogPost(
+                $uriArray[$startingIndex + 1],
+                $token
+            );
         }
 
         // Edits/updates a post
         // PUT /posts/:id
         elseif ($method == 'PUT'
-            && $uriArray[1] == "posts" && is_numeric($uriArray[2])
+            && $uriArray[1] == "posts"
+            && is_numeric($uriArray[$startingIndex + 1])
         ) {
             echo $this->feed->editBlogPost($uriArray[2]);
         }
@@ -120,7 +137,8 @@ class Router {
         // Update a comment
         // PUT /comments/:id
         elseif ($method == 'PUT'
-            && $uriArray[1] == "comments" && is_numeric($uriArray[2])
+            && $uriArray[1] == "comments"
+            && is_numeric($uriArray[$startingIndex + 1])
         ) {
             echo $this->feed->editComment();
         }
@@ -128,9 +146,10 @@ class Router {
         // Delete a comment
         // DELETE /comments/:id
         elseif ($method == 'DELETE'
-            && $uriArray[1] == "comments" && is_numeric($uriArray[2])
+            && $uriArray[1] == "comments"
+            && is_numeric($uriArray[$startingIndex + 1])
         ) {
-            echo $this->feed->deleteComment($uriArray[2]);
+            echo $this->feed->deleteComment($uriArray[$startingIndex + 1]);
         }
 
         // Retrieves all posts
@@ -141,7 +160,10 @@ class Router {
 
         // Retrieves profile feed
         // GET /profile/me
-        elseif ($method == 'GET' && $base_uri == '/profile' && $uriArray[2] == "me") {
+        elseif ($method == 'GET'
+            && $base_uri == '/profile'
+            && $uriArray[$startingIndex + 1] == "me") {
+
             $decoded = $this->authenticator->decodeJWT($token);
             $userId = $decoded['payload']['user_id'];
             echo $this->feed->retrieveUserPosts($userId);
