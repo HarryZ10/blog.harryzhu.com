@@ -141,7 +141,7 @@ class Router {
 
         // Retrieves profile feed
         // GET /profile/me
-        elseif ($method == 'GET' && $base_uri == 'profile' && $uriArray[2] == "me") {
+        elseif ($method == 'GET' && $base_uri == '/profile' && $uriArray[2] == "me") {
             $decoded = $this->authenticator->decodeJWT($token);
             $userId = $decoded['payload']['user_id'];
             echo $this->feed->retrieveUserPosts($userId);
