@@ -84,7 +84,6 @@ const PostCard: React.FC<PCInfo> = ({ post_id, post_text, post_date, user_id, ad
 
     // Job offer info
     const jobOfferInfo = additional_info?.jobOfferInfo;
-    // console.log(`Job offer info: ${additional_info}`)
 
     // Handles delete and updates
     // eslint-disable-next-line

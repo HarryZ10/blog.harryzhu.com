@@ -19,7 +19,7 @@ export const getAllPosts = async (): Promise<PostsResponse> => {
         const data: PostsResponse = await response.json();
         return data;
     } catch (err) {
-        console.error(err);
+        console.error(`Get Posts: ${err}`);
         return {
             results: [],
             status: `${err}`
@@ -40,7 +40,7 @@ export const getAllPostsByUser = async (): Promise<PostsResponse> => {
         const data: PostsResponse = await response.json();
         return data;
     } catch (err) {
-        console.error(err);
+        console.error(`Get Profile Posts: ${err}`);
         return {
             results: [],
             status: `${err}`
@@ -113,7 +113,7 @@ export const deletePost = async (id: string, userId: string) => {
     }).then(res => {
         return res.json();
     }).catch(err => {
-        console.error(err)
+        console.error(`Delete Post: ${err}`)
     })
     if (response) {
         if (response.status !== "Success") {
