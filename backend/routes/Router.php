@@ -47,7 +47,7 @@ class Router {
         }
 
         // Secured endpoints
-        $endpoints_to_gatekeep = ['/posts', '/comments', "/users"];
+        $endpoints_to_gatekeep = ['/posts', '/comments', "/users", "/profile"];
 
         $is_secured = in_array($base_uri, $endpoints_to_gatekeep);
 
@@ -139,7 +139,9 @@ class Router {
             echo $this->feed->retrieveBlogFeed();
         }
 
-        else if ($method == 'GET' && $uriArray[1] == 'profile' && $uriArray[2] == "me") {
+        // Retrieves profile feed
+        // GET /profile/me
+        elseif ($method == 'GET' && $base_uri == 'profile' && $uriArray[2] == "me") {
             $decoded = $this->authenticator->decodeJWT($token);
             $userId = $decoded['payload']['user_id'];
             echo $this->feed->retrieveUserPosts($userId);
