@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/~hzhu20/static/css/main.26906484.css",
+    "main.js": "/~hzhu20/static/js/main.a4549bea.js",
+    "index.html": "/~hzhu20/index.html",
+    "main.26906484.css.map": "/~hzhu20/static/css/main.26906484.css.map",
+    "main.a4549bea.js.map": "/~hzhu20/static/js/main.a4549bea.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.26906484.css",
+    "static/js/main.a4549bea.js"
+  ]
+}
