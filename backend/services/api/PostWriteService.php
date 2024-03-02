@@ -18,7 +18,7 @@ class PostWriteService {
         $stmt->bindParam(":extra", json_encode($postBodyData["extra"]));
             $stmt->execute();
         } catch (\PDOException $e) {
-            return $e;
+            return $e->getMessage();
         }
 
         return "Success";
