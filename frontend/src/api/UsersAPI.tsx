@@ -87,9 +87,5 @@ export const register = async (username: string, password: string): Promise<Regi
         console.error(`Registration: ${err}`);
     });
 
-    if (response.status !== "Success") {
-        alert(response.status);
-    }
-
     return response;
 };
