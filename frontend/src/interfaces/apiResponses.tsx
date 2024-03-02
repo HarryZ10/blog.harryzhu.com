@@ -17,7 +17,6 @@ export interface RetrieveUsernameResponse {
 
 export interface CreatePostResponse {
     status: string;
-    post_id: string;
 }
 
 export interface UpdateCommentResponse {
