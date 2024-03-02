@@ -37,7 +37,7 @@ The main directory for the frontend part of the project.
   - `api`: Contains files related to API calls.
   - `components`: React components used in the application.
   - `pages`: Contains the React components for different pages.
-    - `BlogPage.jsx`: The blog page component.
+    - `FeedPage.jsx`: The page that gets all the blogs
     - `HomePage.jsx`: The home page component.
     - `LoginPage.jsx`: The login page component.
   - `styles`: CSS files and styling related resources.
@@ -67,4 +67,4 @@ Contributions to this project are not welcome.
 
 ## Acknowledgments
 
-Special thanks to CSIS 314 and Adjunct Professor Heather Orr
+* CS 314: Client-Server Systems

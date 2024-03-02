@@ -194,7 +194,7 @@ class AuthService {
             ];
 
         } else {
-            throw new Exception('Invalid JWT');
+            return 'Invalid JWT';
         }
     }
 

@@ -4,6 +4,7 @@ import Form from 'react-bootstrap/Form';
 import { useNavigate } from "react-router-dom";
 import { login, register } from "../../api/UsersAPI";
 import themes from "../../styles/themes";
+import { LoginResponse } from "../../interfaces/apiResponses";
 
 const PageStyles: { 
     registerLink: React.CSSProperties;
@@ -76,13 +77,17 @@ const LoginPanel: React.FC = () => {
     const onLoginHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         try {
-            await login(username, password);
+            const response: LoginResponse = await login(username, password);
 
-            // Post-login success logic
-            history("/"); // Redirect user to the saved URI or a default path
+            if (response.status === "Success") {
+                // Post-login success logic
+                history("/"); // Redirect user to the saved URI or a default path
+            } else {
+                console.log(response);
+            }
 
         } catch (err) {
-            alert("Login failed");
+            alert("Login failed" + err);
         }
     };
 

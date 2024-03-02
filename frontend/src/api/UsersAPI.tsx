@@ -6,7 +6,7 @@ import {
     LoginResponse
 } from '../interfaces/apiResponses';
 
-const API_BASE_URL = process.env.REACT_APP_API_ROOT || 'http://10.10.10.25:80';
+const API_BASE_URL = process.env.REACT_APP_API_ROOT ?? 'http://10.10.10.25:80';
 
 export const getUsername = async (id: string): Promise<string> => {
 
@@ -44,18 +44,16 @@ export const login = async (username: string, password: string): Promise<LoginRe
     }).then(resp => {
         return resp.json();
     }).catch(err => {
-        console.error(err);
+        return err
     });
 
-    if (response.status !== "Success") {
-        alert("Something went wrong");
+    if (response.status === "Success") {
+        const token = response.token;
+
+        Cookies.set('token', token, {
+            secure: false
+        });
     }
-
-    const token = response.token;
-
-    Cookies.set('token', token, {
-        secure: false
-    });
 
     return response;
 };

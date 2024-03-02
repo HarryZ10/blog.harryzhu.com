@@ -8,13 +8,11 @@
     // define('DB_USER', 'dev');
     // define('DB_PASSWORD', '314dev');
     // define('HTTP_ORIGIN', 'http://10.10.10.25:3000');
-    define('HTTP_ORIGIN', 'http://web.cs.georgefox.edu/~hzhu20');
-
-    // Production mode
-    define('PRODUCTION_MODE', true);
     // define('PRODUCTION_MODE', false);
 
     // Production environment
+    define('HTTP_ORIGIN', 'http://web.cs.georgefox.edu/~hzhu20');
+    define('PRODUCTION_MODE', true);
     define('DB_NAME', 'blog');
     define('DB_USER', 'charlie');
     define('DB_PASSWORD', 'charlie');

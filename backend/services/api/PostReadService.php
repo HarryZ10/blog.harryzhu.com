@@ -12,7 +12,37 @@ class PostReadService {
         $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $result = [];
         foreach ($posts as $post) {
-            $result[] = new Post($post['id'], $post['user_id'], $post['post_date'], $post['post_text'], $post['extra']);
+            $result[] = new Post(
+                $post['id'],
+                $post['user_id'],
+                $post['project_id'],
+                $post['post_date'],
+                $post['post_text'],
+                $post['extra']
+            );
+        }
+        return $result;
+    }
+
+    public static function fetchAllUserPosts($userId) {
+        $dbo = DatabaseService::database();
+        $stmt = $dbo->prepare(
+            "SELECT * FROM post WHERE project_id = 3 
+            and user_id = :user_id ORDER BY post_date DESC;"
+        );
+        $stmt->execute(['user_id' => $userId]);
+        
+        $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $result = [];
+        foreach ($posts as $post) {
+            $result[] = new Post(
+                $post['id'],
+                $post['user_id'],
+                $post['project_id'],
+                $post['post_date'],
+                $post['post_text'],
+                $post['extra']
+            );
         }
         return $result;
     }
@@ -20,8 +50,8 @@ class PostReadService {
     // Retrieve a post based on id
     // Authentication Check Needed
     public static function fetchPost($id) {
-        $stmt = DatabaseService::database()->prepare("SELECT * FROM post WHERE id = :post_id;");
-        $stmt->execute(['post_id' => $id]);
+        $stmt = DatabaseService::database()->prepare("SELECT * FROM post WHERE id = :id;");
+        $stmt->execute(['id' => $id]);
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $post = $stmt->fetch();
         return $post;

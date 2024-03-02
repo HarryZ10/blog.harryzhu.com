@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 import { CreatePostResponse, UpdateCommentResponse, PostsResponse } from "../interfaces/apiResponses";
 import { CreatePostData } from "../interfaces/post";
 
-const API_BASE_URL = process.env.REACT_APP_API_ROOT|| 'http://10.10.10.25:80';
+const API_BASE_URL = process.env.REACT_APP_API_ROOT ?? 'http://10.10.10.25:80';
 
 // Get all posts
 export const getAllPosts = async (): Promise<PostsResponse> => {
@@ -20,30 +20,31 @@ export const getAllPosts = async (): Promise<PostsResponse> => {
         return data;
     } catch (err) {
         console.error(err);
-        throw new Error('Failed to fetch posts');
+        return {
+            results: [],
+            status: `${err}`
+        }
     }
 };
 
-// Get a single post by ID
-export const getPostById = async (id: string) => {
+export const getAllPostsByUser = async (): Promise<PostsResponse> => {
     try {
-        const response = await fetch(`${API_BASE_URL}/posts/${id}`,
-            {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${Cookies.get('token')}`
-                },
-            }
-        );
-        if (!response.ok) {
-            alert('Error fetching post');
+        const response = await fetch(`${API_BASE_URL}/profile/me`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${Cookies.get('token')}`
+        },
+        });
+
+        const data: PostsResponse = await response.json();
+        return data;
+    } catch (err) {
+        console.error(err);
+        return {
+            results: [],
+            status: `${err}`
         }
-
-        return await response.json();
-
-    } catch {
-        console.error(`Something went wrong`);
     }
 };
 
@@ -97,7 +98,6 @@ export const updatePost = async (data: CreatePostData): Promise<UpdateCommentRes
 
 // Delete an existing post
 export const deletePost = async (id: string, userId: string) => {
-
     const response = await fetch(`${API_BASE_URL}/posts/${id}`, {
         method: 'DELETE',
         headers: {
@@ -115,9 +115,10 @@ export const deletePost = async (id: string, userId: string) => {
     }).catch(err => {
         console.error(err)
     })
-
-    if (response.status !== "Success") {
-        alert("Unauthorized");
+    if (response) {
+        if (response.status !== "Success") {
+            alert("Unauthorized");
+        }
     }
 
     return response;

@@ -6,17 +6,24 @@ import { Post, ExtraInfo } from '../interfaces/post';
 import CreatePostForm from '../components/feed/CreatePostForm';
 import NavBar from '../components/layout/NavBar';
 import PostCard from '../components/feed/post/PostCard';
-import { getAllPosts, deletePost, updatePost } from '../api/PostsAPI';
+import { getAllPosts, deletePost, updatePost, getAllPostsByUser } from '../api/PostsAPI';
 import ActionPlus from '../components/layout/ActionPlus';
 import { PostsResponse } from '../interfaces/apiResponses';
 
-const BlogPage = () => {
+interface FeedProps {
+    isProfileMode: boolean,
+}
+
+const FeedPage: React.FC<FeedProps> = ( props ) => {
+
+    const isProfileMode = props.isProfileMode;
 
     const [posts, setPosts] = useState<Array<Post>>([]);
     const [postId, setPostId] = useState('');
-    const [postData, setPostData] = useState<Post>({
+    const [formPostData, setFormPostData] = useState<Post>({
         id: '',
         user_id: '',
+        project_id: '',
         post_text: '',
         post_date: '',
         extra: {
@@ -49,12 +56,13 @@ const BlogPage = () => {
 
     const [show, setShow] = useState(false);
 
-    const handleClose = () => {
+    const handleFormClose = () => {
         setShow(false);
         setPostId('');
-        setPostData({
+        setFormPostData({
             id: '',
             user_id: '',
+            project_id: '',
             post_text: '',
             post_date: '',
             extra: {
@@ -82,32 +90,48 @@ const BlogPage = () => {
         });
     };
 
-    const handleShow = () => setShow(true);
+    const handleFormShow = () => setShow(true);
 
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const fetchedPostData: PostsResponse = await getAllPosts();
+                if (!isProfileMode) {
+                    const fetchedPostData: PostsResponse = await getAllPosts();
+                    if (fetchedPostData.status === "Success") {
+                        const postsWithParsedExtra: Post[] = fetchedPostData.results.map((post) => {
+                            const extraInfo: ExtraInfo = JSON.parse(post.extra);
+                            return {
+                                ...post,
+                                extra: extraInfo,
+                            };
+                        });
 
-                if (fetchedPostData.status === "Success") {
-                    const postsWithParsedExtra: Post[] = fetchedPostData.results.map((post) => {
-                        const extraInfo: ExtraInfo = JSON.parse(post.extra);
-                        // console.log({
-                        //     ...post,
-                        //     extra: extraInfo
-                        // });
-
-                        return {
-                            ...post,
-                            extra: extraInfo,
-                        };
-                    });
-
-                    setPosts(postsWithParsedExtra);
-                    setLoading(false);
+                        setPosts(postsWithParsedExtra);
+                        setLoading(false);
+                    } else {
+                        navigate("/login");
+                    }
                 } else {
-                    navigate("/login");
+
+                    const fetchedPostData: PostsResponse = await getAllPostsByUser();
+
+                    if (fetchedPostData.status === "Success") {
+                        const postsWithParsedExtra: Post[] = fetchedPostData.results.map((post) => {
+                            const extraInfo: ExtraInfo = JSON.parse(post.extra);
+                            return {
+                                ...post,
+                                extra: extraInfo,
+                            };
+                        });
+
+                        setPosts(postsWithParsedExtra);
+                        setLoading(false);
+                    } else {
+                        navigate("/login");
+                    }
+
                 }
+                
             } catch (err) {
                 console.error(`Blog page can't load posts due to ${err}`);
                 setLoading(false);
@@ -120,7 +144,7 @@ const BlogPage = () => {
     const onDeleteHandler = async (post_id: string, user_id: string) => {
         const status: string = await deletePost(post_id, user_id)
             .then(res => {
-                return res;
+                return res.status;
             })
             .catch(err => {
                 setError(err.message);
@@ -134,8 +158,7 @@ const BlogPage = () => {
 
     const onUpdateHandler = async (data: Post) => {
         setPostId(data.id);
-        setPostData(data);
-        console.log(`Updating: ${data.extra.jobOfferInfo.baseSalary}`);
+        setFormPostData(data);
         setShow(!show);
     };
 
@@ -151,7 +174,7 @@ const BlogPage = () => {
         <div>
             <NavBar />
             <PageTitle>
-                Flexes for you.
+                {!isProfileMode ? "Flexes for you." : "My Stuff"}
             </PageTitle>
             {Array.isArray(posts) && posts
                 .sort((a, b) => new Date(b.post_date).getTime() - new Date(a.post_date).getTime())
@@ -168,8 +191,15 @@ const BlogPage = () => {
                     />
                 ))
             }
-            <ActionPlus id="create-post" onClick={handleShow} />
-            <CreatePostForm show={show} handleClose={handleClose} id={postId} initialFormData={postData} />
+            { !isProfileMode ? <ActionPlus id="create-post" onClick={handleFormShow} /> : <>/</> }
+
+            <CreatePostForm
+                show={show}
+                handleClose={handleFormClose}
+                id={postId}
+                initialFormData={formPostData}
+            />
+
         </div>
     );
 };
@@ -187,4 +217,4 @@ const PageTitle = styled.h1`
     padding: '28px 0 16px';
 `;
 
-export default BlogPage;
+export default FeedPage;

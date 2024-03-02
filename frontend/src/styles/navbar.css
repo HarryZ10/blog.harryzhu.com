@@ -31,3 +31,7 @@
 .custom-toggler .navbar-toggler-icon {
     filter: invert(100%);
 }
+
+.dropdown-item {
+  text-align: center !important;
+}
