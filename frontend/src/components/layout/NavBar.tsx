@@ -80,18 +80,16 @@ const NavBar: React.FC = () => {
                                         {username}
                                     </Dropdown.Toggle>
                                     <Dropdown.Menu style={{ width: "200px" }} className={menuClass}>
-                                        <Dropdown.Item
-                                            style={{
-                                                display: "flex",
-                                                justifyContent: "center"
-                                            }}
-                                            href="/profile">Profile</Dropdown.Item>
-                                        <Dropdown.Item 
-                                            style={{
-                                                display: "flex",
-                                                justifyContent: "center"
-                                            }}
-                                            href="/logout">Logout</Dropdown.Item>
+                                        <Dropdown.Item>
+                                            <Link style={LoggedInLink} to="/profile">
+                                                Profile
+                                            </Link>
+                                        </Dropdown.Item>
+                                        <Dropdown.Item>
+                                            <Link style={LoggedInLink} to="/logout">
+                                                Log Out
+                                            </Link>
+                                        </Dropdown.Item>
                                     </Dropdown.Menu>
                                 </Dropdown>
                             ) : (
@@ -116,7 +114,7 @@ const LinkStyle = {
 const LoggedInLink = {
     textDecoration: 'none',
     border: '#5bc3eb',
-    width: '200px'
+    width: '200px',
 }
 
 const NavStyle = {

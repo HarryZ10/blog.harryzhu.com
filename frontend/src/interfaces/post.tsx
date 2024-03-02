@@ -38,6 +38,7 @@ export interface CreatePostData {
 export interface Post {
     id: string;
     user_id: string;
+    project_id: string;
     post_date: string;
     post_text: string;
     extra: ExtraInfo;
@@ -46,6 +47,7 @@ export interface Post {
 export interface PreprocessedPost {
     id: string;
     user_id: string;
+    project_id: string;
     post_date: string;
     post_text: string;
     extra: string;

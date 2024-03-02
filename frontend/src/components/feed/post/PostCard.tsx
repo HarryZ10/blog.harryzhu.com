@@ -223,9 +223,9 @@ const PostCard: React.FC<PCInfo> = ({ post_id, post_text, post_date, user_id, ad
                         <Col xs={6} md={3} style={{ padding: 0 }}
                             className="d-flex justify-content-end">
 
-                            {/* {currentUserId === user_id && (
+                            {currentUserId === user_id && (
                                 <ActionButton style={DeleteButtonStyle} onClick={handleDelete}>Delete</ActionButton>
-                            )} */}
+                            )}
                         </Col>
                     </Row>
                     <Row>

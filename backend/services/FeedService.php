@@ -25,6 +25,17 @@ class FeedService {
         ]);
     }
 
+    public function retrieveUserPosts($userId) {
+        $status = [
+            'status' => 'Success'
+        ];
+
+        return json_encode([
+            ...$status,
+            'results' => PostReadService::fetchAllUserPosts($userId)
+        ]);
+    }
+
     public function retrieveBlogPost($id) {
         $content = PostReadService::fetchPost($id);
         // If found, encode the post data in json
@@ -38,20 +49,31 @@ class FeedService {
         }
     }
 
-    public function removeBlogPost($id, $requestorUserId) {
-        $content = PostReadService::fetchPost($id);
+    public function removeBlogPost($id, $token) {
 
-        if ($this->isValidContentAndUser($content, $this->authenticator)) {
-            PostWriteService::deletePost($content, $requestorUserId);
-            return json_encode([
-                'status' => 'Success'
-            ]);
-        } else {
-            http_response_code(403);
-            return json_encode([
-                'status' => 'Unauthorized'
-            ]);
+        $decoded = $this->authenticator->decodeJWT($token);
+        $payload = $decoded['payload'];
+        $requestorUserId = $payload['user_id'];
+        
+        $userInfo = [
+            'user_id' => $requestorUserId,
+            'token' => $token,
+            'post_id' => $id
+        ];
+
+        if ($this->isValidContentAndUser($userInfo, $this->authenticator)) {
+            $status = PostWriteService::deletePost($userInfo);
+            if ($status == "Success") {
+                return json_encode([
+                    'status' => 'Success'
+                ]);
+            }
         }
+        
+        http_response_code(403);
+        return json_encode([
+            'status' => 'Unauthorized'
+        ]);
     }
 
     public function editBlogPost($id) {

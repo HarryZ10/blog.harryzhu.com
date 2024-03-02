@@ -56,18 +56,33 @@ class PostWriteService {
     // Delete a post
     // Authentication Check Needed & user ids must match
     // This function should also take the user_id of the requestor as a parameter
-    public static function deletePost($postBodyData, $requestorUserId) {
-        // First, verify if the post belongs to the user making the request
-        if ($postBodyData['user_id'] != $requestorUserId) {
-            throw new Exception("Unauthorized action.");
-        }
+    public static function deletePost($userInfo) {
 
-        $stmt = DatabaseService::database()->prepare(
-            "DELETE FROM post WHERE id = :id AND user_id = :user_id AND project_id = 3;"
-        );
-        $stmt->bindParam(':user_id', $postBodyData['user_id']);
-        $stmt->bindParam(':id', $postBodyData['id']);
-        $stmt->execute();
+        try  {
+            $dbo = DatabaseService::database();
+            $dbo->beginTransaction();
+
+            // First delete the comments of the post
+            $stmt = $dbo->prepare(
+                "DELETE FROM blog_comment WHERE post_id = :post_id;"
+            );
+
+            $stmt->bindParam(':post_id', $userInfo['post_id']);
+            $stmt->execute();
+
+            $stmt = $dbo->prepare(
+                "DELETE FROM post WHERE id = :id AND user_id = :user_id AND project_id = 3;"
+            );
+            $stmt->bindParam(':user_id', $userInfo['user_id']);
+            $stmt->bindParam(':id', $userInfo['post_id']);
+            $stmt->execute();
+
+            $dbo->commit();
+
+        } catch (\PDOException $e) {
+            $dbo->rollBack();
+            return $e;
+        }
         return "Success";
     }
 }

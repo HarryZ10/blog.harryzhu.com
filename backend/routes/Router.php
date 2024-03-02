@@ -106,9 +106,7 @@ class Router {
         elseif ($method == 'DELETE'
             && $uriArray[1] == "posts" && is_numeric($uriArray[2])
         ) {
-            $decoded = $this->authenticator->decodeJWT($token);
-            $payload = $decoded['payload'];
-            echo $this->feed->removeBlogPost($uriArray[2], $payload['user_id']);
+            echo $this->feed->removeBlogPost($uriArray[2], $token);
         }
 
         // Edits/updates a post
@@ -139,6 +137,12 @@ class Router {
         // GET /posts
         elseif ($method == 'GET' && $base_uri == '/posts') {
             echo $this->feed->retrieveBlogFeed();
+        }
+
+        else if ($method == 'GET' && $uriArray[1] == 'profile' && $uriArray[2] == "me") {
+            $decoded = $this->authenticator->decodeJWT($token);
+            $userId = $decoded['payload']['user_id'];
+            echo $this->feed->retrieveUserPosts($userId);
         }
 
         else {
