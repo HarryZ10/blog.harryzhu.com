@@ -191,7 +191,7 @@ const FeedPage: React.FC<FeedProps> = ( props ) => {
                     />
                 ))
             }
-            { !isProfileMode ? <ActionPlus id="create-post" onClick={handleFormShow} /> : <>/</> }
+            { !isProfileMode ? <ActionPlus id="create-post" onClick={handleFormShow} /> : <></> }
 
             <CreatePostForm
                 show={show}
