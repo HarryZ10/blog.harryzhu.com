@@ -84,11 +84,11 @@ export const register = async (username: string, password: string): Promise<Regi
     }).then(resp => {
         return resp.json();
     }).catch(err => {
-        console.error(`Registration Error: ${err}`);
+        console.error(`Registration: ${err}`);
     });
 
     if (response.status !== "Success") {
-        alert("Something went wrong.");
+        alert(response.status);
     }
 
     return response;

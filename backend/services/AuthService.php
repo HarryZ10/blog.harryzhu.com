@@ -29,7 +29,7 @@ class AuthService {
     }
 
     public function register() {
-        $result = null;
+        $response = null;
         $json_str = file_get_contents('php://input');
         $data = json_decode($json_str, true);
         $username = $data['username'] ?? '';
@@ -39,18 +39,26 @@ class AuthService {
             if (!UserRegisterService::checkUsername($username)) {
                 // write to database
                 http_response_code(200);
-                UserRegisterService::addUser($username, $password);
-                $result = json_encode(["status" => "Success"]);
+
+                $result = UserRegisterService::addUser($username, $password);
+                if ($result == "Success") {
+                    $response = json_encode(["status" => "Success"]);
+                } else {
+                    $response = json_encode([
+                        "status" =>  $result,
+                    ]);
+                }
             } else {
                 http_response_code(500);
-                $result = json_encode(["status" => "Username already exists"]); 
+                $response = json_encode(["status" => "Username already exists"]); 
             }
 
         } else {
             http_response_code(500);
-            $result = json_encode(["status" => "Username invalid"]);
+            $response = json_encode(["status" => "Username invalid"]);
         }
-        return $result;
+
+        return $response;
     }
 
     public function login() {
