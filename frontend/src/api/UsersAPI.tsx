@@ -19,7 +19,7 @@ export const getUsername = async (id: string): Promise<string> => {
     }).then(resp => {
         return resp.json();
     }).catch(err => {
-        console.error(err);
+        console.error(`Username Verification: ${err}`);
     });
 
     if (response.status === "Not found") {
@@ -84,7 +84,7 @@ export const register = async (username: string, password: string): Promise<Regi
     }).then(resp => {
         return resp.json();
     }).catch(err => {
-        console.error(err);
+        console.error(`Registration Error: ${err}`);
     });
 
     if (response.status !== "Success") {

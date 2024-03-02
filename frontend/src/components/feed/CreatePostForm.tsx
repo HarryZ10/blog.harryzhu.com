@@ -129,8 +129,7 @@ const CreatePostForm: React.FC<FormProps> = ({ id, initialFormData, show, handle
             try {
                 const user_id = getUserIdFromToken();
                 if (!user_id) {
-                    console.error('User ID not found in token');
-                    return;
+                    throw new Error('User ID not found in token');
                 }
 
                 const postData: CreatePostData = {
@@ -175,11 +174,13 @@ const CreatePostForm: React.FC<FormProps> = ({ id, initialFormData, show, handle
                                 alert("Must reauthenticate or post is empty");
                             } else if (response.status === "Character limit exceeded") {
                                 alert("Post must be less than 150 characters.");
+                            } else {
+                                alert(response.status);
+                                handleClose();
                             }
                         }
                     }
                 } else {
-                    console.log(postData);
                     response = await updatePost(postData);
 
                     if (response.status === "Post updated") {
@@ -191,13 +192,16 @@ const CreatePostForm: React.FC<FormProps> = ({ id, initialFormData, show, handle
                                 alert("Must reauthenticate or post is empty");
                             } else if (response.status === "Character limit exceeded") {
                                 alert("Post must be less than 150 characters.");
+                            } else {
+                                alert(response.status);
+                                handleClose();
                             }
                         }
                     }
                 }
 
             } catch (error) {
-                console.error("Post error: " + error);
+                console.error(`Create Post: ${error}`);
             }
         }
     };

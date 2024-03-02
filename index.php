@@ -2,6 +2,10 @@
 require_once __DIR__.'/backend/routes/Router.php';
 require_once __DIR__.'/backend/config.php';
 
+error_reporting(E_ALL);
+ini_set('display_errors', '0');
+ini_set('log_errors', '1');
+
 $httpOrigin = HTTP_ORIGIN;
 
 header('Content-Type: application/json');

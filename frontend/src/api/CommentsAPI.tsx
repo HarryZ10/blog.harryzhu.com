@@ -29,7 +29,7 @@ export const addComment = async (post_id: string, data: CommentData) => {
         }
 
     } catch (err) {
-        console.error("Error: ", err);
+        console.error("Add Comment: ", err);
     }
 };
 
@@ -51,6 +51,6 @@ export const getCommentsByPostId = async (post_id: string) => {
         }
 
     } catch (err) {
-        console.error("Error: ", err);
+        console.error("Get Comments Error: ", err);
     }
 };

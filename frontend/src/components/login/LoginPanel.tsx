@@ -83,7 +83,7 @@ const LoginPanel: React.FC = () => {
                 // Post-login success logic
                 history("/"); // Redirect user to the saved URI or a default path
             } else {
-                console.log(response);
+                console.error(`Log In Error: ${response}`);
             }
 
         } catch (err) {
@@ -94,7 +94,6 @@ const LoginPanel: React.FC = () => {
     const onRegisterHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         try {
-            console.log(username, password);
             await register(username, password);
 
             // Post-login success logic
