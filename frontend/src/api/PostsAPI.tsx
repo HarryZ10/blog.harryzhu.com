@@ -65,7 +65,7 @@ export const createPost = async (data: CreatePostData): Promise<CreatePostRespon
     .catch(err => console.error(err));
 
     if (response.status !== "Post created") {
-        alert('Error creating post');
+        alert(response.status);
     }
 
     return response;
