@@ -15,12 +15,12 @@ class AuthService {
             http_response_code(200);
             $result = json_encode([
                 "username" => $username,
-                "status" => "Success"
+                'message' => "Success"
             ]);
         } else {
             http_response_code(404);
             $result = json_encode([
-                "status" => "Not found",
+                'message' => "Not found",
                 "username" => ""
             ]);
         }
@@ -42,20 +42,20 @@ class AuthService {
 
                 $result = UserRegisterService::addUser($username, $password);
                 if ($result == "Success") {
-                    $response = json_encode(["status" => "Success"]);
+                    $response = json_encode(['message' => "Success"]);
                 } else {
                     $response = json_encode([
-                        "status" =>  $result,
+                        'message' =>  $result,
                     ]);
                 }
             } else {
                 http_response_code(500);
-                $response = json_encode(["status" => "Username already exists"]); 
+                $response = json_encode(['message' => "Username already exists"]); 
             }
 
         } else {
             http_response_code(500);
-            $response = json_encode(["status" => "Username invalid"]);
+            $response = json_encode(['message' => "Username invalid"]);
         }
 
         return $response;
@@ -88,16 +88,16 @@ class AuthService {
                 http_response_code(200);
                 $result = json_encode([
                     "token" => $token,
-                    "status" => "Success"
+                    'message' => "Success"
                 ]);
             } else {
                 // we need to send a 401 error
                 http_response_code(401);
-                $result = json_encode(["status" => "Unauthorized"]);
+                $result = json_encode(['message' => "Unauthorized"]);
             }
         } else {
             http_response_code(500);
-            $result = json_encode(["status" => "Cannot leave fields blank"]);
+            $result = json_encode(['message' => "Cannot leave fields blank"]);
         }
 
         return $result;

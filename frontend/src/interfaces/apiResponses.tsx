@@ -1,30 +1,35 @@
 // src/interfaces/apiResponses.tsx
-import { ExtraInfo, PreprocessedPost } from "./post";
+import { PreprocessedPost, Comment } from "./post";
 
 export interface RegisterResponse {
-    status: string;
+    message: string;
 }
 
 export interface LoginResponse {
-    status: string;
+    message: string;
     token: string;
 }
 
 export interface RetrieveUsernameResponse {
-    status: string;
+    message: string;
     username: string;
 }
 
 export interface CreatePostResponse {
-    status: string;
+    message: string;
 }
 
 export interface UpdateCommentResponse {
     comment_id: string;
-    status: string;
+    message: string;
 }
 
 export interface PostsResponse {
     results: PreprocessedPost[],
-    status: string;
+    message: string;
+}
+
+export interface GetCommentsResponse {
+    results: Comment[],
+    message: string,
 }

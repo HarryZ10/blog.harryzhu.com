@@ -5,6 +5,7 @@ import {
     RegisterResponse,
     LoginResponse
 } from '../interfaces/apiResponses';
+import ToastError from '../utils/ToastError';
 
 const API_BASE_URL = process.env.REACT_APP_API_ROOT ?? 'http://10.10.10.25:80';
 
@@ -16,15 +17,22 @@ export const getUsername = async (id: string): Promise<string> => {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${Cookies.get('token')}`
         },
-    }).then(resp => {
-        return resp.json();
+    }).then(async res => {
+        if (res.ok) {
+            return res.json();
+        } else {
+            return res.json()
+            .then(err => {
+                const error = new ToastError(
+                    `Failed to get username: ${err?.message}`,
+                    'GET_USERNAME_FAILED'
+                );
+                throw error;
+            });
+        }
     }).catch(err => {
-        console.error(`Username Verification: ${err}`);
+        throw err;
     });
-
-    if (response.status === "Not found") {
-        alert('No username found');
-    }
 
     return response.username;
 };
@@ -41,19 +49,22 @@ export const login = async (username: string, password: string): Promise<LoginRe
             "username": username,
             "password": password
         })
-    }).then(resp => {
-        return resp.json();
+    }).then(async res => {
+        if (res.ok) {
+            return res.json();
+        } else {
+            return res.json()
+            .then(err => {
+                const error = new ToastError(
+                    `Failed to login: ${err?.message}`,
+                    'LOGIN_FAILED'
+                );
+                throw error;
+            });
+        }
     }).catch(err => {
-        return err
+        throw err;
     });
-
-    if (response.status === "Success") {
-        const token = response.token;
-
-        Cookies.set('token', token, {
-            secure: false
-        });
-    }
 
     return response;
 };
@@ -65,7 +76,7 @@ export const Logout: React.FC  = () => {
     // Wait for a short time before navigating
     setTimeout(() => {
         navigate("/");
-    }, 500); // delay in milliseconds
+    }, 500);
 
     return null;
 }
@@ -81,10 +92,22 @@ export const register = async (username: string, password: string): Promise<Regi
             "username": username,
             "password": password
         })
-    }).then(resp => {
-        return resp.json();
+    }).then(async res => {
+        if (res.ok) {
+            return res.json();
+        } else {
+            return res.json()
+            .then(err => {
+                const error = new ToastError(
+                    `Failed to register: ${err?.message}`,
+                    'REGISTER_USER_FAILED'
+                );
+                throw error;
+            });
+        }
     }).catch(err => {
-        console.error(`Registration: ${err}`);
+        // console.error(`Registration: ${err}`);
+        throw err;
     });
 
     return response;

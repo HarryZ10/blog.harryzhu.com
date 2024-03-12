@@ -1,5 +1,7 @@
 // src/api/CommentsAPI.js
 import Cookies from "js-cookie";
+import ToastError from "../utils/ToastError";
+import { GetCommentsResponse } from "../interfaces/apiResponses";
 
 interface CommentData {
   user_id: string;
@@ -12,45 +14,61 @@ const API_BASE_URL = process.env.REACT_APP_API_ROOT ?? 'http://10.10.10.25:80';
 
 // Add comment to post
 export const addComment = async (post_id: string, data: CommentData) => {
-    try {
-        const response = await fetch(`${API_BASE_URL}/posts/${post_id}/comments`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${Cookies.get('token')}`
-            },
-            body: JSON.stringify(data),
-        });
-
-        if (!response.ok) {
-            alert("Error creating comment");
+    const resp = await fetch(`${API_BASE_URL}/posts/${post_id}/comments`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${Cookies.get('token')}`
+        },
+        body: JSON.stringify(data),
+    })
+    .then(async (res) => {
+        if (res.ok) {
+            return res.json();
         } else {
-            return await response.json();
+            return res.json()
+            .then(err => {
+                const error = new ToastError(
+                    `Failed to add comment: ${err?.message}`,
+                    'ADD_COMMENT_FAILED'
+                );
+                throw error;
+            });
         }
+    })
+    .catch((err) => {
+        throw err;
+    });
 
-    } catch (err) {
-        console.error("Add Comment: ", err);
-    }
+    return resp;
 };
 
 // Get comments by post id
-export const getCommentsByPostId = async (post_id: string) => {
-    try {
-        const response = await fetch(`${API_BASE_URL}/posts/${post_id}/comments`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${Cookies.get('token')}`
-            },
-        });
-
-        if (!response.ok) {
-            alert("Error getting post");
+export const getCommentsByPostId = async (post_id: string): Promise<GetCommentsResponse> => {
+    const resp = await fetch(`${API_BASE_URL}/posts/${post_id}/comments`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${Cookies.get('token')}`
+        },
+    })
+    .then(async (res) => {
+        if (res.ok) {
+            return res.json();
         } else {
-            return await response.json();
+            return res.json()
+            .then(err => {
+                const error = new ToastError(
+                    `Failed to get comments: ${err?.message}`,
+                    'GET_COMMENTS_FAILED'
+                );
+                throw error;
+            });
         }
+    })
+    .catch((err) => {
+        throw err;
+    });
 
-    } catch (err) {
-        console.error("Get Comments Error: ", err);
-    }
+    return resp;
 };

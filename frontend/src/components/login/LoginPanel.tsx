@@ -1,10 +1,12 @@
-import React, { useState, useEffect, FormEvent } from "react";
+import React, { useState, useEffect } from "react";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import toast from "react-hot-toast";
+import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+
 import { login, register } from "../../api/UsersAPI";
 import themes from "../../styles/themes";
-import { LoginResponse, RegisterResponse } from "../../interfaces/apiResponses";
 
 const PageStyles: { 
     registerLink: React.CSSProperties;
@@ -76,39 +78,38 @@ const LoginPanel: React.FC = () => {
 
     const onLoginHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        try {
-            const response: LoginResponse = await login(username, password);
-
-            if (response.status === "Success") {
-                // Post-login success logic
-                history("/"); // Redirect user to the saved URI or a default path
+        await login(username, password)
+        .then(res => {
+            const token = res.token;
+            Cookies.set('token', token, { secure: false });
+            history("/")
+            toast.success("User logged in successfully.")
+        })
+        .catch(err => {
+            if (err?.code == "LOGIN_FAILED") {
+                toast.error(err?.message);
             } else {
-                console.error(`Log In Error: ${response}`);
+                toast.error("Failed to login: Please check console for more details.")
             }
-
-        } catch (err) {
-            alert("Login failed" + err);
-        }
+        });
     };
 
     const onRegisterHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        try {
-            const response: RegisterResponse = await register(username, password);
-
-            if (response.status == "Success") {
-                alert("Registered!");
-
-                // Post-login success logic
-                history("/"); // Redirect user to the saved URI or a default path
-            } else {
-                alert(response.status);
+        await register(username, password)
+        .then(res => {
+            if (res?.message === "Success") {
+                history("/");
+                toast.success("Account was registered successfully! Please log in again.")
             }
-
-        } catch (error) {
-            // Handle login error
-            alert(error);
-        }
+        })
+        .catch(err => {
+            if (err?.code == "REGISTER_USER_FAILED") {
+                toast.error(err?.message);
+            } else {
+                toast.error("Failed to register: Please check console for more details.")
+            }
+        })
     };
 
     return (

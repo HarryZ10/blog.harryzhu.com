@@ -3,8 +3,10 @@ import styled from "styled-components";
 import { Row, Col, Form, Button } from 'react-bootstrap';
 import { jwtDecode } from 'jwt-decode';
 import Cookies from "js-cookie";
+import { toast } from 'react-hot-toast';
 import { addComment } from "../../api/CommentsAPI";
 import themes from "../../styles/themes";
+import { useNavigate } from 'react-router-dom';
 
 interface ComponentProps {
   post_id: string;
@@ -33,6 +35,7 @@ const CreateCommentForm: React.FC<ComponentProps> = ({ post_id }) => {
     const [commentCreated, setCommentCreated] = useState(false);
     const [isPostable, setIsPostable] = useState(false);
     const [formStringData, setFormStringData] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (formStringData.length <= 150) {
@@ -41,14 +44,6 @@ const CreateCommentForm: React.FC<ComponentProps> = ({ post_id }) => {
             setIsPostable(false);
         }
     }, [formStringData, formStringData.length]);
-
-    useEffect(() => {
-        if (commentCreated) {
-            setTimeout(() => {
-                alert("Comment created. Refresh to see comment.");
-            }, 100);
-        }
-    }, [commentCreated])
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target;
@@ -66,6 +61,7 @@ const CreateCommentForm: React.FC<ComponentProps> = ({ post_id }) => {
     };
 
     const confirmPost = async (post_id: string) => {
+
         if (isPostable) {
             try {
                 const user_id = getUserIdFromToken();
@@ -78,22 +74,26 @@ const CreateCommentForm: React.FC<ComponentProps> = ({ post_id }) => {
                 }
 
                 if (user_id) {
-                    const response = await addComment(post_id, commentData) as Response;
-
-                    if (response.status === "Success") {
-                        setCommentCreated(true);
-                    } else {
-                        if (response.error) {
-                            if (response.error === "Unauthorized") {
-                                alert("Must reauthenticate or post is emptyn");
-                            } else if (response.error === "Character limit exceeded") {
-                                alert("Comment must be less than 150 characters.");
-                            }
+                    await addComment(post_id, commentData)
+                    .then((res) => {
+                        if (res?.message) {
+                            setCommentCreated(true);
+                            navigate("/");
+                            navigate("/feed")
+                            toast.success("Comment created. Refresh to see changes.");
                         }
-                    }
+                    })
+                    .catch(err => {
+                        if (err?.code == "ADD_COMMENTS_FAILED") {
+                            toast.error(err?.message);
+                        } else {
+                            toast.error("Failed to add comments: Please check console for more details.")
+                        }
+                    });
                 }
             } catch (error) {
-                console.error("Comment error: " + error);
+                toast.dismiss();
+                toast.error("Comment error: " + error);
             }
         }
     }

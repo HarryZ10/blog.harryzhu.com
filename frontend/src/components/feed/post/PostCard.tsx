@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import { Card, Row, Col, Button, Collapse } from 'react-bootstrap';
+import { toast } from 'react-hot-toast';
 
 import CreateCommentForm from "../CreateCommentForm";
 import { PostCard as PCInfo} from "../../../interfaces/postCard";
@@ -45,20 +46,29 @@ const PostCard: React.FC<PCInfo> = ({ post_id, post_text, post_date, user_id, ad
 
     useEffect(() => {
         const fetchCommentsAndUsernames = async () => {
-            let resp = await getCommentsByPostId(post_id);
+            await getCommentsByPostId(post_id)
+            .then(async resp => {
+                 // Create a new array to store comments with usernames
+                let commentsWithUsernames: Array<Comment> = [];
 
-            // Create a new array to store comments with usernames
-            let commentsWithUsernames: Array<Comment> = [];
+                for (let comment of resp?.results) {
 
-            for (let comment of resp) {
-                // Fetch the username for each comment
-                let username = await fetchUsername(comment.user_id);
+                    // Fetch the username for each comment
+                    let username = await fetchUsername(comment.user_id);
 
-                // Create a new comment object including the username
-                commentsWithUsernames.push({ ...comment, username });
-            }
+                    // Create a new comment object including the username
+                    commentsWithUsernames.push({ ...comment, username });
+                }
 
-            setComments(commentsWithUsernames);
+                setComments(commentsWithUsernames);
+            })
+            .catch(err => {
+                if (err?.code == "GET_COMMENTS_FAILED") {
+                    toast.error(err?.message);
+                } else {
+                    toast.error("Failed to get comments: Please check console for more details.")
+                }
+            });
         }
 
         fetchCommentsAndUsernames();

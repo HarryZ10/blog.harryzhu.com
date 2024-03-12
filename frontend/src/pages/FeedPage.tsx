@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from "styled-components";
+import toast from "react-hot-toast";
 
 import { Post, ExtraInfo } from '../interfaces/post';
 import CreatePostForm from '../components/feed/CreatePostForm';
@@ -96,44 +97,64 @@ const FeedPage: React.FC<FeedProps> = ( props ) => {
         const fetchPosts = async () => {
             try {
                 if (!isProfileMode) {
-                    const fetchedPostData: PostsResponse = await getAllPosts();
-                    if (fetchedPostData.status === "Success") {
-                        const postsWithParsedExtra: Post[] = fetchedPostData.results.map((post) => {
-                            const extraInfo: ExtraInfo = JSON.parse(post.extra);
-                            return {
-                                ...post,
-                                extra: extraInfo,
-                            };
-                        });
+                    await getAllPosts()
+                        .then((res => {
+                            if (res?.message == "Success") {
+                                const postsWithParsedExtra: Post[] = res.results.map((post) => {
+                                    const extraInfo: ExtraInfo = JSON.parse(post.extra);
+                                    return {
+                                        ...post,
+                                        extra: extraInfo,
+                                    };
+                                });
 
-                        setPosts(postsWithParsedExtra);
-                        setLoading(false);
-                    } else {
-                        navigate("/login");
-                    }
+                                setPosts(postsWithParsedExtra);
+                                setLoading(false);
+                            } else {
+                                navigate("/login");
+                                toast.custom("Must log in first!");
+                            }
+                        }))
+                        .catch(err => {
+                            if (err?.code == "GET_POSTS_FAILED") {
+                                toast.error(err?.message);
+                            } else {
+                                toast.error("Failed to get posts: Please see console for more.")
+                            }
+                        })
+
                 } else {
 
-                    const fetchedPostData: PostsResponse = await getAllPostsByUser();
+                    await getAllPostsByUser()
+                        .then(res => {
+                            if (res?.message === "Success") {
+                                const postsWithParsedExtra: Post[] = res.results.map((post) => {
+                                    const extraInfo: ExtraInfo = JSON.parse(post.extra);
+                                    return {
+                                        ...post,
+                                        extra: extraInfo,
+                                    };
+                                });
 
-                    if (fetchedPostData.status === "Success") {
-                        const postsWithParsedExtra: Post[] = fetchedPostData.results.map((post) => {
-                            const extraInfo: ExtraInfo = JSON.parse(post.extra);
-                            return {
-                                ...post,
-                                extra: extraInfo,
-                            };
+                                setPosts(postsWithParsedExtra);
+                                setLoading(false);
+                            } else {
+                                navigate("/login");
+                                toast.custom("Must log in first!");
+                            }
+                        })
+                        .catch(err => {
+                            if (err?.code == "GET_POSTS_BY_USER_FAILED") {
+                                toast.error(err?.message);
+                            } else {
+                                toast.error("Failed to get posts: Please check console for more details.")
+                            }
                         });
-
-                        setPosts(postsWithParsedExtra);
-                        setLoading(false);
-                    } else {
-                        navigate("/login");
-                    }
-
                 }
                 
             } catch (err) {
-                console.error(`Blog page can't load posts due to ${err}`);
+                toast.dismiss();
+                toast.error(`Blog page can't load posts due to ${err}`);
                 setLoading(false);
             }
         };
@@ -142,18 +163,21 @@ const FeedPage: React.FC<FeedProps> = ( props ) => {
     }, [navigate]);
 
     const onDeleteHandler = async (post_id: string, user_id: string) => {
-        const status: string = await deletePost(post_id, user_id)
+        await deletePost(post_id, user_id)
             .then(res => {
-                return res.status;
+                if (res?.message === "Success") {
+                    setPosts(posts.filter(post => post.id !== post_id));
+                    toast.success("Post deleted successfully!");
+                }
             })
             .catch(err => {
-                setError(err.message);
-                return err.status
+                setError(err);
+                if (err?.code == "DELETE_POST_FAILED") {
+                    toast.error(err?.message);
+                } else {
+                    toast.error("Failed to delete post: Please check console for more details.")
+                }
             })
-
-        if (status === "Success") {
-            setPosts(posts.filter(post => post.id !== post_id));
-        }
     };
 
     const onUpdateHandler = async (data: Post) => {
