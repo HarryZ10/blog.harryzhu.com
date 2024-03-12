@@ -2,50 +2,67 @@
 import Cookies from "js-cookie";
 import { CreatePostResponse, UpdateCommentResponse, PostsResponse } from "../interfaces/apiResponses";
 import { CreatePostData } from "../interfaces/post";
+import ToastError from "../utils/ToastError";
 
 const API_BASE_URL = process.env.REACT_APP_API_ROOT ?? 'http://10.10.10.25:80';
 
 // Get all posts
 export const getAllPosts = async (): Promise<PostsResponse> => {
-    try {
-        const response = await fetch(`${API_BASE_URL}/posts`, {
+    const response = await fetch(`${API_BASE_URL}/posts`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${Cookies.get('token')}`
         },
-        });
-
-        const data: PostsResponse = await response.json();
-        return data;
-    } catch (err) {
-        console.error(`Get Posts: ${err}`);
-        return {
-            results: [],
-            status: `${err}`
+    })
+    .then(async (res) => {
+        if (res.ok) {
+            return res.json();
+        } else {
+            return res.json()
+            .then(err => {
+                const error = new ToastError(
+                    `Failed to get posts: ${err?.message}`,
+                    'GET_POSTS_FAILED'
+                );
+                throw error;
+            });
         }
-    }
+    })
+    .catch((err) => {
+        throw err;
+    });
+
+    return response
 };
 
 export const getAllPostsByUser = async (): Promise<PostsResponse> => {
-    try {
-        const response = await fetch(`${API_BASE_URL}/profile/me`, {
+    const response = await fetch(`${API_BASE_URL}/profile/me`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${Cookies.get('token')}`
         },
-        });
-
-        const data: PostsResponse = await response.json();
-        return data;
-    } catch (err) {
-        console.error(`Get Profile Posts: ${err}`);
-        return {
-            results: [],
-            status: `${err}`
+    })
+    .then(async res => {
+        if (res.ok) {
+            return res.json();
+        } else {
+            return res.json()
+            .then(err => {
+                const error = new ToastError(
+                    `Failed to get profile posts: ${err?.message}`,
+                    'GET_POSTS_BY_USER_FAILED'
+                );
+                throw error;
+            });
         }
-    }
+    })
+    .catch(err => {
+        throw err;
+    })
+
+    return response;
 };
 
 // Create a new post
@@ -59,14 +76,23 @@ export const createPost = async (data: CreatePostData): Promise<CreatePostRespon
         },
         body: JSON.stringify(data),
 
-    }).then(res => {
-        return res.json();
+    }).then(async res => {
+        if (res.ok) {
+            return res.json();
+        } else {
+            return res.json()
+            .then(err => {
+                const error = new ToastError(
+                    `Failed to create post: ${err?.message}`,
+                    'CREATE_POST_FAILED'
+                );
+                throw error;
+            });
+        }
     })
-    .catch(err => console.error(err));
-
-    if (response.status !== "Post created") {
-        alert(response.status);
-    }
+    .catch(err => {
+        throw err;
+    });
 
     return response;
 };
@@ -84,15 +110,23 @@ export const updatePost = async (data: CreatePostData): Promise<UpdateCommentRes
             ...data,
             token: Cookies.get('token'),
         }), 
-    }).then((res) => {
-        return res.json();
+    }).then(async (res) => {
+        if (res.ok) {
+            return res.json();
+        } else {
+            return res.json()
+            .then(err => {
+                const error = new ToastError(
+                    `Failed to update post: ${err?.message}`,
+                    'UPDATE_POST_FAILED'
+                );
+                throw error;
+            });
+        }
     }).catch(err => {
-        alert("Something went wrong");
+        throw err;
     })
-    
-    if (response.status !== "Post updated") {
-        alert("Something went wrong with updating post");
-    }
+
     return response;
 };
 
@@ -110,16 +144,22 @@ export const deletePost = async (id: string, userId: string) => {
             "token": Cookies.get('token')
         })
 
-    }).then(res => {
-        return res.json();
-    }).catch(err => {
-        console.error(`Delete Post: ${err}`)
-    })
-    if (response) {
-        if (response.status !== "Success") {
-            alert("Unauthorized");
+    }).then(async res => {
+        if (res.ok) {
+            return res.json();
+        } else {
+            return res.json()
+            .then(err => {
+                const error = new ToastError(
+                    `Failed to delete post: ${err?.message}`,
+                    'DELETE_POST_FAILED'
+                );
+                throw error;
+            });
         }
-    }
+    }).catch(err => {
+        throw err;
+    })
 
     return response;
 };

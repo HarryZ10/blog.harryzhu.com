@@ -52,3 +52,11 @@ export interface PreprocessedPost {
     post_text: string;
     extra: string;
 }
+
+export interface Comment {
+  id: string;
+  post_id: string;
+  user_id: string;
+  comment_date: string;
+  comment_text: string;
+}

@@ -16,7 +16,7 @@ class FeedService {
 
     public function retrieveBlogFeed() {
         $status = [
-            'status' => 'Success'
+            'message' => 'Success'
         ];
 
         return json_encode([
@@ -27,7 +27,7 @@ class FeedService {
 
     public function retrieveUserPosts($userId) {
         $status = [
-            'status' => 'Success'
+            'message' => 'Success'
         ];
 
         return json_encode([
@@ -44,7 +44,7 @@ class FeedService {
         } else {
             http_response_code(404);
             return json_encode([
-                'status' => 'Post not found'
+                'message' => 'Post not found'
             ]);
         }
     }
@@ -65,20 +65,20 @@ class FeedService {
             $status = PostWriteService::deletePost($userInfo);
             if ($status == "Success") {
                 return json_encode([
-                    'status' => 'Success'
+                    'message' => 'Success'
                 ]);
             }
         }
         
         http_response_code(403);
         return json_encode([
-            'status' => 'Unauthorized'
+            'message' => 'Unauthorized'
         ]);
     }
 
     public function editBlogPost($id) {
         $status = [
-            'status' => 'Post updated'
+            'message' => 'Post updated'
         ];
 
         $content = json_decode(file_get_contents('php://input'), true);
@@ -92,12 +92,12 @@ class FeedService {
             } else {
                 http_response_code(403);
                 // Prepare error response for character limit exceeded
-                $response['status'] = 'Character limit exceeded';
+                $response['message'] = 'Character limit exceeded';
             }
         } else {
             http_response_code(403);
             return json_encode([
-                'status' => 'Unauthorized'
+                'message' => 'Unauthorized'
             ]);
         }
     }
@@ -107,7 +107,7 @@ class FeedService {
 
         // Initialize response array
         $response = [
-            'status' => 'Unauthorized',
+            'message' => 'Unauthorized',
         ];
 
         if ($this->isValidContentAndUser($content, $this->authenticator)) {
@@ -120,22 +120,22 @@ class FeedService {
 
                     if ($result == "Success") {
                         $response = [
-                            'status' => 'Post created',
+                            'message' => 'Post created',
                         ];
                     } else {
                         $response = [
-                            'status' => $result,
+                            'message' => $result,
                         ];
                     }
                 } else {
                     http_response_code(403);
                     // Prepare error response for character limit exceeded
-                    $response['status'] = 'Character limit exceeded';
+                    $response['message'] = 'Character limit exceeded';
                 }
             }
         } else {
             http_response_code(403);
-            $response['status'] = 'Unauthorized';
+            $response['message'] = 'Unauthorized';
         }
 
         // Return the JSON-encoded response
@@ -147,7 +147,7 @@ class FeedService {
     public function addComment() {
         $content = json_decode(file_get_contents('php://input'), true);
         $response = json_encode([
-            'status' => 'Unauthorized'
+            'message' => 'Unauthorized'
         ]);
 
         if ($this->isValidContentAndUser($content, $this->authenticator)) {
@@ -156,30 +156,31 @@ class FeedService {
                 if (strlen($content["comment_text"]) <= 150) {
                     // Add comment info to database
                     PostWriteService::addCommentOnPost($content);
-                    $response = json_encode(['status' => 'Success']);
+                    $response = json_encode(['message' => 'Success']);
                 } else {
                     http_response_code(403);
-                    $response['status'] = 'Character limit exceeded';
+                    $response['message'] = 'Character limit exceeded';
                 }
             }
         } else {
             http_response_code(403);
-            $response['status'] = 'Unauthorized';
+            $response['message'] = 'Unauthorized';
         }
 
         return $response;
     }
 
     public function listComments($post_id) {
-        return json_encode(
-            PostReadService::retrieveCommentsOnPost($post_id)
-        );
+        return json_encode([
+            'results' => PostReadService::retrieveCommentsOnPost($post_id),
+            'message' => 'Success'
+        ]);
     }
 
     public function editComment() {
         $content = json_decode(file_get_contents('php://input'), true);
         $response = json_encode([
-            'status' => 'Unauthorized',
+            'message' => 'Unauthorized',
             'comment_id' => ''
         ]);
 
@@ -187,13 +188,13 @@ class FeedService {
 
             CommentWriteService::updateComment($content);
             $response = json_encode([
-                'status' => "Success",
+                'message' => "Success",
                 'comment_id' => $content['id']
             ]);
 
         } else {
             http_response_code(403);
-            $response['status'] = 'Unauthorized';
+            $response['message'] = 'Unauthorized';
         }
 
         return $response;
@@ -209,7 +210,7 @@ class FeedService {
         } else {
             http_response_code(403);
             return json_encode([
-                'status' => 'Unauthorized'
+                'message' => 'Unauthorized'
             ]);
         }
     }

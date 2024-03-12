@@ -12,6 +12,7 @@ import { createPost, updatePost } from '../../api/PostsAPI';
 import ActionPlus from '../layout/ActionPlus';
 import themes from '../../styles/themes';
 import "../../styles/createPost.css"
+import toast from 'react-hot-toast';
 
 interface FormData {
     postContent: string;
@@ -96,7 +97,6 @@ const CreatePostForm: React.FC<FormProps> = ({ id, initialFormData, show, handle
 
     useEffect(() => {
         if (postCreated) {
-            alert("Post has been updated or created. Refresh to see post.");
             handleClose();
             setPostCreated(false);
         }
@@ -165,22 +165,43 @@ const CreatePostForm: React.FC<FormProps> = ({ id, initialFormData, show, handle
                 let response: CreatePostResponse | UpdateCommentResponse;
 
                 if (!isUpdateMode) {
-                    response = await createPost(postData);
-                    if (response.status === "Post created") {
-                        setPostCreated(true);
-                        handleClose();
-                    }
+                    await createPost(postData)
+                    .then(res => {
+                        if (res.message === "Post created") {
+                            setPostCreated(true);
+                            handleClose();
+                            toast.success(`${res.message} successfully! Refresh to see changes.`)
+                        }
+                    })
+                    .catch(err => {
+                        if (err?.code == "CREATE_POST_FAILED") {
+                            toast.error(err?.message);
+                        } else {
+                            toast.error("Failed to create post: Please check console for more details.")
+                        }
+                    });
+     
                 } else {
-                    response = await updatePost(postData);
-
-                    if (response.status === "Post updated") {
-                        setPostCreated(true);
-                        handleClose();
-                    }
+                    await updatePost(postData)
+                    .then(res => {
+                        if (res?.message === "Post updated") {
+                            setPostCreated(true);
+                            handleClose();
+                            toast.success("Post updated successfully");
+                        }
+                    })
+                    .catch(err => {
+                        if (err?.code == "UPDATE_POST_FAILED") {
+                            toast.error(err?.message);
+                        } else {
+                            toast.error("Failed to update post: Please check console for more details.")
+                        }
+                    });
                 }
 
             } catch (error) {
-                console.error(`Create Post: ${error}`);
+                toast.dismiss();
+                toast.error(`Something went wrong: ${error}`);
             }
         }
     };
