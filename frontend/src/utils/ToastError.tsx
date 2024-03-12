@@ -10,8 +10,8 @@ class ToastError extends Error {
      * @param code the short form error name
      */
     constructor(message: string, code: string) {
-        super(message),
-        this.code = code,
+        super(message);
+        this.code = code;
         Object.setPrototypeOf(this, ToastError.prototype);
     }
 }
