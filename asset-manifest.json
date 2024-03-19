@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/$%7BREACT_APP_API_URL%7D/static/css/main.26906484.css",
+    "main.js": "/$%7BREACT_APP_API_URL%7D/static/js/main.b014375b.js",
+    "index.html": "/$%7BREACT_APP_API_URL%7D/index.html",
+    "main.26906484.css.map": "/$%7BREACT_APP_API_URL%7D/static/css/main.26906484.css.map",
+    "main.b014375b.js.map": "/$%7BREACT_APP_API_URL%7D/static/js/main.b014375b.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.26906484.css",
+    "static/js/main.b014375b.js"
+  ]
+}
