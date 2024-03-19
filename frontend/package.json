@@ -1,6 +1,6 @@
 {
   "name": "frontend",
-  "homepage": "${REACT_APP_API_URL}",
+  "homepage": "http://3.95.119.22/",
   "version": "0.1.0",
   "private": true,
   "engines": {
