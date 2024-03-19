@@ -1,3 +1,7 @@
 pgsql/
 *.pem
 *.pub
+vendor/
+.env
+.env.local
+.htaccess
