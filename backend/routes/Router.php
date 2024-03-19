@@ -31,9 +31,8 @@ class Router {
         $token = $this->getTokenFromReqBody();
         $uriArray = explode('/', $uri);
         $startingIndex = 1;
-
-        if ($_ENV['CLASS_MODE']) {
-            // Ensure URI starts with /api/v1
+        if ($_ENV['CLASS_MODE'] !== 'false') {
+	    // Ensure URI starts with /api/v1
             if (substr($uri, 0, 15) !== '/~hzhu20/api/v1') {
                 header('HTTP/1.1 400 Bad Request');
                 echo json_encode([
@@ -47,8 +46,19 @@ class Router {
             // Skip past primary domain and "/~hzhu20/api/v1" and prepend '/'
             $base_uri = '/' . $uriArray[$startingIndex];
         } else {
-            // Extract the base endpoint from the URI
-            $base_uri = '/' . $uriArray[1];
+    	    // Ensure URI starts with /api/v1
+            if (substr($uri, 0, 7) !== '/api/v1') {    
+		header('HTTP/1.1 400 Bad Request');
+		echo json_encode([
+                    'status' => 'Invalid endpoint'
+                ]);
+                exit;
+            }
+
+            $startingIndex = 3;
+
+            // Skip past primary domain and "/api/v1" and prepend '/'
+            $base_uri = '/' . $uriArray[$startingIndex];
         }
 
         // Secured endpoints
