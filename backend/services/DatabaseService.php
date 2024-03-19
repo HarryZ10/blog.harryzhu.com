@@ -1,5 +1,7 @@
 <?php
-require_once __DIR__.'/../config.php';
+require __DIR__ . '/../../vendor/autoload.php';
+
+Dotenv\Dotenv::createUnsafeImmutable(__DIR__ . '/../../')->load();
 
 class DatabaseService {
     private static $db = null;                      // DB Connection instance
@@ -11,15 +13,14 @@ class DatabaseService {
     public static function database() {
 
         if (self::$db == null) {
-            // Standard URI to connect to a postgres server
-            $conn_uri = "pgsql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_NAME;
+		
+	    // Standard URI to connect to a postgres server
+            $conn_uri = "pgsql:host=" . $_ENV['DB_HOST'] . ";port=" . $_ENV['DB_PORT'] . ";dbname=" . $_ENV['DB_NAME'];
 
             // Creates a new database connection with the parameters
-            // ATTR_ERRMODE: Instructs php to throw error if db error occurs
             try {
-                self::$db = new PDO($conn_uri, DB_USER, DB_PASSWORD, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+                self::$db = new PDO($conn_uri, $_ENV['DB_USER'], $_ENV['DB_PASSWORD'], [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
             } catch (PDOException $err) {
-                // Displays the error
                 echo "[Server Error] Cannot connect to DB: " . $err->getMessage();
             }
         }

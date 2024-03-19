@@ -1,7 +1,9 @@
 <?php
 require_once __DIR__.'/../services/FeedService.php';
 require_once __DIR__.'/../services/AuthService.php';
-require_once __DIR__.'/../config.php';
+require __DIR__ . '/../../vendor/autoload.php';
+
+Dotenv\Dotenv::createUnsafeImmutable(__DIR__ . '/../../')->load();
 
 /**
  * Router implementation that handles requests that uses an in-house feed and login service
@@ -28,10 +30,9 @@ class Router {
         $method = $_SERVER['REQUEST_METHOD'];
         $token = $this->getTokenFromReqBody();
         $uriArray = explode('/', $uri);
-
         $startingIndex = 1;
 
-        if (PRODUCTION_MODE) {
+        if ($_ENV['CLASS_MODE']) {
             // Ensure URI starts with /api/v1
             if (substr($uri, 0, 15) !== '/~hzhu20/api/v1') {
                 header('HTTP/1.1 400 Bad Request');
@@ -181,12 +182,10 @@ class Router {
     }
 
     function getTokenFromReqBody() {
-        // Initialize the JWT variable
         $token = null;
         $authHeader = null;
         $headers = getallheaders();
 
-        // todo simplify?
         foreach ($headers as $key => $val) {
             if (strtolower($key) == 'authorization') {
                 $authHeader = $val;

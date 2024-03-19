@@ -1,12 +1,14 @@
 <?php
 require_once __DIR__.'/backend/routes/Router.php';
-require_once __DIR__.'/backend/config.php';
+require __DIR__ . '/vendor/autoload.php';
+
+Dotenv\Dotenv::createUnsafeImmutable(__DIR__ . '/')->load();
 
 error_reporting(E_ALL);
 ini_set('display_errors', '0');
 ini_set('log_errors', '1');
 
-$httpOrigin = HTTP_ORIGIN;
+$httpOrigin = $_ENV['HTTP_ORIGIN'];
 
 header('Content-Type: application/json');
 header("Access-Control-Allow-Origin: $httpOrigin");
