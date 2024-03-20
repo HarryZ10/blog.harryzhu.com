@@ -71,7 +71,7 @@ class Router {
         // Check for token on secured endpoints
         if ($is_secured && !$this->authenticator->isAliveToken($token)) {
             http_response_code(401);
-            echo json_encode(['error' => 'Unauthorized']);
+            echo json_encode(['message' => 'Unauthorized']);
             exit(1);
         }
 
