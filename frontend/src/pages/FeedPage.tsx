@@ -117,11 +117,11 @@ const FeedPage: React.FC<FeedProps> = ( props ) => {
                             }
                         }))
                         .catch(err => {
-                            if (err?.code == "GET_POSTS_FAILED") {
+			    console.error(err);
+                            if (err?.code === "GET_POSTS_FAILED") {
 				navigate("/login");
 				toast.dismiss();
                                 toast.error(err?.message);
-
                             } else {
                                 toast.error(`Failed to refresh feed`)
                             }
