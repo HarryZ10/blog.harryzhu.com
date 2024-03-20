@@ -2,6 +2,9 @@
 require_once __DIR__.'/../services/DatabaseService.php';
 require_once __DIR__.'/api/UserRegisterService.php';
 require_once __DIR__.'/api/UserReadService.php';
+require __DIR__ . '/../../vendor/autoload.php';
+
+Dotenv\Dotenv::createUnsafeImmutable(__DIR__ . '/../../')->load();
 
 class AuthService {
 
