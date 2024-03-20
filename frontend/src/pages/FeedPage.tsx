@@ -144,14 +144,17 @@ const FeedPage: React.FC<FeedProps> = ( props ) => {
                                 setLoading(false);
                             } else {
                                 navigate("/login");
-                                toast.custom("Must log in first!");
+				toast.dismiss();
+                                toast.error("Must log in first!");
                             }
                         })
                         .catch(err => {
                             if (err?.code == "GET_POSTS_BY_USER_FAILED") {
-                                toast.error(err?.message);
+                                toast.dismiss();
+				toast.error(err?.message);
                             } else {
-                                toast.error("Failed to get posts: Please check console for more details.")
+				toast.dismiss();
+                                toast.error("Failed to retrieve profile")
                             }
                         });
                 }

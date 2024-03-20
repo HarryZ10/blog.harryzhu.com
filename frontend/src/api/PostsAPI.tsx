@@ -51,7 +51,7 @@ export const getAllPostsByUser = async (): Promise<PostsResponse> => {
             return res.json()
             .then(err => {
                 const error = new ToastError(
-                    `Failed to get profile posts: ${err?.message}`,
+                    `${err?.message}`,
                     'GET_POSTS_BY_USER_FAILED'
                 );
                 throw error;

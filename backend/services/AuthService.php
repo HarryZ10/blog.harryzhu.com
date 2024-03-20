@@ -8,7 +8,11 @@ Dotenv\Dotenv::createUnsafeImmutable(__DIR__ . '/../../')->load();
 
 class AuthService {
 
-    private $secretKey = $_ENV['JWT_SECRET_KEY'];
+    private $secretKey;
+
+    public function __construct() {
+        $this->secretKey = $_ENV['JWT_SECRET_KEY'];
+    }
 
     public function retrieveUsername($id) {
         $result = null;
