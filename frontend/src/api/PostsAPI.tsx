@@ -22,7 +22,7 @@ export const getAllPosts = async (): Promise<PostsResponse> => {
             return res.json()
             .then(err => {
                 const error = new ToastError(
-                    `Failed to get posts: ${err?.message}`,
+                    `Failed to refresh feed: ${err?.message || err?.error || 'Something went wrong'}`,
                     'GET_POSTS_FAILED'
                 );
                 throw error;

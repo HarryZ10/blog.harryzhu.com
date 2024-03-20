@@ -5,7 +5,7 @@ require_once __DIR__.'/api/UserReadService.php';
 
 class AuthService {
 
-    private $secretKey = "S3cr3tK3y!_2024$#YsP67&^gHJb2%4#k^s@6v9yB8&F";
+    private $secretKey = $_ENV['JWT_SECRET_KEY'];
 
     public function retrieveUsername($id) {
         $result = null;
