@@ -123,7 +123,7 @@ const FeedPage: React.FC<FeedProps> = ( props ) => {
                                 toast.error(err?.message);
 
                             } else {
-                                toast.error("Failed to get posts: Please see console for more.")
+                                toast.error(`Failed to refresh feed`)
                             }
                         })
 
