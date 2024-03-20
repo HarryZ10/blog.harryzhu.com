@@ -150,7 +150,8 @@ const FeedPage: React.FC<FeedProps> = ( props ) => {
                         })
                         .catch(err => {
                             if (err?.code == "GET_POSTS_BY_USER_FAILED") {
-                                toast.dismiss();
+                                navigate("/login");
+				toast.dismiss();
 				toast.error(err?.message);
                             } else {
 				toast.dismiss();
