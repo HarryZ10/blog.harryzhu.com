@@ -1,7 +1,8 @@
 pgsql/
 *.pem
 *.pub
-vendor/
+vendor
+copy.bara.sky
 .env
 .env.local
 .htaccess

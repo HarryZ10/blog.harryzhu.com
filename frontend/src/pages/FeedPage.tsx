@@ -7,9 +7,8 @@ import { Post, ExtraInfo } from '../interfaces/post';
 import CreatePostForm from '../components/feed/CreatePostForm';
 import NavBar from '../components/layout/NavBar';
 import PostCard from '../components/feed/post/PostCard';
-import { getAllPosts, deletePost, updatePost, getAllPostsByUser } from '../api/PostsAPI';
+import { getAllPosts, deletePost, getAllPostsByMe } from '../api/PostsAPI';
 import ActionPlus from '../components/layout/ActionPlus';
-import { PostsResponse } from '../interfaces/apiResponses';
 
 interface FeedProps {
     isProfileMode: boolean,
@@ -56,7 +55,6 @@ const FeedPage: React.FC<FeedProps> = ( props ) => {
     const navigate = useNavigate();
 
     const [show, setShow] = useState(false);
-
     const handleFormClose = () => {
         setShow(false);
         setPostId('');
@@ -99,7 +97,7 @@ const FeedPage: React.FC<FeedProps> = ( props ) => {
                 if (!isProfileMode) {
                     await getAllPosts()
                         .then((res => {
-                            if (res?.message == "Success") {
+                            if (res?.message === "Success") {
                                 const postsWithParsedExtra: Post[] = res.results.map((post) => {
                                     const extraInfo: ExtraInfo = JSON.parse(post.extra);
                                     return {
@@ -113,14 +111,14 @@ const FeedPage: React.FC<FeedProps> = ( props ) => {
                             } else {
                                 navigate("/login");
                                 toast.dismiss();
-				toast.error("Must log in first!");
+                                toast.error("Must log in first!");
                             }
                         }))
                         .catch(err => {
-			    console.error(err);
+                            console.error(err);
                             if (err?.code === "GET_POSTS_FAILED") {
-				navigate("/login");
-				toast.dismiss();
+                                navigate("/login");
+                                toast.dismiss();
                                 toast.error(err?.message);
                             } else {
                                 toast.error(`Failed to refresh feed`)
@@ -129,7 +127,7 @@ const FeedPage: React.FC<FeedProps> = ( props ) => {
 
                 } else {
 
-                    await getAllPostsByUser()
+                    await getAllPostsByMe()
                         .then(res => {
                             if (res?.message === "Success") {
                                 const postsWithParsedExtra: Post[] = res.results.map((post) => {
@@ -144,17 +142,17 @@ const FeedPage: React.FC<FeedProps> = ( props ) => {
                                 setLoading(false);
                             } else {
                                 navigate("/login");
-				toast.dismiss();
+                                toast.dismiss();
                                 toast.error("Must log in first!");
                             }
                         })
                         .catch(err => {
                             if (err?.code == "GET_POSTS_BY_USER_FAILED") {
                                 navigate("/login");
-				toast.dismiss();
-				toast.error(err?.message);
+                                toast.dismiss();
+                                toast.error(err?.message);
                             } else {
-				toast.dismiss();
+                                toast.dismiss();
                                 toast.error("Failed to retrieve profile")
                             }
                         });
