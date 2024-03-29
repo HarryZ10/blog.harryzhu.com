@@ -18,6 +18,7 @@ const RoutesHandler = () => {
         <Route path="/" element={<HomePage/>} />
         <Route path="/feed" element={<FeedPage isProfileMode={false}/>} />
         <Route path="/profile" element={<FeedPage isProfileMode={true}/>} />
+        <Route path="/profile/:username" element={<FeedPage isProfileMode={true} />} />
         <Route path="/login" element={<LoginPage/>} />
         <Route path="/logout" element={<Logout /> } />
       </Routes>

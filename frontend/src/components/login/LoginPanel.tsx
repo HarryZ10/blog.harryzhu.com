@@ -19,43 +19,45 @@ const PageStyles: {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        height: '500px',
-        backgroundColor: themes.dark.colors.background,
+        marginTop: '3rem',
+        backgroundColor: '#1c1c1e',
     },
     form: {
-        width: '300px',
-        padding: '20px',
-        boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)', // Adds a subtle shadow for the box effect
-        borderRadius: '5px',
-        backgroundColor: themes.dark.colors.postBackground,
+        width: '400px',
+        padding: '40px',
+        borderRadius: '10px',
+        backgroundColor: '#2c2c2e',
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
     },
     button: {
-        backgroundColor: '#2286f2',
-        borderColor: '#2286f2',
+        backgroundImage: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        backgroundSize: '200% auto',
         color: 'white',
         border: 'none',
-        borderRadius: '20px',
-        transition: 'background-color 0.3s, transform 0.3s',
-        marginTop: '50px',
+        borderRadius: '30px',
+        transition: 'all 0.3s ease',
+        marginTop: '30px',
         display: 'block',
-        height: '40px',
-        marginLeft: 'auto', // Centers the button
-        marginRight: 'auto', // Centers the button
-        width: '100%' // Full width
+        height: '50px',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        width: '100%',
+        fontWeight: 'bold',
+        fontSize: '18px',
     },
     buttonHover: {
-        backgroundColor: '#114278',
-        borderColor: '#114278',
-        transform: 'scale(1.05)'
+        transform: 'scale(1.05)',
+        backgroundPosition: 'right center'
     },
     registerLink: {
-        color: '#007bff', // Blue color for the link
+        color: '#667eea',
         textDecoration: 'none',
-        marginTop: '10px',
-        display: 'block', // Ensures the link is on a new line
+        marginTop: '20px',
+        display: 'block',
         textAlign: 'center',
-        cursor: 'pointer'
-    }
+        cursor: 'pointer',
+        fontSize: '16px',
+    },
 };
 
 const LoginPanel: React.FC = () => {
@@ -65,6 +67,8 @@ const LoginPanel: React.FC = () => {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [passwordMatch, setPasswordMatch] = useState(true);
 
     useEffect(() => {
         // Capture the current URL and store it as returnUri
@@ -86,7 +90,7 @@ const LoginPanel: React.FC = () => {
             toast.success("User logged in successfully.")
         })
         .catch(err => {
-            if (err?.code == "LOGIN_FAILED") {
+            if (err?.code === "LOGIN_FAILED") {
                 toast.error(err?.message);
             } else {
                 toast.error("Failed to login: Please check console for more details.")
@@ -96,44 +100,79 @@ const LoginPanel: React.FC = () => {
 
     const onRegisterHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
+
+        // Validate password and confirm password match
+        if (password !== confirmPassword) {
+            toast.error("Passwords do not match.");
+            return;
+        }
+
         await register(username, password)
-        .then(res => {
-            if (res?.message === "Success") {
-                history("/");
-                toast.success("Account was registered successfully! Please log in again.")
-            }
-        })
-        .catch(err => {
-            if (err?.code == "REGISTER_USER_FAILED") {
-                toast.error(err?.message);
-            } else {
-                toast.error("Failed to register: Please check console for more details.")
-            }
-        })
+            .then(res => {
+                if (res?.message === "Success") {
+                    history("/");
+                    toast.success("Account was registered successfully! Please log in again.")
+                }
+            })
+            .catch(err => {
+                if (err?.code === "REGISTER_USER_FAILED") {
+                    toast.error(err?.message);
+                } else {
+                    toast.error("Failed to register: Please check console for more details.")
+                }
+            })
+    };
+
+    const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setConfirmPassword(e.target.value);
+        setPasswordMatch(e.target.value === password);
     };
 
     return (
         <div style={PageStyles.container}>
             <Form style={PageStyles.form}>
-                <Form.Group className="mb-3" controlId="formBasicUsername">
-                    <Form.Label>Username</Form.Label>
+                <Form.Group className="mb-4" controlId="formBasicUsername">
+                    <Form.Label style={{ color: 'white', fontSize: '18px' }}>Username</Form.Label>
                     <Form.Control
                         type="text"
                         placeholder="Enter username"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)} // Update username
+                        style={{ height: '50px', fontSize: '16px' }}
                     />
                 </Form.Group>
 
-                <Form.Group className="mb-3" controlId="formBasicPassword">
-                    <Form.Label>Password</Form.Label>
+                <Form.Group className="mb-4" controlId="formBasicPassword">
+                    <Form.Label style={{ color: 'white', fontSize: '18px' }}>Password</Form.Label>
                     <Form.Control
                         type="password"
                         placeholder="Enter password"
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)} // Update username
+                        onChange={(e) => setPassword(e.target.value)} // Update password
+                        style={{ height: '50px', fontSize: '16px' }}
                     />
                 </Form.Group>
+
+                {isRegistering && (
+                    <Form.Group className="mb-4" controlId="formBasicConfirmPassword">
+                        <Form.Label style={{ color: 'white', fontSize: '18px' }}>Confirm Password</Form.Label>
+                        <Form.Control
+                            type="password"
+                            placeholder="Confirm password"
+                            value={confirmPassword}
+                            onChange={handleConfirmPasswordChange} // Update confirm password and check match
+                            style={{ height: '50px', fontSize: '16px' }}
+                        />
+
+                        {!passwordMatch && (
+                            <Form.Text style={{ color: 'red', fontSize: '14px' }}>Passwords do not match</Form.Text>
+                        )}
+
+                        {passwordMatch && confirmPassword && (
+                            <Form.Text style={{ color: 'green', fontSize: '14px' }}>Passwords match</Form.Text>
+                        )}
+                    </Form.Group>
+                )}
 
                 <Button
                     style={{ ...PageStyles.button, ...(isHovered ? PageStyles.buttonHover : null) }}
