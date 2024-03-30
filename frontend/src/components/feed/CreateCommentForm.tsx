@@ -78,15 +78,16 @@ const CreateCommentForm: React.FC<ComponentProps> = ({ post_id }) => {
                     .then((res) => {
                         if (res?.message) {
                             setCommentCreated(true);
-                            navigate("/");
-                            navigate("/feed")
+                            toast.dismiss();
                             toast.success("Comment created. Refresh to see changes.");
                         }
                     })
                     .catch(err => {
                         if (err?.code == "ADD_COMMENTS_FAILED") {
+                            toast.dismiss();
                             toast.error(err?.message);
                         } else {
+                            toast.dismiss();
                             toast.error("Failed to add comments: Please check console for more details.")
                         }
                     });
@@ -97,13 +98,6 @@ const CreateCommentForm: React.FC<ComponentProps> = ({ post_id }) => {
             }
         }
     }
-
-    const CharacterCount = styled.div`
-        color: ${formStringData.length > 150 ? "#c9163a" : "#777"};
-        font-size: 14px;
-        margin-top: 5px;
-        text-align: right;
-    `
 
     const modalButtonStyle: React.CSSProperties = {
         fontFamily: "Cabin",
@@ -142,7 +136,11 @@ const CreateCommentForm: React.FC<ComponentProps> = ({ post_id }) => {
                             }}
                             rows={3}
                         />
-                        <CharacterCount>
+                        <CharacterCount
+                            style={{
+                                 color: `${formStringData.length > 150 ? "#c9163a" : "#777"}`
+                            }}
+                        >
                             {formStringData.length} characters
                         </CharacterCount>
                     </Col>
@@ -169,6 +167,12 @@ const StyledButton = styled(Button)<any>`
         margin-left: 0 !important;
     }
 `;
+
+const CharacterCount = styled.div`
+    font-size: 14px;
+    margin-top: 5px;
+    text-align: right;
+`
 
 const FormInputStyle = {
     backgroundColor: themes.dark.colors.modalTextInput,

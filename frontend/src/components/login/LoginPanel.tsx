@@ -6,7 +6,7 @@ import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 
 import { login, register } from "../../api/UsersAPI";
-import themes from "../../styles/themes";
+import { useAuth } from '../../contexts/AuthContext';
 
 const PageStyles: { 
     registerLink: React.CSSProperties;
@@ -62,19 +62,15 @@ const PageStyles: {
 
 const LoginPanel: React.FC = () => {
     const [isHovered, setIsHovered] = useState(false);
-    const [isRegistering, setIsRegistering] = useState(false); // State to toggle between login and register
+    const [isRegistering, setIsRegistering] = useState(false);
+
     const history = useNavigate();
+    const { login: loginUser } = useAuth();
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [passwordMatch, setPasswordMatch] = useState(true);
-
-    useEffect(() => {
-        // Capture the current URL and store it as returnUri
-        const currentUrl = window.location.href.replace("/login", "")
-        localStorage.setItem('returnUri', currentUrl);
-    }, []);
 
     const toggleForm = () => {
         setIsRegistering(!isRegistering);
@@ -84,15 +80,16 @@ const LoginPanel: React.FC = () => {
         e.preventDefault();
         await login(username, password)
         .then(res => {
-            const token = res.token;
-            Cookies.set('token', token, { secure: false });
+            loginUser(username, res.token);
             history("/")
-            toast.success("User logged in successfully.")
+            toast.success(`${username} successfully signed in`)
         })
         .catch(err => {
             if (err?.code === "LOGIN_FAILED") {
+                toast.dismiss();
                 toast.error(err?.message);
             } else {
+                toast.dismiss();
                 toast.error("Failed to login: Please check console for more details.")
             }
         });
@@ -103,6 +100,7 @@ const LoginPanel: React.FC = () => {
 
         // Validate password and confirm password match
         if (password !== confirmPassword) {
+            toast.dismiss();
             toast.error("Passwords do not match.");
             return;
         }
@@ -116,8 +114,10 @@ const LoginPanel: React.FC = () => {
             })
             .catch(err => {
                 if (err?.code === "REGISTER_USER_FAILED") {
+                    toast.dismiss();
                     toast.error(err?.message);
                 } else {
+                    toast.dismiss();
                     toast.error("Failed to register: Please check console for more details.")
                 }
             })
