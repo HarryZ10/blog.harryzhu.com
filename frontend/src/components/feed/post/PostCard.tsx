@@ -49,6 +49,7 @@ const PostCard: React.FC<PCInfo> = ({ post_id, post_text, post_date, user_id, ad
         const fetchCommentsAndUsernames = async () => {
             await getCommentsByPostId(post_id)
             .then(async resp => {
+
                  // Create a new array to store comments with usernames
                 let commentsWithUsernames: Array<Comment> = [];
 
@@ -64,11 +65,7 @@ const PostCard: React.FC<PCInfo> = ({ post_id, post_text, post_date, user_id, ad
                 setComments(commentsWithUsernames);
             })
             .catch(err => {
-                if (err?.code == "GET_COMMENTS_FAILED") {
-                    toast.error(err?.message);
-                } else {
-                    toast.error("Failed to get comments: Please check console for more details.")
-                }
+                console.error(`Failed to get comments on ${post_id}`);
             });
         }
 
@@ -86,8 +83,13 @@ const PostCard: React.FC<PCInfo> = ({ post_id, post_text, post_date, user_id, ad
 
     useEffect(() => {
         const fetchUsername = async () => {
-            const resp = await getUsername(user_id);
-            setUsername(resp);
+            await getUsername(user_id)
+                .then((res) => {
+                    setUsername(res);
+                })
+                .catch((err: any) => {
+                    console.error(err?.message);
+                })
         };
 
         fetchUsername();
