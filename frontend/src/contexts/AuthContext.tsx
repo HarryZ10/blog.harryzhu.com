@@ -1,9 +1,13 @@
 // src/contexts/AuthContext.tsx
+import React, { 
+    createContext,
+    useContext,
+    useState,
+    useEffect
+} from 'react';
 import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
-import React, { createContext, useContext, useState } from 'react';
 import { JSONPayload } from '../components/feed/CreateCommentForm';
-import { useNavigate } from 'react-router-dom';
 interface User {
     username: string;
     userId: string;
@@ -28,6 +32,24 @@ export const useAuth = () => {
 
 export const AuthProvider: React.FC<any> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
+
+    useEffect(() => {
+        const token = Cookies.get("token");
+        if (token) {
+            try {
+                const decodedToken = jwtDecode<JSONPayload>(token);
+                const userData: User = {
+                    username: decodedToken.username,
+                    userId: decodedToken.user_id,
+                    token: token,
+                };
+                setUser(userData);
+            } catch (error) {
+                console.error(`Invalid token: ${error}`);
+                Cookies.remove('token');
+            }
+        }
+    }, [])
 
     const login = (username: string, token: string) => {
         const userData: User = {

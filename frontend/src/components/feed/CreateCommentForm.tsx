@@ -25,11 +25,6 @@ interface CommentData {
   token: string | undefined;
 }
 
-interface Response {
-  status: string;
-  error?: string;
-}
-
 const CreateCommentForm: React.FC<ComponentProps> = ({ post_id }) => {
 
     const [commentCreated, setCommentCreated] = useState(false);

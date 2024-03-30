@@ -97,11 +97,12 @@ const FeedPage: React.FC<FeedProps> = ({ isProfileMode }) => {
 
     useEffect(() => {
         fetchPosts(isProfileMode);
-    }, [fetchPosts, isProfileMode]);
+    }, [isProfileMode]);
 
-    const handleUpdatePost = async (postData: Post) => {
-        await updatePost(postData);
-        await fetchPosts(isProfileMode);
+    const handleUpdatePost = async (data: Post) => {
+        setPostId(data.id);
+        setFormPostData(data);
+        setShow(!show);
     };
 
     const handleDeletePost = async (postId: string, userId: string) => {

@@ -49,6 +49,7 @@ const PostCard: React.FC<PCInfo> = ({ post_id, post_text, post_date, user_id, ad
         const fetchCommentsAndUsernames = async () => {
             await getCommentsByPostId(post_id)
             .then(async resp => {
+
                  // Create a new array to store comments with usernames
                 let commentsWithUsernames: Array<Comment> = [];
 

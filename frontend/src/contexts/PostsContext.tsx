@@ -1,7 +1,5 @@
 import React, { useContext, useState, createContext } from 'react';
 import toast from "react-hot-toast";
-import { useNavigate } from 'react-router-dom';
-import ToastError from '../utils/ToastError';
 import { ExtraInfo, Post } from '../interfaces/post';
 import { getAllPosts, createPost, updatePost, deletePost, getAllPostsByMe } from '../api/PostsAPI';
 import { CreatePostResponse } from '../interfaces/apiResponses';
@@ -30,13 +28,17 @@ export const PostsProvider: React.FC<any> = ({ children }) => {
     const [posts, setPosts] = useState<Post[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const navigate = useNavigate();
  
     const fetchPosts = async (isProfileMode: boolean) => {
         try {
             const fetchFn = isProfileMode ? getAllPostsByMe : getAllPosts;
-            const res = await fetchFn();
-            
+            const res = await fetchFn()
+                .then((resp) => {
+                    toast.dismiss();
+                    // toast.success("Successfully loaded all posts")
+                    return resp;
+                });
+
             if (res?.message === "Success") {
                 const postsWithParsedExtra: Post[] = res.results.map((post) => {
                     const extraInfo: ExtraInfo = JSON.parse(post.extra);

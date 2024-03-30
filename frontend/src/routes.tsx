@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import FeedPage from './pages/FeedPage';
-import { Logout } from './api/UsersAPI';
 
 import { PostsProvider } from './contexts/PostsContext';
 import { AuthProvider } from './contexts/AuthContext';
@@ -23,7 +22,6 @@ const RoutesHandler = () => {
             <Route path="/feed" element={<FeedPage isProfileMode={false}/>} />
             <Route path="/profile" element={<FeedPage isProfileMode={true}/>} />
             <Route path="/login" element={<LoginPage/>} />
-            <Route path="/logout" element={<Logout /> } />
             {/* <Route path="/profile/:username" element={<FeedPage isProfileMode={true} />} /> */}
           </Routes>
         </PostsProvider>
