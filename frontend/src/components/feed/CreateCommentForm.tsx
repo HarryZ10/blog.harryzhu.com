@@ -7,9 +7,11 @@ import { toast } from 'react-hot-toast';
 import { addComment } from "../../api/CommentsAPI";
 import themes from "../../styles/themes";
 import { useNavigate } from 'react-router-dom';
+import { getUsername } from "../../api/UsersAPI";
 
 interface ComponentProps {
   post_id: string;
+  handleNewComments: (commentData: any) => void;
 }
 
 export interface JSONPayload {
@@ -22,9 +24,10 @@ interface CommentData {
   user_id: string;
   post_id: string;
   comment_text: string;
+  username?: string;
 }
 
-const CreateCommentForm: React.FC<ComponentProps> = ({ post_id }) => {
+const CreateCommentForm: React.FC<ComponentProps> = ({ post_id, handleNewComments }) => {
 
     const [isPostable, setIsPostable] = useState(false);
     const [formStringData, setFormStringData] = useState('');
@@ -57,11 +60,12 @@ const CreateCommentForm: React.FC<ComponentProps> = ({ post_id }) => {
         if (isPostable) {
             try {
                 const user_id = getUserIdFromToken();
-
+                const username = await getUsername(user_id);
                 const commentData: CommentData = {
                     user_id: user_id,
                     post_id: post_id,
                     comment_text: formStringData,
+                    username: username,
                 }
 
                 if (user_id) {
@@ -69,7 +73,8 @@ const CreateCommentForm: React.FC<ComponentProps> = ({ post_id }) => {
                     .then((res) => {
                         if (res?.message) {
                             toast.dismiss();
-                            toast.success("Comment created. Refresh to see changes.");
+                            toast.success("Comment created. Refresh to edit.");
+                            handleNewComments(commentData);
                         }
                     })
                     .catch(err => {

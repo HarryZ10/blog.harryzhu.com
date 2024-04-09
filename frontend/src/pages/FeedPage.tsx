@@ -23,8 +23,6 @@ const FeedPage: React.FC<FeedProps> = ({ isProfileMode }) => {
 
     if (!user) {
         history("/login");
-        toast.dismiss();
-        toast.error("Unauthenticated")
     }
 
     const { posts, loading, error, fetchPosts, createPost, updatePost, deletePost } = usePosts();

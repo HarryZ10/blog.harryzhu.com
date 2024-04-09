@@ -89,7 +89,7 @@ export const updateComment = async (data: UpdateCommentData) => {
 };
 
 export const deleteComment = async (data: UpdateCommentData) => {
-    const resp = await fetch(`${API_BASE_URL}/posts/${data.post_id}/comments`, {
+    const resp = await fetch(`${API_BASE_URL}/comments/${data.id}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
