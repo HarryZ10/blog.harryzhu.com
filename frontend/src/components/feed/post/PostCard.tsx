@@ -30,8 +30,6 @@ const PostCard: React.FC<PCInfo> = ({ post_id, post_text, post_date, user_id, ad
     // Post Card Other Info collapse/show toggle
     const [openAdditionalInfo, setOpenAdditionalInfo] = useState(false);
 
-    const [openCommentForm, setOpenCommentForm] = useState(false);
-
     // Get username info
     const [username, setUsername] = useState('');
     const [currentUserId, setCurrentUserId] = useState('');

@@ -22,15 +22,12 @@ interface CommentData {
   user_id: string;
   post_id: string;
   comment_text: string;
-  token: string | undefined;
 }
 
 const CreateCommentForm: React.FC<ComponentProps> = ({ post_id }) => {
 
-    const [commentCreated, setCommentCreated] = useState(false);
     const [isPostable, setIsPostable] = useState(false);
     const [formStringData, setFormStringData] = useState('');
-    const navigate = useNavigate();
 
     useEffect(() => {
         if (formStringData.length <= 150) {
@@ -65,14 +62,12 @@ const CreateCommentForm: React.FC<ComponentProps> = ({ post_id }) => {
                     user_id: user_id,
                     post_id: post_id,
                     comment_text: formStringData,
-                    token: Cookies.get('token')
                 }
 
                 if (user_id) {
                     await addComment(post_id, commentData)
                     .then((res) => {
                         if (res?.message) {
-                            setCommentCreated(true);
                             toast.dismiss();
                             toast.success("Comment created. Refresh to see changes.");
                         }

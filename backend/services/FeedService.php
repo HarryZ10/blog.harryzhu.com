@@ -185,7 +185,6 @@ class FeedService {
         ]);
 
         if ($this->isValidContentAndUser($content, $this->authenticator)) {
-
             CommentWriteService::updateComment($content);
             $response = json_encode([
                 'message' => "Success",

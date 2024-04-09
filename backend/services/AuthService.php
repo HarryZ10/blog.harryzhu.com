@@ -234,14 +234,10 @@ class AuthService {
             $signatureProvided = $segments[2];
 
             // Convert the given header back into a json object, then URL encode it
-            $base64UrlHeader = $this->base64UrlEncode(
-                json_encode($header)
-            );
+            $base64UrlHeader = $this->base64UrlEncode(json_encode($header));
 
             // Convert the given payload back into a json object, then URL encode it
-            $base64UrlPayload = $this->base64UrlEncode(
-                json_encode($payload)
-            );
+            $base64UrlPayload = $this->base64UrlEncode(json_encode($payload));
 
             // Generate new signature
             $signature = hash_hmac('sha256',
@@ -257,8 +253,6 @@ class AuthService {
                 // Check for expiration
                 $current_time = time();
                 if ($payload['exp'] >= $current_time) {
-
-                    // JWT is valid
                     $isValid = $payload;
                 }
             }

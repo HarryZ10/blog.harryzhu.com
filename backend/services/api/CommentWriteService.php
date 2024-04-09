@@ -8,15 +8,15 @@ class CommentWriteService {
     // Authentication Check Needed
     public static function updateComment($commentData) {
         $stmt = DatabaseService::database()->prepare(
-             "UPDATE blog_comment
-             SET user_id = :user_id,
-                 comment_date = :comment_date,
-                 comment_text = :comment_text,
-             WHERE id = :id;"
+            "UPDATE blog_comment
+            SET user_id = :user_id,
+                comment_date = :comment_date,
+                comment_text = :comment_text
+            WHERE id = :id;"
         );
 
         $stmt->bindParam(':user_id', $commentData['user_id']);
-        $stmt->bindParam(':comment_date', $commentData['comment_date']);
+        $stmt->bindParam(':comment_date', date('Y-m-d'));
         $stmt->bindParam(':comment_text', $commentData['comment_text']);
         $stmt->bindParam(':id', $commentData['id']);
         $stmt->execute();
