@@ -200,12 +200,17 @@ class FeedService {
 
     }
 
-    public function deleteComment($id) {
+    public function deleteComment($id, $token) {
         $content = PostReadService::fetchComment($id);
+        $content["token"] = $token;
+
         // If found, encode the post data in json
         if ($this->isValidContentAndUser($content, $this->authenticator)) {
             CommentWriteService::deleteComment($content);
-            return json_encode($content);
+            return json_encode([
+                ...$content,
+                'message' => "Success"
+            ]);
         } else {
             http_response_code(403);
             return json_encode([
@@ -219,7 +224,7 @@ class FeedService {
 
         // if content exists and token is set
         if ($content && isset($content['token'])) {
-
+            
             // Decode the token to get payload
             $decodedToken = $authenticator->decodeJWT($content["token"]);
 
