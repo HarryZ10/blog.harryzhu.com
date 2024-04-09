@@ -108,7 +108,7 @@ class Router {
             && is_numeric($uriArray[$startingIndex + 1])
             && $uriArray[$startingIndex + 2] == "comments"
         ) {
-             echo $this->feed->listComments($uriArray[$startingIndex + 1]);
+            echo $this->feed->listComments($uriArray[$startingIndex + 1]);
         }
 
         // Retrieve post by identifier
@@ -117,7 +117,7 @@ class Router {
             && $base_uri == "/posts"
             && is_numeric($uriArray[$startingIndex + 1])
 	) {
-             echo $this->feed->retrieveBlogPost($uriArray[$startingIndex + 1]);
+            echo $this->feed->retrieveBlogPost($uriArray[$startingIndex + 1]);
         }
 
         // Creates a ost
