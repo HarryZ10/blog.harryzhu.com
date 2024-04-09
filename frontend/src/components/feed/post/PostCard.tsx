@@ -119,6 +119,14 @@ const PostCard: React.FC<PCInfo> = ({ post_id, post_text, post_date, user_id, ad
         }).format(numberValue);
     }; 
 
+    const handleCommentUpdates = (commentData: any) => {
+        setComments(comments.filter((comment) => comment.id !== commentData.id));
+    };
+
+    const handleNewComments = (commentData: any) => {
+        setComments([...comments, commentData]);
+    };
+
      return (
         <StyledCard
             style={PostCardStyle}
@@ -248,10 +256,10 @@ const PostCard: React.FC<PCInfo> = ({ post_id, post_text, post_date, user_id, ad
                         </Col>
                     </Row>
                     <Row>
-                        <CreateCommentForm post_id={post_id} />
+                        <CreateCommentForm post_id={post_id} handleNewComments={handleNewComments}/>
                     </Row>
 
-                    <CommentList comments={comments}/>
+                    <CommentList comments={comments} handleUpdates={handleCommentUpdates}/>
 
                 </Card.Footer>
             </Card.Body>
