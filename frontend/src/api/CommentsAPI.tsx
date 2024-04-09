@@ -27,7 +27,10 @@ export const addComment = async (post_id: string, data: CommentData) => {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${Cookies.get('token')}`
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+            ...data,
+            token: Cookies.get("token"),
+        }),
     })
     .then(async (res) => {
         if (res.ok) {
@@ -92,7 +95,10 @@ export const deleteComment = async (data: UpdateCommentData) => {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${Cookies.get('token')}`
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+            ...data,
+            token: Cookies.get("token"),
+        }),
     })
     .then(async (res) => {
         if (res.ok) {
