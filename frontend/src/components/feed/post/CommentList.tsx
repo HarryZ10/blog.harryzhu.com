@@ -29,8 +29,8 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, onDelete, onUpdate }
     const [isEditing, setIsEditing] = useState(false);
     const [editedComment, setEditedComment] = useState(comment.comment_text);
 
-    const handleDelete = () => {      
-
+    const handleDelete = () => {
+        
         const commentData: UpdateCommentData = {
             id: comment.id,
             user_id: comment.user_id,

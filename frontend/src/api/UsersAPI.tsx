@@ -9,7 +9,7 @@ import ToastError from '../utils/ToastError';
 
 const API_BASE_URL = process.env.REACT_APP_API_ROOT ?? 'http://10.10.10.25:80';
 
-export const getUsername = async (id: string): Promise<string> => {
+export const getUsername = async (id?: string): Promise<string> => {
 
     const response: RetrieveUsernameResponse = await fetch(`${API_BASE_URL}/users/${id}`, {
         method: 'GET',

@@ -6,8 +6,11 @@ import React, {
     useEffect
 } from 'react';
 import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import { JSONPayload } from '../components/feed/CreateCommentForm';
+import toast from 'react-hot-toast';
+
 interface User {
     username: string;
     userId: string;
@@ -32,6 +35,7 @@ export const useAuth = () => {
 
 export const AuthProvider: React.FC<any> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const token = Cookies.get("token");
@@ -64,7 +68,10 @@ export const AuthProvider: React.FC<any> = ({ children }) => {
     const logout = () => {
         setUser(null);
         Cookies.remove('token');
-    }
+        toast.dismiss();
+        toast.success("Signed out successfully")
+        navigate("/");
+    };
 
     return (
         <AuthContext.Provider value={{ user, login, logout }}>
