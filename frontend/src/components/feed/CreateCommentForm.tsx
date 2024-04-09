@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { getUsername } from "../../api/UsersAPI";
 
 interface ComponentProps {
-  post_id: string;
+  post_id?: string;
   handleNewComments: (commentData: any) => void;
 }
 
@@ -22,7 +22,7 @@ export interface JSONPayload {
 
 interface CommentData {
   user_id: string;
-  post_id: string;
+  post_id?: string;
   comment_text: string;
   username?: string;
 }
@@ -55,7 +55,7 @@ const CreateCommentForm: React.FC<ComponentProps> = ({ post_id, handleNewComment
         return userid;
     };
 
-    const confirmPost = async (post_id: string) => {
+    const confirmPost = async (post_id?: string) => {
 
         if (isPostable) {
             try {
@@ -63,17 +63,17 @@ const CreateCommentForm: React.FC<ComponentProps> = ({ post_id, handleNewComment
                 const username = await getUsername(user_id);
                 const commentData: CommentData = {
                     user_id: user_id,
-                    post_id: post_id,
+                    post_id: post_id || undefined,
                     comment_text: formStringData,
                     username: username,
                 }
 
                 if (user_id) {
-                    await addComment(post_id, commentData)
+                    await addComment(commentData, post_id)
                     .then((res) => {
                         if (res?.message) {
                             toast.dismiss();
-                            toast.success("Comment created. Refresh to edit.");
+                            toast.success("Comment created. Refresh to modify or delete.");
                             handleNewComments(commentData);
                         }
                     })

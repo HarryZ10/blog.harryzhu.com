@@ -167,15 +167,16 @@ class Router {
 
         // Retrieves profile feed
         // GET /profile/me
-        elseif ($method == 'GET'
-            && $base_uri == '/profile'
-            && $uriArray[$startingIndex + 1] == "me") {
-
+        elseif ($method == 'GET' & $base_uri == '/profile' && $uriArray[$startingIndex + 1] == "me") {
             $decoded = $this->authenticator->decodeJWT($token);
             $userId = $decoded['payload']['user_id'];
             echo $this->feed->retrieveUserPosts($userId);
         }
-
+        // Retrieves profile feed
+        // GET /profile/:id
+        elseif ($method == 'GET' && $base_uri == '/profile' && is_numeric($uriArray[$startingIndex + 1])) {
+            echo $this->feed->retrieveUserPosts($uriArray[$startingIndex + 1]);
+        }
         else {
             http_response_code(404);
             echo json_encode([

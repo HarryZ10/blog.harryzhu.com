@@ -13,14 +13,15 @@ export interface UpdateCommentData {
 
 export interface CommentData {
     user_id: string;
-    post_id: string;
+    post_id?: string;
+    username?: string;
     comment_text: string;
 }
 
 const API_BASE_URL = process.env.REACT_APP_API_ROOT ?? 'http://10.10.10.25:80';
 
 // Add comment to post
-export const addComment = async (post_id: string, data: CommentData) => {
+export const addComment = async (data: CommentData, post_id?: string) => {
     const resp = await fetch(`${API_BASE_URL}/posts/${post_id}/comments`, {
         method: 'POST',
         headers: {
@@ -122,7 +123,7 @@ export const deleteComment = async (data: UpdateCommentData) => {
 };
 
 // Get comments by post id
-export const getCommentsByPostId = async (post_id: string): Promise<GetCommentsResponse> => {
+export const getCommentsByPostId = async (post_id: string | undefined): Promise<GetCommentsResponse> => {
     const resp = await fetch(`${API_BASE_URL}/posts/${post_id}/comments`, {
         method: 'GET',
         headers: {

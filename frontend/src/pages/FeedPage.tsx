@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from "styled-components";
 import { toast } from "react-hot-toast";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import CreatePostForm from '../components/feed/CreatePostForm';
 import NavBar from '../components/layout/NavBar';
@@ -11,23 +11,25 @@ import ActionPlus from '../components/layout/ActionPlus';
 import { Post } from '../interfaces/post';
 import { usePosts } from '../contexts/PostsContext';
 import { useAuth } from '../contexts/AuthContext';
-
+import { getUsername } from '../api/UsersAPI';
 interface FeedProps {
     isProfileMode: boolean,
 }
 
 const FeedPage: React.FC<FeedProps> = ({ isProfileMode }) => {
 
+    const { posts, loading, error, fetchPosts, createPost, updatePost, deletePost } = usePosts();
     const { user, login, logout } = useAuth();
     const history = useNavigate();;
+    let { userId } = useParams();
 
     if (!user) {
         history("/login");
+        toast.dismiss();
+        toast.error("No authentication provided");
     }
 
-    const { posts, loading, error, fetchPosts, createPost, updatePost, deletePost } = usePosts();
-
-    const [postId, setPostId] = useState('');
+    const [postId, setPostId] = useState<string | undefined>('');
     const [formPostData, setFormPostData] = useState<Post>({
         id: '',
         user_id: '',
@@ -93,18 +95,29 @@ const FeedPage: React.FC<FeedProps> = ({ isProfileMode }) => {
         });
     };
 
+    const [username, setUsername] = useState<string>('');
     useEffect(() => {
-        fetchPosts(isProfileMode);
+        const retrieveUsername = async () => {
+            await getUsername(userId)
+                .then((res) => {
+                    setUsername(res);
+                })
+                .catch(() => {
+                    setUsername('');
+                })
+        }
+        retrieveUsername();
+        fetchPosts(isProfileMode, userId);
     }, [isProfileMode]);
 
     const handleUpdatePost = async (data: Post) => {
-        setPostId(data.id);
+        setPostId(data?.id);
         setFormPostData(data);
         setShow(!show);
     };
 
-    const handleDeletePost = async (postId: string, userId: string) => {
-        await deletePost(postId, userId);
+    const handleDeletePost = async (postId: string | undefined, id: string) => {
+        await deletePost(postId, id);
         await fetchPosts(isProfileMode);
     };
 
@@ -113,25 +126,27 @@ const FeedPage: React.FC<FeedProps> = ({ isProfileMode }) => {
     if (loading) {
         toast.dismiss();
         toast.loading("Loading...");
+    } else {
+        toast.dismiss();
     }
 
     return (
         <div>
             <NavBar />
             <PageTitle>
-                {!isProfileMode ? "Flexes for you." : "My Stuff"}
+                {!isProfileMode ? "Discover" : !username ? "My Stuff" : `${username.toLocaleUpperCase()}'s Stuff`}
             </PageTitle>
             {Array.isArray(posts) && posts
-                .sort((a, b) => new Date(b.post_date).getTime() - new Date(a.post_date).getTime())
+                .sort((a, b) => new Date(b?.post_date || '').getTime() - new Date(a?.post_date || '').getTime())
                 .map(post => (
                     <PostCard
-                        key={post.id}
-                        post_id={post.id}
+                        key={post?.id}
+                        post_id={post?.id}
                         post_text={post.post_text}
-                        post_date={post.post_date}
+                        post_date={post?.post_date}
                         user_id={post.user_id}
                         additional_info={post.extra}
-                        onDelete={() => handleDeletePost(post.id, post.user_id)}
+                        onDelete={() => handleDeletePost(post?.id, post.user_id)}
                         onUpdate={() => handleUpdatePost(post)}
                     />
                 ))
@@ -152,7 +167,7 @@ const FeedPage: React.FC<FeedProps> = ({ isProfileMode }) => {
 const PageTitle = styled.h1`
     font-weight: 800;
     font-family: 'Outfit';
-    color: ${(props) => props.theme.dark.colors.skyblueHighlight };
+    color: ${(props) => props.theme.dark.colors.pageTitleAlt };
     font-size: 82px;
     line-height: 72px;
     width: max-content;
