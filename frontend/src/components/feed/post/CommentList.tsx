@@ -94,13 +94,18 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, onDelete, onUpdate }
                     editable={!isEditing && (comment.user_id != user?.userId) ? false : {
                         onChange: (newComment: string) => {
                             handleUpdate(newComment);
+                            setEditedComment(newComment);
                         },
                     }}
                     style={{
                         color: "#fff"
                     }}
                 >
-                    {comment.comment_text}
+                    {editedComment ?
+                        editedComment :
+                        comment.comment_text
+                    }
+
                 </Typography.Paragraph>
             </Col>
 
