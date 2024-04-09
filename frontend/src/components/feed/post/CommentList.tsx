@@ -105,7 +105,6 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, onDelete, onUpdate }
                         editedComment :
                         comment.comment_text
                     }
-
                 </Typography.Paragraph>
             </Col>
 
