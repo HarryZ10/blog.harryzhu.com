@@ -51,21 +51,10 @@ jobs:
           git commit -m "Add build artifacts" 
           git push origin ${{ env.BRANCH_NAME }}
 
-      - name: Get Latest Release Branch
-        id: get_release_branch
-        env:
-          GH_TOKEN: ${{ secrets.GH_API_TOKEN }}
-        run: |
-          latest_release_branch=$(git ls-remote --heads origin 'release/v*' | cut -d/ -f3 | sort -V | tail -n1)
-          echo "latest_release_branch=${latest_release_branch}" >> $GITHUB_OUTPUT
-
       - name: Create Pull Request
         env:
-          GH_TOKEN: ${{ secrets.GH_API_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_API_TOKEN }}
         run: |
           PR_TITLE="Automated Build Artifacts Update"
           PR_BODY="Latest build artifacts for client files"
-          VERSION=$(echo "${{ steps.get_release_branch.outputs.latest_release_branch }}" | sed 's/release\/v//')
-          NEXT_VERSION=$((VERSION + 1))
-          BASE_BRANCH="release/v${NEXT_VERSION}"
-          gh pr create --title "$PR_TITLE" --body "$PR_BODY" --base "$BASE_BRANCH" --head ${{ env.BRANCH_NAME }}
+          gh pr create --title "$PR_TITLE" --body "$PR_BODY" --base "release/v2" --head ${{ env.BRANCH_NAME }}
