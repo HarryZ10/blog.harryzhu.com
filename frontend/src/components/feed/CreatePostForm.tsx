@@ -40,6 +40,8 @@ interface FormProps {
     handleClose: () => void;
 }
 
+// TODO? use auth context that was made
+
 const CreatePostForm: React.FC<FormProps> = ({ id, initialFormData, show, handleClose }) => {
 
     const { posts, loading, error, fetchPosts, createPost, updatePost, deletePost } = usePosts();
