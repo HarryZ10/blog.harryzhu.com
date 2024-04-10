@@ -96,6 +96,9 @@ class Router {
         elseif ($method == 'GET' && $base_uri == "/users" && is_numeric($uriArray[$startingIndex + 1])) {
             echo $this->authenticator->retrieveUsername($uriArray[$startingIndex + 1]);
         }
+        elseif ($method == 'GET' && $base_uri == "/users") {
+            echo $this->authenticator->retrieveAllUsers();
+        }
 
         // Retrieve all comments for a post.
         // GET /posts/:id/comments

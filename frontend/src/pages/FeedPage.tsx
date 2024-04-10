@@ -12,6 +12,7 @@ import { Post } from '../interfaces/post';
 import { usePosts } from '../contexts/PostsContext';
 import { useAuth } from '../contexts/AuthContext';
 import { getUsername } from '../api/UsersAPI';
+
 interface FeedProps {
     isProfileMode: boolean,
 }
@@ -164,7 +165,7 @@ const FeedPage: React.FC<FeedProps> = ({ isProfileMode }) => {
     );
 };
 
-const PageTitle = styled.h1`
+export const PageTitle = styled.h1`
     font-weight: 800;
     font-family: 'Outfit';
     color: ${(props) => props.theme.dark.colors.pageTitleAlt };

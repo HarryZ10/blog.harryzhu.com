@@ -104,7 +104,7 @@ const HomePage = () => {
                 <PageTitle>Journex</PageTitle>
                 <PageSubTitle>Career journaling made easy</PageSubTitle>
                 <HeroButton onClick={() => {
-                    navigate("/feed")
+                    navigate("/blog")
                 }}>Get Started</HeroButton>
             </HeroSection>
 

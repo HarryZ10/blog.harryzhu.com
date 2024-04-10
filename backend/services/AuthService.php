@@ -14,6 +14,21 @@ class AuthService {
         $this->secretKey = $_ENV['JWT_SECRET_KEY'];
     }
 
+    public function retrieveAllUsers() {
+        $result = UserReadService::getAllUsersFromDB();
+        if (isset($result)) {
+            return json_encode([
+                "results" => $result,
+                "message" => "Success"
+            ]);
+        } else {
+            return json_encode([
+                "results" => null,
+                "message" => "Failed"
+            ]);
+        }
+    }
+
     public function retrieveUsername($id) {
         $result = null;
         // Check if 'id' is set

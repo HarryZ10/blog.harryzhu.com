@@ -13,6 +13,14 @@ class UserReadService {
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result ? $result['username'] : null;
     }
+
+    public static function getAllUsersFromDB() {
+        $stmt = DatabaseService::database()->prepare(
+            "SELECT DISTINCT id, username from blog_user;"
+        );
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 
 ?>
