@@ -95,18 +95,10 @@ const CreateCommentForm: React.FC<ComponentProps> = ({ post_id, handleNewComment
     }
 
     const modalButtonStyle: React.CSSProperties = {
-        fontFamily: "Cabin",
-        fontWeight: '400',
-        fontSize: '16px',
-        width: '100%',
-        marginTop: '70px',
-        marginLeft: '20px',
         backgroundColor: isPostable ? themes.dark.colors.submission : '#b193ca',
-        color: themes.dark.colors.postText,
         borderColor: isPostable ? themes.dark.colors.submission : '#b193ca',
-        borderRadius: '5px',
-        transition: 'transform 0.3s, background-color 0.3s, border-color 0.3s',
-        cursor: !isPostable ? 'not-allowed' : 'pointer'
+        cursor: !isPostable ? 'not-allowed' : 'pointer',
+        color: themes.dark.colors.postText,
     }
 
     const confirmPostButton: string = isPostable ? "hover-effect-button" : '';
@@ -115,7 +107,7 @@ const CreateCommentForm: React.FC<ComponentProps> = ({ post_id, handleNewComment
         <>
             <Form>
                 <Form.Group as={Row}>
-                    <Col sm={8} style={{ padding: 0, marginTop: '20px' }}>
+                    <Col style={{ padding: 0, marginTop: '20px' }}>
                         <Form.Control
                             as="textarea"
                             name="commentContent"
@@ -133,22 +125,24 @@ const CreateCommentForm: React.FC<ComponentProps> = ({ post_id, handleNewComment
                         />
                         <CharacterCount
                             style={{
-                                 color: `${formStringData.length > 150 ? "#c9163a" : "#777"}`
+                                color: `${formStringData.length > 150 ? "#c9163a" : "#777"}`
                             }}
                         >
                             {formStringData.length} characters
                         </CharacterCount>
                     </Col>
-                    <Col sm={3} style={{ padding: 0 }}>
-                        <StyledButton
-                            style={modalButtonStyle}
-                            className={confirmPostButton}
-                            variant="primary"
-                            onClick={() => confirmPost(post_id)}
-                        >
-                            Comment
-                        </StyledButton>
-                    </Col>
+                </Form.Group>
+                <Form.Group as={Row}>
+                    <StyledButton
+                        style={{
+                            ...modalButtonStyle,
+                        }}
+                        className={confirmPostButton}
+                        variant="primary"
+                        onClick={() => confirmPost(post_id)}
+                    >
+                        Comment
+                    </StyledButton>
                 </Form.Group>
             </Form>
         </>
@@ -156,24 +150,34 @@ const CreateCommentForm: React.FC<ComponentProps> = ({ post_id, handleNewComment
 }
 
 const StyledButton = styled(Button)<any>`
-    @media (max-width: 768px) {
+    @media (max-width: 960px) {
         margin-top: 20px !important;
         margin-bottom: 20px !important;
         margin-left: 0 !important;
+        width: 100% !important;
     }
+
+    font-family: "Cabin";
+    font-weight: 400;
+    font-size: 16px;
+    margin: 10px 0 15px auto;
+    width: 60%;
+    border-radius: 5px;
+    transition: transform 0.3s, background-color 0.3s, border-color 0.3s
 `;
 
 const CharacterCount = styled.div`
     font-size: 14px;
     margin-top: 5px;
     text-align: right;
-`
+`;
 
 const FormInputStyle = {
     backgroundColor: themes.dark.colors.modalTextInput,
     border: '1px solid #3D3D42',
     color: themes.dark.colors.postText,
     marginBottom: '10px',
-}
+    width: '100%',
+};
 
 export default CreateCommentForm;
