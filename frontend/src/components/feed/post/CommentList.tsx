@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Row, Col } from 'react-bootstrap';
 import { toast } from 'react-hot-toast';
-import { Typography, Button, Dropdown, Space, message } from 'antd';
+import { Typography, Button, Dropdown, Space } from 'antd';
 
 import { DownOutlined, DeleteOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
@@ -25,12 +25,13 @@ interface CommentItemProps {
 }
 
 const CommentItem: React.FC<CommentItemProps> = ({ comment, onDelete, onUpdate }) => {
-    const { user, login , logout } = useAuth();
+    const { user } = useAuth();
+
     const [isEditing, setIsEditing] = useState(false);
     const [editedComment, setEditedComment] = useState(comment.comment_text);
 
     const handleDelete = () => {
-        
+
         const commentData: UpdateCommentData = {
             id: comment.id,
             user_id: comment.user_id,
@@ -131,7 +132,7 @@ const CommentList: React.FC<CommentListProps> = ({ comments, handleUpdates }) =>
                 }
             })
             .catch(err => {
-                if (err?.code == "DELETE_COMMENTS_FAILED") {
+                if (err?.code === "DELETE_COMMENTS_FAILED") {
                     toast.dismiss();
                     toast.error(err?.message);
                 } else {
@@ -150,7 +151,7 @@ const CommentList: React.FC<CommentListProps> = ({ comments, handleUpdates }) =>
                 }
             })
             .catch(err => {
-                if (err?.code == "UPDATE_COMMENTS_FAILED") {
+                if (err?.code === "UPDATE_COMMENTS_FAILED") {
                     toast.dismiss();
                     toast.error(err?.message);
                 } else {
