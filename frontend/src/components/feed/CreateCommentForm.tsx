@@ -6,7 +6,6 @@ import Cookies from "js-cookie";
 import { toast } from 'react-hot-toast';
 import { addComment } from "../../api/CommentsAPI";
 import themes from "../../styles/themes";
-import { useNavigate } from 'react-router-dom';
 import { getUsername } from "../../api/UsersAPI";
 
 interface ComponentProps {
