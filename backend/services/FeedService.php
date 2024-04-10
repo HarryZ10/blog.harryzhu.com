@@ -78,7 +78,7 @@ class FeedService {
 
     public function editBlogPost($id) {
         $status = [
-            'message' => 'Post updated'
+            'message' => 'Success'
         ];
 
         $content = json_decode(file_get_contents('php://input'), true);
@@ -120,7 +120,7 @@ class FeedService {
 
                     if ($result == "Success") {
                         $response = [
-                            'message' => 'Post created',
+                            'message' => 'Success',
                         ];
                     } else {
                         $response = [

@@ -163,12 +163,12 @@ const CreatePostForm: React.FC<FormProps> = ({ id, initialFormData, show, handle
                     }
                 };
 
-                let response: CreatePostResponse | UpdateCommentResponse;
-
                 if (!isUpdateMode) {
                     await createPost(postData);
+                    setPostCreated(true);
                 } else {
                     await updatePost(postData);
+                    setPostCreated(true);
                 }
 
             } catch (error) {

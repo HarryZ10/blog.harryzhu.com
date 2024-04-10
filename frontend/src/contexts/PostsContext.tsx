@@ -68,6 +68,14 @@ export const PostsProvider: React.FC<any> = ({ children }) => {
             if (res?.message === "Success") {
                 toast.dismiss();
                 toast.success("Post created successfully");
+
+                // TODO? soft reload
+                // setPosts([...posts, {
+                //     post_text: postData.post_text,
+                //     user_id: postData.user_id,
+                //     id: postData.id,
+                    
+                // }])
             } else {
                 toast.dismiss();
                 toast.error("Failed to create post");
@@ -90,6 +98,8 @@ export const PostsProvider: React.FC<any> = ({ children }) => {
             if (res?.message === 'Success') {
                 toast.dismiss();
                 toast.success('Post updated successfully!');
+
+                // TODO? soft reload here
             } else {
                 toast.dismiss();
                 toast.error('Failed to update post');
