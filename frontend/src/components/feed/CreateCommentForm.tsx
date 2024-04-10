@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 import { toast } from 'react-hot-toast';
 import { addComment } from "../../api/CommentsAPI";
 import themes from "../../styles/themes";
+
 import { getUsername } from "../../api/UsersAPI";
 
 interface ComponentProps {
@@ -170,6 +171,12 @@ const CharacterCount = styled.div`
     margin-top: 5px;
     text-align: right;
 `;
+
+const CharacterCount = styled.div`
+    font-size: 14px;
+    margin-top: 5px;
+    text-align: right;
+`
 
 const FormInputStyle = {
     backgroundColor: themes.dark.colors.modalTextInput,
