@@ -52,6 +52,8 @@ jobs:
           git push origin ${{ env.BRANCH_NAME }}
 
       - name: Get Latest Release Version
+        env:
+          GH_TOKEN: ${{ secrets.GH_API_TOKEN }}
         id: get_version
         run: |
           latest_release=$(gh api /repos/HarryZ10/blog.harryzhu.com/releases/latest --jq '.tag_name')
@@ -59,7 +61,7 @@ jobs:
 
       - name: Create Pull Request
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_API_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_API_TOKEN }}
         run: |
           PR_TITLE="Automated Build Artifacts Update"
           PR_BODY="Latest build artifacts for client files"
