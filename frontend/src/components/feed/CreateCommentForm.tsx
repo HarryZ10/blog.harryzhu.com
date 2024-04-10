@@ -78,7 +78,7 @@ const CreateCommentForm: React.FC<ComponentProps> = ({ post_id, handleNewComment
                         }
                     })
                     .catch(err => {
-                        if (err?.code == "ADD_COMMENTS_FAILED") {
+                        if (err?.code === "ADD_COMMENTS_FAILED") {
                             toast.dismiss();
                             toast.error(err?.message);
                         } else {

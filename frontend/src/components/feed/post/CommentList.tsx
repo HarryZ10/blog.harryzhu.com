@@ -131,7 +131,7 @@ const CommentList: React.FC<CommentListProps> = ({ comments, handleUpdates }) =>
                 }
             })
             .catch(err => {
-                if (err?.code == "DELETE_COMMENTS_FAILED") {
+                if (err?.code === "DELETE_COMMENTS_FAILED") {
                     toast.dismiss();
                     toast.error(err?.message);
                 } else {
@@ -150,7 +150,7 @@ const CommentList: React.FC<CommentListProps> = ({ comments, handleUpdates }) =>
                 }
             })
             .catch(err => {
-                if (err?.code == "UPDATE_COMMENTS_FAILED") {
+                if (err?.code === "UPDATE_COMMENTS_FAILED") {
                     toast.dismiss();
                     toast.error(err?.message);
                 } else {
