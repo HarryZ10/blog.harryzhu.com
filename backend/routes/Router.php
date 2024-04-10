@@ -201,7 +201,7 @@ class Router {
 
         // Given a auth header we can look for the bearer token
         if ($authHeader) {
-            $header = $headers['Authorization'];
+            $header = $authHeader;
 
             // Split the Authorization header into 2 segments
             $parts = explode('Bearer', $header, 2);

@@ -126,9 +126,9 @@ const FeedPage: React.FC<FeedProps> = ({ isProfileMode }) => {
 
     if (loading) {
         toast.dismiss();
-        toast.loading("Loading...");
-    } else {
-        toast.dismiss();
+        toast.loading("Loading...", {
+            duration: 3
+        });
     }
 
     return (
