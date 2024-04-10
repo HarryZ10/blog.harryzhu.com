@@ -12,7 +12,7 @@ import { Post } from '../interfaces/post';
 import { usePosts } from '../contexts/PostsContext';
 import { useAuth } from '../contexts/AuthContext';
 import { getUsername } from '../api/UsersAPI';
-        
+
 interface FeedProps {
     isProfileMode: boolean,
 }
