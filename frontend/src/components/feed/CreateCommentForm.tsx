@@ -176,6 +176,12 @@ const CharacterCount = styled.div`
     font-size: 14px;
     margin-top: 5px;
     text-align: right;
+`;
+
+const CharacterCount = styled.div`
+    font-size: 14px;
+    margin-top: 5px;
+    text-align: right;
 `
 
 const FormInputStyle = {
