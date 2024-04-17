@@ -320,7 +320,7 @@ const PostCard: React.FC<PCInfo> = ({ post_id, post_text, post_date, user_id, ad
                         icon={<InfoCircleOutlined />}
                         className="mb-3"
                     >
-                        {openComments ? 'Hide Actions' : 'More Actions'}
+                        {openComments ? 'Hide Comments' : 'View Comments'}
                     </MoreActionButtonStyled>
 
                     <Collapse in={openComments}>
