@@ -1,8 +1,10 @@
 import React, { useState, useEffect} from "react";
+import { InfoCircleOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import { Card, Row, Col, Button, Collapse } from 'react-bootstrap';
+import { Button as MoreActionButton } from "antd";
 import { Link } from "react-router-dom";
 
 import CreateCommentForm from "../CreateCommentForm";
@@ -29,6 +31,7 @@ const PostCard: React.FC<PCInfo> = ({ post_id, post_text, post_date, user_id, ad
 
     // Post Card Other Info collapse/show toggle
     const [openAdditionalInfo, setOpenAdditionalInfo] = useState(false);
+    const [openComments, setOpenComments] = useState(false);
 
     // Get username info
     const [username, setUsername] = useState('');
@@ -216,7 +219,7 @@ const PostCard: React.FC<PCInfo> = ({ post_id, post_text, post_date, user_id, ad
                             </a>
 
                             <Collapse in={openAdditionalInfo}>
-                                <div id="job-offer-info-collapse">
+                                <div>
                                     <Row>
                                         <Col xs={6} sm={6} md={6}><strong>Medical Insurance:</strong></Col>
                                         <Col xs={6} sm={6} md={6}>{jobOfferInfo.otherOptions.healthInsurance.medical ? 'Yes' : 'No'}</Col>
@@ -260,34 +263,50 @@ const PostCard: React.FC<PCInfo> = ({ post_id, post_text, post_date, user_id, ad
                 )}
 
                 <Card.Footer style={CardBorderStyle}>
-                    <Row>
-                        <Col xs={6} md={9} style={{ padding: 0 }} className="d-flex justify-content-start">
+                    <>
+                        <MoreActionButton
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setOpenComments(!openComments);
+                            }}
+                        >
+                            <strong>
+                                <InfoCircleOutlined /> {openComments ? 'Hide Actions' : 'More Actions'}
+                            </strong>
+                        </MoreActionButton>
 
-                            {currentUserId === user_id && (
-                                <Button
-                                    onClick={handleUpdate}
-                                    style={EditButtonStyle}
-                                >
-                                    Edit
-                                </Button>
-                            )}
-                        </Col>
+                        <Collapse in={openComments}>
+                            <div>
+                                <Row>
+                                    <Col xs={6} md={9} style={{ padding: 0 }} className="d-flex justify-content-start">
 
-                        <Col xs={6} md={3} style={{ padding: 0 }}
-                            className="d-flex justify-content-end">
+                                        {currentUserId === user_id && (
+                                            <Button
+                                                onClick={handleUpdate}
+                                                style={EditButtonStyle}
+                                            >
+                                                Edit
+                                            </Button>
+                                        )}
+                                    </Col>
 
-                            {currentUserId === user_id && (
-                                <ActionButton style={DeleteButtonStyle} onClick={handleDelete}>Delete</ActionButton>
-                            )}
-                        </Col>
-                    </Row>
-                    <Row>
-                        <CreateCommentForm post_id={post_id} handleNewComments={handleNewComments}/>
-                    </Row>
+                                    <Col xs={6} md={3} style={{ padding: 0 }}
+                                        className="d-flex justify-content-end">
 
-                    <CommentList comments={comments} handleUpdates={handleCommentUpdates}/>
-
+                                        {currentUserId === user_id && (
+                                            <ActionButton style={DeleteButtonStyle} onClick={handleDelete}>Delete</ActionButton>
+                                        )}
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <CreateCommentForm post_id={post_id} handleNewComments={handleNewComments}/>
+                                </Row>
+                                <CommentList comments={comments} handleUpdates={handleCommentUpdates}/>
+                            </div>
+                    </Collapse>
+                    </>
                 </Card.Footer>
+
             </Card.Body>
         </StyledCard>
     )
