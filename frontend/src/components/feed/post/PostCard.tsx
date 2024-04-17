@@ -269,6 +269,7 @@ const PostCard: React.FC<PCInfo> = ({ post_id, post_text, post_date, user_id, ad
                                 e.preventDefault();
                                 setOpenComments(!openComments);
                             }}
+                            className="mb-5"
                         >
                             <InfoCircleOutlined />
                             {openComments ? 'Hide Actions' : 'More Actions'}
