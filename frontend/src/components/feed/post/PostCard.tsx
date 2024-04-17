@@ -270,9 +270,9 @@ const PostCard: React.FC<PCInfo> = ({ post_id, post_text, post_date, user_id, ad
                                 setOpenComments(!openComments);
                             }}
                         >
-                            <strong>
-                                <InfoCircleOutlined /> {openComments ? 'Hide Actions' : 'More Actions'}
-                            </strong>
+                            <InfoCircleOutlined />
+                            {openComments ? 'Hide Actions' : 'More Actions'}
+
                         </MoreActionButton>
 
                         <Collapse in={openComments}>
