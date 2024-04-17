@@ -76,7 +76,8 @@ class FeedService {
         ]);
     }
 
-    public function editBlogPost($id) {
+    public function editBlogPost() {
+
         $status = [
             'message' => 'Success'
         ];
@@ -84,13 +85,21 @@ class FeedService {
         $content = json_decode(file_get_contents('php://input'), true);
 
         if ($this->isValidContentAndUser($content, $this->authenticator)) {
+
             if (strlen($content["post_text"]) <= 150) {
-                PostWriteService::updatePost($content);
+
+                $result = PostWriteService::updatePost($content);
+                $decoded = json_decode($result, true);
+
                 return json_encode([
                     ...$status,
+                    "id" => $content["id"],
+                    "date" => $decoded['time'],
                 ]);
+
             } else {
                 http_response_code(403);
+
                 // Prepare error response for character limit exceeded
                 $response['message'] = 'Character limit exceeded';
             }
@@ -116,15 +125,19 @@ class FeedService {
                 // Check if post text length is within the limit
                 if (strlen($content["post_text"]) <= 150) {
                     // Create post and prepare success response
-                    $result = PostWriteService::createPost($content);
+                    $result = json_decode(
+                        PostWriteService::createPost($content), true
+                    ) ?? null;
 
-                    if ($result == "Success") {
+                    if ($result != null) {
                         $response = [
                             'message' => 'Success',
+                            'id' => $result['id'],
+                            'date' => $result['date'],
                         ];
                     } else {
                         $response = [
-                            'message' => $result,
+                            'message' => 'Something went wrong',
                         ];
                     }
                 } else {

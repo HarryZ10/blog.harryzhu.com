@@ -138,7 +138,7 @@ class Router {
             && $base_uri == "/posts"
             && is_numeric($uriArray[$startingIndex + 1])
         ) {
-            echo $this->feed->editBlogPost($uriArray[2]);
+            echo $this->feed->editBlogPost();
         }
 
         // Update a comment

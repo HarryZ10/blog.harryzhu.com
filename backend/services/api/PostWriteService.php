@@ -7,21 +7,29 @@ class PostWriteService {
     // Create a post
     // Authentication Check Needed
     public static function createPost($postBodyData) {
+        $id = null;
+        $date = date('Y-m-d');
         try  {
             $stmt = DatabaseService::database()->prepare(
                 "INSERT INTO post (user_id, project_id, post_date, post_text, extra)
-                VALUES (:user_id, 3, :post_date, :post_text, :extra);"
+                 VALUES (:user_id, 3, :post_date, :post_text, :extra)
+                 RETURNING id;"
             );
+            
             $stmt->bindParam(":user_id", $postBodyData["user_id"]);
-            $stmt->bindParam(":post_date", date('Y-m-d'));
+            $stmt->bindParam(":post_date", $date);
             $stmt->bindParam(":post_text", $postBodyData["post_text"]);
-        $stmt->bindParam(":extra", json_encode($postBodyData["extra"]));
+            $stmt->bindParam(":extra", json_encode($postBodyData["extra"]));
             $stmt->execute();
+            $id = $stmt->fetch(PDO::FETCH_ASSOC)['id'];
+
         } catch (\PDOException $e) {
             return $e->getMessage();
         }
-
-        return "Success";
+        return json_encode([
+            'id' => $id,
+            'date' => $date,
+        ]);
     }
 
     // Add a comment to a post
@@ -48,14 +56,19 @@ class PostWriteService {
                  post_text = :post_text,
                  extra = :extra
              WHERE project_id = 3 AND id = :id;"
-	);
-        $stmt->bindParam(':post_date', date('m-d-Y', time()));
+	    );
+        $time = date('m-d-Y');
+        $result = json_encode([
+            "time" => $time,
+        ]);
 
+        $stmt->bindParam(':post_date', $time);
         $stmt->bindParam(':id', $postBodyData['id']);
         $stmt->bindParam(':post_text', $postBodyData['post_text']);
         $stmt->bindParam(':extra', json_encode($postBodyData['extra']));
         $stmt->execute();
-        return "Success";
+
+        return $result;
     }
 
     // Delete a post
