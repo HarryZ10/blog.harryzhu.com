@@ -37,14 +37,20 @@ class PostWriteService {
     public static function addCommentOnPost($commentData) {
         $stmt = DatabaseService::database()->prepare(
             "INSERT INTO blog_comment (user_id, post_id, comment_date, comment_text)
-             VALUES (:user_id, :post_id, :comment_date, :comment_text);"
+             VALUES (:user_id, :post_id, :comment_date, :comment_text) RETURNING id;"
         );
+        $date = date('Y-m-d');
         $stmt->bindParam(':user_id', $commentData['user_id']);
         $stmt->bindParam(':post_id', $commentData['post_id']);
-        $stmt->bindParam(':comment_date', date('Y-m-d'));
+        $stmt->bindParam(':comment_date', $date);
         $stmt->bindParam(':comment_text', $commentData['comment_text']);
         $stmt->execute();
-        return "Success";
+
+        // Fetch the ID of the newly inserted comment
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $result[] = $date;
+    
+        return $result ?? null;
     }
 
     // Update a post

@@ -168,8 +168,12 @@ class FeedService {
             if ($content["comment_text"]) {
                 if (strlen($content["comment_text"]) <= 150) {
                     // Add comment info to database
-                    PostWriteService::addCommentOnPost($content);
-                    $response = json_encode(['message' => 'Success']);
+                    $result = PostWriteService::addCommentOnPost($content);
+                    $response = json_encode([
+                        'message' => 'Success',
+                        "id" => $result['id'] ?? '',
+                        "date" => $result['date'] ?? ''
+                    ]);
                 } else {
                     http_response_code(403);
                     $response['message'] = 'Character limit exceeded';

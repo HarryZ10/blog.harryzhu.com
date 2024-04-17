@@ -123,8 +123,22 @@ const PostCard: React.FC<PCInfo> = ({ post_id, post_text, post_date, user_id, ad
         setComments(comments.filter((comment) => comment.id !== commentData.id));
     };
 
-    const handleNewComments = (commentData: any) => {
-        setComments([...comments, commentData]);
+    const handleNewComments = (commentData: any, id: string, date: string) => {
+        const newComment = { ...commentData, id};
+
+        // Soft reload
+        setComments((prevComments) => [
+            ...prevComments.filter((comment) => comment.id !== id),
+            {
+                id: id,
+                comment_date: date,
+                comment_text: commentData.comment_text,
+                post_id: commentData.post_id,
+                user_id: commentData.user_id,
+                username: commentData.username,
+            }
+        ]);
+
     };
 
      return (
