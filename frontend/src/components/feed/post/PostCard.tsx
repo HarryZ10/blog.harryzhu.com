@@ -328,6 +328,7 @@ const PostCard: React.FC<PCInfo> = ({ post_id, post_text, post_date, user_id, ad
                             style={{
                                 marginLeft: '10px',
                             }}
+                            className="mb-5"
                         >
                             <CreateCommentForm post_id={post_id} handleNewComments={handleNewComments}/>
                             <CommentList comments={comments} handleUpdates={handleCommentUpdates}/>
