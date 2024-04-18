@@ -317,11 +317,10 @@ const PostCard: React.FC<PCInfo> = ({ post_id, post_text, post_date, user_id, ad
                             e.preventDefault();
                             setOpenComments(!openComments);
                         }}
+                        icon={<InfoCircleOutlined />}
                         className="mb-3"
                     >
-                        <InfoCircleOutlined />
                         {openComments ? 'Hide Actions' : 'More Actions'}
-
                     </MoreActionButtonStyled>
 
                     <Collapse in={openComments}>
