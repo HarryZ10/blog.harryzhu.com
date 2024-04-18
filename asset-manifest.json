@@ -1,11 +1,11 @@
 {
   "files": {
-    "main.css": "/~hzhu20/static/css/main.0ede8af8.css",
-    "main.js": "/~hzhu20/static/js/main.0e32b115.js",
-    "index.html": "/~hzhu20/index.html"
+    "main.css": "/static/css/main.0ede8af8.css",
+    "main.js": "/static/js/main.faa07cec.js",
+    "index.html": "/index.html"
   },
   "entrypoints": [
     "static/css/main.0ede8af8.css",
-    "static/js/main.0e32b115.js"
+    "static/js/main.faa07cec.js"
   ]
 }
