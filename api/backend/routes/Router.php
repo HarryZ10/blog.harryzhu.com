@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__.'/../services/FeedService.php';
 require_once __DIR__.'/../services/AuthService.php';
-require __DIR__ . '/../../vendor/autoload.php';
+require __DIR__ . '/../../../vendor/autoload.php';
 
 Dotenv\Dotenv::createUnsafeImmutable(__DIR__ . '/../../')->load();
 
