@@ -1,9 +1,6 @@
 <?php
 require_once __DIR__.'/../services/FeedService.php';
 require_once __DIR__.'/../services/AuthService.php';
-require __DIR__ . '/../../../vendor/autoload.php';
-
-Dotenv\Dotenv::createUnsafeImmutable(__DIR__ . '/../../')->load();
 
 /**
  * Router implementation that handles requests that uses an in-house feed and login service
@@ -33,35 +30,19 @@ class Router {
 
         $startingIndex = 1;
 
-        if ($_ENV['CLASS_MODE'] !== 'false') {
-            // Ensure URI starts with /api/v1
-            if (substr($uri, 0, 15) !== '/~hzhu20/api/v1') {
-                header('HTTP/1.1 400 Bad Request');
-                echo json_encode([
-                    'status' => 'Invalid endpoint'
-                ]);
-                exit;
-            }
-
-            $startingIndex = 4;
-
-            // Skip past primary domain and "/~hzhu20/api/v1" and prepend '/'
-            $base_uri = '/' . $uriArray[$startingIndex];
-
-        } else {
-            // Ensure URI starts with /api/v1
-            if (substr($uri, 0, 7) !== '/api/v1') {
-                header('HTTP/1.1 400 Bad Request');
-                echo json_encode([
-                    'status' => 'Invalid endpoint'
-                ]);
-                exit;
-            }
-
-            $startingIndex = 3;
-            // Skip past primary domain and "/api/v1" and prepend '/'
-            $base_uri = '/' . $uriArray[$startingIndex];;
+        // Ensure URI starts with /api/v1
+        if (substr($uri, 0, 7) !== '/api/v1') {
+            header('HTTP/1.1 400 Bad Request');
+            echo json_encode([
+                'status' => 'Invalid endpoint'
+            ]);
+            exit;
         }
+
+        $startingIndex = 3;
+
+        // Skip past primary domain and "/api/v1" and prepend '/'
+        $base_uri = '/' . $uriArray[$startingIndex];;
 
         // Secured endpoints
         $endpoints_to_gatekeep = ['/posts', '/comments', "/users", "/profile"];

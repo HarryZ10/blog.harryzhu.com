@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__.'/backend/routes/Router.php';
-require __DIR__ . '/vendor/autoload.php';
 
 Dotenv\Dotenv::createUnsafeImmutable(__DIR__ . '/')->load();
 
