@@ -1,7 +1,6 @@
 pgsql/
 *.pem
 *.pub
-vendor
 copy.bara.sky
 .env
 .env.local

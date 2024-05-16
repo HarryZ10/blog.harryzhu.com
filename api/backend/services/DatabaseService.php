@@ -1,4 +1,7 @@
 <?php
+require __DIR__ . '/../../../vendor/autoload.php';
+
+Dotenv\Dotenv::createUnsafeImmutable(__DIR__ . '/../../')->load();
 
 class DatabaseService {
     private static $db = null;                      // DB Connection instance

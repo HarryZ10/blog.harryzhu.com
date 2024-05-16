@@ -40,10 +40,9 @@ class Router {
         }
 
         $startingIndex = 3;
-
         // Skip past primary domain and "/api/v1" and prepend '/'
         $base_uri = '/' . $uriArray[$startingIndex];;
-
+    
         // Secured endpoints
         $endpoints_to_gatekeep = ['/posts', '/comments', "/users", "/profile"];
 
