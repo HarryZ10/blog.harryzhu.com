@@ -10,7 +10,7 @@ class AuthService {
     private $secretKey;
 
     public function __construct() {
-        $this->secretKey = $_ENV['JWT_SECRET_KEY'];
+        $this->secretKey = "AVNS_eWZAyM34bR24zjgYhg3";
     }
 
     public function retrieveAllUsers() {
