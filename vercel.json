@@ -1,35 +1,17 @@
 {
-  "functions": {
-    "api/index.php": {
-      "runtime": "vercel-php@0.6.1"
-    }
-  },
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/api/index.php",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "https://blog.harryzhu.com"
-        },
-        {
-          "key": "Access-Control-Allow-Methods",
-          "value": "GET,POST,PUT,DELETE,OPTIONS"
-        },
-        {
-          "key": "Access-Control-Allow-Headers",
-          "value": "Content-Type, Authorization, X-Requested-With"
-        },
-        {
-          "key": "Access-Control-Max-Age",
-          "value": "3600"
-        },
-        {
-          "key": "Access-Control-Allow-Credentials",
-          "value": "true"
+    "functions": {
+        "api/index.php": {
+            "runtime": "vercel-php@0.6.1"
         }
-      ]
-    }
-  ]
+    },
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "/api/index.php",
+            "methods": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+            "headers": {
+                "Access-Control-Allow-Origin": "*"
+            }
+        }
+    ]
 }
